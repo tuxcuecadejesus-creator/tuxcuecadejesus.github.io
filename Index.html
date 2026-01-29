@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover"/>
+  <title>Elite English Pro — Premium v6.2 (Universal Nav Fix)</title>
+  <meta name="theme-color" content="#0b1020" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    :root{
+      --bg-1:#0b1020; --bg-2:#0a0d15; --glass:rgba(255,255,255,.04);
+      --text:#E7ECF3; --muted:#8DA2BF; --border:rgba(255,255,255,.12);
+      --brand:#7C7CFF; --brand-2:#A678FF; --brand-3:#00E5FF;
+      --gradient:linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 45%, var(--brand-3) 100%);
+      --ring:rgba(124,124,255,.35); --gold:#fbbf24; --r-lg:24px; --nav-h:74px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text); font-family:'Inter',system-ui;
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(124,124,255,.25), transparent 60%),
+                  radial-gradient(900px 700px at 110% 10%, rgba(0,229,255,.18), transparent 55%),
+                  linear-gradient(180deg, var(--bg-1), var(--bg-2));
+      background-attachment: fixed;
+      /* EXTRA bottom padding: nav height + safe-area + buffer */
+      padding-bottom: max(140px, calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 60px));
+    }
+    header{position:sticky; top:0; z-index:1000; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      background: linear-gradient(180deg, rgba(8,12,22,.75), rgba(8,12,22,.55)); border-bottom:1px solid var(--border);
+      padding:14px 18px; display:flex; align-items:center; justify-content:space-between}
+    .brand{display:flex; align-items:center; gap:12px; font-family:'Outfit'; font-weight:900}
+    .brand i{background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:1.4rem}
+    .brand span{font-size:1.05rem; background:linear-gradient(90deg,#fff,#a0b4d4); -webkit-background-clip:text; -webkit-text-fill-color:transparent}
+    .top-actions{display:flex; gap:10px}
+    .chip{padding:8px 12px; border:1px solid var(--border); border-radius:999px; background:var(--glass); font-family:'Outfit'; font-weight:800; font-size:.8rem; color:#B8C6DD}
+
+    .container{max-width:520px;margin:0 auto;padding:22px 18px}
+    .tab-content{display:none}
+    .tab-content.active{display:block; animation:fadeIn .5s ease}
+    @keyframes fadeIn{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)}}
+
+    .card{position:relative; background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); border:1px solid var(--border); border-radius: var(--r-lg);
+      padding:26px 20px; margin-bottom:18px; box-shadow: 0 10px 30px rgba(0,0,0,.35)}
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)); font-size:.78rem; font-weight:800; font-family:'Outfit';
+      color:#C9D7F0; letter-spacing:.6px; text-transform:uppercase}
+    .text-en{font-family:'Outfit'; font-weight:800; color:#F3F7FF; font-size:1.55rem; line-height:1.28; margin:6px 0 14px}
+    .text-fig{color:var(--gold); background:rgba(251,191,36,.08); border:1px dashed rgba(251,191,36,.35); padding:14px; border-radius:14px; font-family: ui-monospace, Menlo, Consolas, 'Courier New', monospace; font-weight:700; font-size:.95rem}
+    .text-es{color:#9FB0C9; font-size:1.06rem; margin-top:10px}
+
+    .audio-grid{display:grid; grid-template-columns: repeat(3,1fr); gap:10px; margin-top:14px}
+    .btn-audio,.btn-rate{background: rgba(255,255,255,.05); border:1px solid var(--border); color:#BCD1EF; border-radius:14px; padding:12px; cursor:pointer; font-family:'Outfit';
+      font-size:.78rem; font-weight:800; letter-spacing:.6px; text-transform:uppercase; display:flex; flex-direction:column; align-items:center; gap:6px}
+    .btn-primary{width:100%; padding:18px; border-radius:16px; border:1px solid transparent; cursor:pointer; background: var(--gradient); color:white; font-family:'Outfit'; font-weight:900; letter-spacing:.8px; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:12px}
+
+    input, textarea, select{width:100%; padding:14px 14px; border-radius:14px; border:1px solid var(--border); background: rgba(255,255,255,.03); color:#E6EEFF; font-size:1rem; outline:none}
+    input:focus, textarea:focus, select:focus{ box-shadow: 0 0 0 6px var(--ring) }
+
+    /* --------- UNIVERSAL NAV (center on desktop, scroll on mobile) --------- */
+    nav{position:fixed; left:0; right:0; bottom:0; z-index:999; padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));}
+    .nav-shell{ max-width:720px; margin:0 auto; } /* centers bar on desktop */
+    .nav-bar{ display:flex; gap:8px; padding:8px; border-radius:20px; border:1px solid var(--border); backdrop-filter: blur(18px); background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)); box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      width:100%; justify-content:center; overflow:hidden }
+
+    /* When items do not fit, enable horizontal scroll gracefully */
+    .nav-scroll{ display:flex; justify-content:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none }
+    .nav-scroll::-webkit-scrollbar{ display:none }
+
+    .nav-item{ min-width:96px; padding:10px 12px; border-radius:14px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; color:#AFC5E6; border:1px solid transparent; font-family:'Outfit'; font-weight:800; font-size:.72rem; letter-spacing:.6px; white-space:nowrap; flex:0 0 auto }
+    .nav-item i{font-size:1.22rem}
+    .nav-item.active{ background: rgba(255,255,255,.06); border-color: var(--border); color:#F2F7FF }
+
+    @media (max-width:520px){
+      .nav-shell{ max-width:100% }
+      .nav-bar{ width:max-content; justify-content:flex-start }
+      .nav-scroll{ justify-content:flex-start }
+      .nav-item{ min-width:78px }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand"><i class="fas fa-gem"></i><span>ELITE ENGLISH PRO</span></div>
+  <div class="top-actions">
+    <div class="chip" id="scoreLabel">0 PTS</div>
+  </div>
+</header>
+
+<div class="container">
+  <section id="sec-phrases" class="tab-content active" role="tabpanel">
+    <div class="card">
+      <span class="badge"><i class="fas fa-sparkles"></i> Daily Inspiration</span>
+      <div id="phEn" class="text-en">Loading...</div>
+      <div id="phFig" class="text-fig">...</div>
+      <div id="phEs" class="text-es">...</div>
+      <div class="audio-grid">
+        <button class="btn-audio" onclick="playAudio('phEn',1)"><i class="fas fa-volume-high"></i> Natural</button>
+        <button class="btn-audio" onclick="playAudio('phEn',0.6)"><i class="fas fa-volume-low"></i> Slow</button>
+        <button class="btn-audio" onclick="playDuo('phEn','phEs')"><i class="fas fa-language"></i> Duo</button>
+      </div>
+      <button class="btn-primary" style="margin-bottom:8px" onclick="loadPhrase()">Next Quote <i class="fas fa-arrow-right"></i></button>
+    </div>
+  </section>
+
+  <section id="sec-stories" class="tab-content" role="tabpanel">
+    <div class="card">
+      <span class="badge"><i class="fas fa-globe-americas"></i> World Library</span>
+      <div id="stEn" class="text-en" style="font-size:1.2rem; line-height:1.7; font-weight:700;">...</div>
+      <div id="stFig" class="text-fig">...</div>
+      <div class="audio-grid" style="margin-top:10px">
+        <button class="btn-audio" onclick="playAudio('stEn',1)"><i class="fas fa-book-reader"></i> Read</button>
+        <button class="btn-audio" onclick="playAudio('stEn',0.6)"><i class="fas fa-volume-low"></i> Slow</button>
+        <button class="btn-audio" onclick="playDuo('stEn','stEs')"><i class="fas fa-exchange-alt"></i> Duo</button>
+      </div>
+      <button id="stFigToggle" class="btn-audio" style="width:100%; margin-top:12px;" onclick="toggleFig()"><i class="fas fa-angles-down"></i> Ver más</button>
+      <div id="stEs" class="text-es">...</div>
+      <button class="btn-primary" style="margin-top:8px; margin-bottom:8px" onclick="loadStory()">New Story <i class="fas fa-random"></i></button>
+    </div>
+  </section>
+
+  <section id="sec-exercises" class="tab-content" role="tabpanel">
+    <div class="card">
+      <span id="badge-type" class="badge"><i class="fas fa-flask"></i> Gemini AI Lab</span>
+      <div id="exEn" class="text-en" style="text-align:center; border:1px dashed var(--border); padding:30px 14px; border-radius:16px; background:rgba(255,255,255,.03)">
+        <i class="fas fa-circle-notch fa-spin"></i> Connecting AI...
+      </div>
+      <div id="exFig" class="text-fig" style="text-align:center; background:transparent; border:none; color:var(--gold)">...</div>
+      <div id="feedback" class="text-es" style="display:none; text-align:center"></div>
+      <input type="text" id="exInput" placeholder="Type missing word..." autocomplete="off">
+      <div class="audio-grid">
+        <button class="btn-audio" onclick="playAudio('exEn',1)"><i class="fas fa-volume-high"></i> Normal</button>
+        <button class="btn-audio" onclick="playAudio('exEn',0.6)"><i class="fas fa-volume-low"></i> Slow</button>
+        <button class="btn-audio" onclick="playAudio('exEn',0.4)"><i class="fas fa-volume-off"></i> Snail</button>
+      </div>
+      <button class="btn-primary" onclick="checkEx()">Verify Answer <i class="fas fa-check"></i></button>
+      <button class="btn-audio" style="width:100%; margin-top:12px" onclick="loadGeminiEx()"><i class="fas fa-forward"></i> Skip Challenge</button>
+      <div id="exEs" class="text-es" style="margin-top:16px; text-align:center; opacity:.85"></div>
+    </div>
+  </section>
+
+  <section id="sec-translator" class="tab-content" role="tabpanel">
+    <div class="card">
+      <span class="badge"><i class="fas fa-language"></i> Quick Translator</span>
+      <textarea id="trInput" rows="4" placeholder="Escribe o pega texto en español o inglés..."></textarea>
+      <div class="row" style="display:flex; gap:10px; margin:10px 0 6px">
+        <select id="trDirection" style="flex:1">
+          <option value="es-en">Spanish ➜ English</option>
+          <option value="en-es">English ➜ Spanish</option>
+          <option value="auto" selected>Auto detect</option>
+        </select>
+        <button class="btn-primary" style="flex:1" onclick="translateText()">Translate <i class="fas fa-arrow-right"></i></button>
+      </div>
+      <div class="row" style="display:flex; gap:10px; align-items:center; margin-top:6px">
+        <span id="trDetect" class="chip">Detecting...</span>
+        <button class="btn-audio" onclick="swapDirection()"><i class="fas fa-arrows-rotate"></i> Swap</button>
+      </div>
+      <div id="trStatus" class="text-es" style="margin-top:8px"></div>
+      <div id="trOut" class="text-en" style="margin-top:6px; font-size:1.25rem; white-space:pre-wrap"></div>
+      <div class="audio-grid" style="margin-top:12px">
+        <button class="btn-audio" onclick="playAudio('trOut',1)"><i class="fas fa-volume-high"></i> Read</button>
+        <button class="btn-audio" onclick="playAudio('trOut',0.6)"><i class="fas fa-volume-low"></i> Slow</button>
+        <button class="btn-audio" onclick="playDuoText()"><i class="fas fa-exchange-alt"></i> Duo</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-cards" class="tab-content" role="tabpanel">
+    <div class="card">
+      <span class="badge"><i class="fas fa-brain"></i> Power Flashcards</span>
+      <div class="row" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px">
+        <span class="chip" id="fcDue">Due: 0</span>
+        <span class="chip" id="fcStudied">Studied today: 0</span>
+        <span class="chip" id="fcTotal">Total: 0</span>
+      </div>
+      <div id="fcFront" class="text-en" style="text-align:center;">—</div>
+      <div id="fcBack" class="text-es" style="text-align:center; display:none;">—</div>
+      <div id="fcEx" class="text-fig" style="text-align:center;">—</div>
+      <div class="audio-grid">
+        <button class="btn-audio" onclick="fcSpeak()"><i class="fas fa-volume-high"></i> Read</button>
+        <button class="btn-audio" onclick="fcToggle()"><i class="fas fa-eye"></i> Show</button>
+        <button class="btn-audio" onclick="fcSkip()"><i class="fas fa-forward"></i> Skip</button>
+      </div>
+      <div class="row" style="display:flex; margin-top:6px; gap:10px">
+        <button class="btn-rate" style="border-color:#ef4444; color:#fecaca" onclick="fcRate(0)">Again</button>
+        <button class="btn-rate" style="border-color:#f59e0b; color:#ffedd5" onclick="fcRate(1)">Hard</button>
+        <button class="btn-rate" style="border-color:#10b981; color:#d1fae5" onclick="fcRate(2)">Good</button>
+        <button class="btn-rate" style="border-color:#6366f1; color:#e0e7ff" onclick="fcRate(3)">Easy</button>
+      </div>
+      <hr style="border:none; border-top:1px solid var(--border); margin:16px 0">
+      <div class="row" style="display:flex; gap:10px">
+        <input id="fcNewEn" placeholder="New word (EN): book">
+        <input id="fcNewEs" placeholder="Meaning (ES): libro">
+      </div>
+      <input id="fcNewEx" placeholder="Example (EN): I read a book every night.">
+      <div class="row" style="display:flex; margin-top:6px; gap:10px">
+        <button class="btn-primary" style="flex:1" onclick="fcAdd()">Add Card <i class="fas fa-plus"></i></button>
+        <button class="btn-audio" style="flex:1" onclick="fcReset()"><i class="fas fa-rotate-left"></i> Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-speak" class="tab-content" role="tabpanel">
+    <div class="card">
+      <span class="badge"><i class="fas fa-microphone"></i> Shadowing Studio</span>
+      <input id="spInput" placeholder="Write or paste an English sentence here...">
+      <div class="row" style="display:flex; gap:10px; margin-top:8px">
+        <button class="btn-audio" onclick="spUseSuggest()"><i class="fas fa-wand-magic-sparkles"></i> Suggest</button>
+        <button class="btn-audio" onclick="spSpeakRef()"><i class="fas fa-volume-high"></i> Play reference</button>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px">
+        <div>
+          <span class="chip">Reference</span>
+          <div id="spRef" class="text-en" style="font-size:1.1rem; font-weight:800;">—</div>
+          <div id="spFig" class="text-fig">—</div>
+        </div>
+        <div>
+          <span class="chip">Your speech</span>
+          <div id="spHyp" class="text-en" style="font-size:1.1rem; font-weight:800;">—</div>
+          <div id="spDiff" style="font-family:'Outfit'; font-size:.95rem"></div>
+        </div>
+      </div>
+      <div class="row" style="display:flex; gap:10px; margin-top:10px; align-items:center">
+        <select id="spVoice" style="flex:1">
+          <option value="en-US" selected>Voice: en-US</option>
+          <option value="en-GB">Voice: en-GB</option>
+        </select>
+        <span id="spScore" class="chip">Score —</span>
+        <span id="spWarn" class="chip" style="display:none; background:rgba(251,191,36,.12); border-color:rgba(251,191,36,.35); color:#FFE6A6">Speech API not available</span>
+      </div>
+      <div class="row" style="display:flex; gap:10px; margin-top:10px">
+        <button id="spStart" class="btn-primary" style="flex:1" onclick="spStart()"><i class="fas fa-microphone"></i> Start</button>
+        <button id="spStop" class="btn-audio" style="flex:1" onclick="spStop()"><i class="fas fa-square"></i> Stop</button>
+        <button id="spPlayHyp" class="btn-audio" style="flex:1" onclick="spSpeakHyp()"><i class="fas fa-volume-low"></i> Play yours</button>
+      </div>
+      <div class="text-es" style="margin-top:10px; opacity:.85">Consejo: escucha la referencia, repite con ritmo y entonación. Luego compara y corrige.</div>
+    </div>
+  </section>
+</div>
+
+<nav role="tablist" aria-label="Secciones">
+  <div class="nav-shell">
+    <div id="navScroll" class="nav-scroll">
+      <div class="nav-bar" id="navBar">
+        <div class="nav-item active" onclick="switchTab('sec-phrases',this)" role="tab"><i class="fas fa-bolt"></i><span>PHRASES</span></div>
+        <div class="nav-item" onclick="switchTab('sec-stories',this)" role="tab"><i class="fas fa-book-open"></i><span>STORIES</span></div>
+        <div class="nav-item" onclick="switchTab('sec-exercises',this)" role="tab"><i class="fas fa-gamepad"></i><span>PRACTICE</span></div>
+        <div class="nav-item" onclick="switchTab('sec-translator',this)" role="tab"><i class="fas fa-language"></i><span>TRANSLATOR</span></div>
+        <div class="nav-item" onclick="switchTab('sec-cards',this)" role="tab"><i class="fas fa-brain"></i><span>CARDS</span></div>
+        <div class="nav-item" onclick="switchTab('sec-speak',this)" role="tab"><i class="fas fa-microphone"></i><span>SPEAK</span></div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+// Utility: detect if the nav items overflow. If not, center fully. If yes, enable scroll container.
+function reconcileNavLayout(){
+  const scroll = document.getElementById('navScroll');
+  const bar = document.getElementById('navBar');
+  // Measure total width of items
+  const totalW = Array.from(bar.children).reduce((w,el)=>w+el.getBoundingClientRect().width+8, 0);
+  const shellW = scroll.getBoundingClientRect().width;
+  if(totalW <= shellW){
+    // Fits: center (no scroll)
+    bar.style.width = '100%';
+    bar.style.justifyContent = 'center';
+    scroll.style.overflowX = 'hidden';
+  } else {
+    // Overflow: content width and enable scroll
+    bar.style.width = totalW + 'px';
+    bar.style.justifyContent = 'flex-start';
+    scroll.style.overflowX = 'auto';
+  }
+}
+window.addEventListener('resize', reconcileNavLayout);
+window.addEventListener('orientationchange', ()=>setTimeout(reconcileNavLayout, 250));
+
+function scrollNavTo(el){
+  try{ el.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'}); }catch(e){}
+}
+
+// Tabs
+let targetWord=""; let figExpanded=false;
+function switchTab(id, el){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active'); scrollNavTo(el);
+  if(id==='sec-exercises' && !targetWord) loadGeminiEx(); if(id==='sec-cards'){ fcInit(); }
+}
+
+// Figurada (same engine)
+const FIG_DEFAULT={maxLen:240, stress:true};
+function getFigurada(input,opts){ if(!input) return ""; if(typeof opts==='number') opts={maxLen:opts}; const cfg=Object.assign({},FIG_DEFAULT,opts||{});
+  const EX={'the':'da','this':'dis','that':'dat','these':'diz','those':'douz','there':'der','their':'der','they':'dei','them':'dem','hello':'jelou','hi':'jai','hey':'jei','please':'plis','thanks':'zanx','thank':'zank','yes':'ies','no':'nou','ok':'oukei','okay':'oukei','sure':'shur','i':'ai','i\'m':'aim','i\'ve':'aiv','i\'d':'aid','i\'ll':'ail','you':'iu','your':'ior','yours':'iors','we':'wi','he':'ji','she':'shi','it':'it','do':'du','does':'dos','did':'did','to':'tu','too':'tu','two':'tu','of':'ov','for':'for','from':'from','have':'jav','has':'jas','had':'jad','are':'ar','is':'is','was':'wos','were':'wer','be':'bi','been':'bin','being':'biin','with':'wiv','without':'widaut','about':'abaut','because':'bikoz','before':'bifor','after':'after','what':'wat','where':'wer','when':'wen','why':'guai','who':'ju','how':'jau','one':'wan','once':'uans','three':'zri','four':'for','five':'faiv','six':'siks','seven':'seven','eight':'eit','nine':'nain','ten':'ten','though':'dou','through':'tru','thorough':'zoro','thought':'zot','tough':'tof','rough':'rof','cough':'kof','bought':'bot','bough':'bau','enough':'inof','know':'nou','knowledge':'nolich','knife':'naif','knock':'nok','write':'rait','wrong':'rong','answer':'anser','honest':'onest','hour':'aur','heir':'er','schedule':'skedyul','choir':'kuair','colonel':'kernel','yacht':'iot','bury':'beri','busy':'bizi','business':'biznes'};
+  const vowels='aeiou', acc={a:'á',e:'é',i:'í',o:'ó',u:'ú'}; const isW=t=>/[A-Za-z]/.test(t);
+  function stress(w){ const low=w.toLowerCase(); const suf=['tion','sion','cian','graphy','phy','ogy','ic','ity','ety','ible','able']; for(const s of suf){ const idx=low.lastIndexOf(s); if(idx>0){ let cut=w.slice(0,idx); for(let i=cut.length-1;i>=0;i--){ const ch=cut[i].toLowerCase(); if(vowels.includes(ch)){ const m=(w[i]===w[i].toUpperCase()?acc[ch].toUpperCase():acc[ch]); return w.slice(0,i)+m+w.slice(i+1);} } } } for(let i=0;i<w.length;i++){ const ch=w[i].toLowerCase(); if(vowels.includes(ch)){ const m=(w[i]===w[i].toUpperCase()?acc[ch].toUpperCase():acc[ch]); return w.slice(0,i)+m+w.slice(i+1);} } return w; }
+  function rules(word){ let w=word.toLowerCase(); if(EX[w]) return stress(EX[w]); w=w.replace(/^kn/,'n').replace(/^wr/,'r').replace(/^wh/,'w'); w=w.replace(/ought\b/g,'ot').replace(/ough\b/g,'of').replace(/through/g,'tru').replace(/though/g,'dou'); w=w.replace(/tion\b/g,'shon').replace(/sion\b/g,'shon').replace(/ture\b/g,'cher').replace(/sure\b/g,'shur').replace(/cia(n?)\b/g,'sha$1').replace(/ph/g,'f'); w=w.replace(/a(?=[^aeiou]e\b)/g,'ei').replace(/i(?=[^aeiou]e\b)/g,'ai').replace(/o(?=[^aeiou]e\b)/g,'ou').replace(/e(?=[^aeiou]e\b)/g,'i').replace(/u(?=[^aeiou]e\b)/g,'iu'); w=w.replace(/ee/g,'i').replace(/ea/g,'i').replace(/oo/g,'u').replace(/oa/g,'ou').replace(/ow/g,'ou').replace(/ai/g,'ei').replace(/ay/g,'ei').replace(/ou/g,'au'); w=w.replace(/ar\b/g,'ar').replace(/er\b/g,'er').replace(/ir\b/g,'ir').replace(/or\b/g,'or').replace(/ur\b/g,'ur'); w=w.replace(/c(?=[eiy])/g,'s').replace(/c/g,'k'); w=w.replace(/g(?=[eiy])/g,'y'); w=w.replace(/qu/g,'ku').replace(/q/g,'k'); w=w.replace(/^x/g,'eks').replace(/x/g,'ks'); w=w.replace(/^th(?=[aeiou])/,'d').replace(/th/g,'z'); w=w.replace(/^sch/,'sk'); w=w.replace(/igh/g,'ai').replace(/gh\b/g,''); w=w.replace(/ed\b/g,'d').replace(/ing\b/g,'in'); w=w.replace(/y\b/g,'i'); w=w.replace(/z/g,'s'); w=w.replace(/\'/g,''); return stress(w); }
+  const tokens=input.match(/\w+|\s+|[^\w\s]+/g)||[input]; return tokens.map(t=>isW(t)?rules(t):t).join('').slice(0,cfg.maxLen);
+}
+
+// Translator helpers
+function detectLangSimple(text){ const t=(text||'').toLowerCase(); const esWords=/(hola|como|estas|gracias|por|favor|buenos|dias|buenas|tardes|noche|porque|para|que|cuando|donde|quien|yo|tu|usted|nosotros|ellos|muy|bien)/g; const enWords=/(hello|how|are|you|thanks|please|good|morning|afternoon|night|because|for|that|when|where|who|i|we|they|very|well)/g; const hasES=/[áéíóúñü]/i.test(text); const e1=(t.match(esWords)||[]).length; const e2=(t.match(enWords)||[]).length; if(hasES||e1>e2) return 'es'; if(e2>e1) return 'en'; const words=t.split(/\s+/).filter(Boolean); const vowels=words.filter(w=>/[aeiou]$/.test(w)).length; return (vowels>words.length*0.6)?'es':'en'; }
+function swapDirection(){ const sel=document.getElementById('trDirection'); if(sel.value==='es-en') sel.value='en-es'; else if(sel.value==='en-es') sel.value='es-en'; else sel.value='auto'; }
+async function translateText(){ const src=document.getElementById('trInput').value.trim(); const out=document.getElementById('trOut'); const status=document.getElementById('trStatus'); const detectBadge=document.getElementById('trDetect'); const sel=document.getElementById('trDirection'); out.innerText=''; status.textContent='Traduciendo...'; if(!src){ status.textContent='Escribe un texto para traducir.'; detectBadge.innerText='—'; return; } let from,to; if(sel.value==='auto'){ from=detectLangSimple(src); to= from==='es'?'en':'es'; } else { [from,to]=sel.value.split('-'); } detectBadge.innerText=`Detect: ${from.toUpperCase()} → ${to.toUpperCase()}`; async function call(q){ const url=`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${from}|${to}`; const r=await fetch(url); if(!r.ok) throw new Error('HTTP '+r.status); const j=await r.json(); return j?.responseData?.translatedText||''; } try{ const cleaned=src.replace(/\s+/g,' ').trim(); let translated=await call(cleaned); if(!translated || translated.toLowerCase()===cleaned.toLowerCase()){ const src2= cleaned.endsWith('.')? cleaned : cleaned+'.'; translated = await call(src2); } if(!translated) throw new Error('Sin resultado'); out.innerText=translated; status.textContent=`${from.toUpperCase()} ➜ ${to.toUpperCase()} listo.`; }catch(e){ status.textContent='No se pudo traducir ahora. Cambia la dirección o intenta de nuevo.'; } }
+function playAudio(id,rate){ try{ window.speechSynthesis.cancel(); const txt=document.getElementById(id).innerText.replace(/_/g,''); const m=new SpeechSynthesisUtterance(txt); m.lang='en-US'; m.rate=rate; window.speechSynthesis.speak(m);}catch{} }
+function playDuo(en,es){ try{ window.speechSynthesis.cancel(); const mEn=new SpeechSynthesisUtterance(document.getElementById(en).innerText); mEn.lang='en-US'; mEn.onend=()=>{ const mEs=new SpeechSynthesisUtterance(document.getElementById(es).innerText); mEs.lang='es-MX'; window.speechSynthesis.speak(mEs); }; window.speechSynthesis.speak(mEn);}catch{} }
+function playDuoText(){ try{ window.speechSynthesis.cancel(); const src=document.getElementById('trInput').value.trim(); const tgt=document.getElementById('trOut').innerText.trim(); if(!src||!tgt) return; const from=detectLangSimple(src); const to=(from==='es')?'en':'es'; const mSrc=new SpeechSynthesisUtterance(src); mSrc.lang=(from==='es')?'es-MX':'en-US'; mSrc.onend=()=>{ const mTgt=new SpeechSynthesisUtterance(tgt); mTgt.lang=(to==='es')?'es-MX':'en-US'; window.speechSynthesis.speak(mTgt); }; window.speechSynthesis.speak(mSrc); }catch{} }
+
+// Exercises (offline demo)
+async function loadGeminiEx(){ try{ const res=await fetch('https://api.adviceslip.com/advice'); const d=await res.json(); const txt=d.slip.advice; document.getElementById('exEn').innerText=txt.replace(/(\w{6,})/, '____'); document.getElementById('exFig').innerText=getFigurada(txt,{maxLen:240}); document.getElementById('exEs').innerText='(Tip) Translate it yourself first.'; const match=txt.match(/\w{6,}/); targetWord=(match?match[0]:'practice').toLowerCase(); }catch(e){ document.getElementById('exEn').innerText='No se pudo generar el ejercicio.'; }}
+function checkEx(){ const val=document.getElementById('exInput').value.trim().toLowerCase(); const fb=document.getElementById('feedback'); if(val===targetWord){ fb.style.display='block'; fb.style.color='#97F4C3'; fb.innerText='✨ PERFECTO'; confetti({ particleCount:80, spread:60, origin:{y:.85}, colors:['#7C7CFF','#00E5FF']}); } else { fb.style.display='block'; fb.style.color='#F9A8A8'; fb.innerHTML=`Incorrect. It was: <span style='color:#fff;font-weight:800'>${targetWord.toUpperCase()}</span>`; }}
+
+// Loaders
+async function loadPhrase(){ document.getElementById('phEn').style.opacity='.6'; try{ const res=await fetch('https://api.adviceslip.com/advice'); const d=await res.json(); document.getElementById('phEn').innerText=d.slip.advice; document.getElementById('phFig').innerText=getFigurada(d.slip.advice,{maxLen:240}); const t=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(d.slip.advice)}&langpair=en|es`).then(r=>r.json()); document.getElementById('phEs').innerText=t.responseData.translatedText; }catch(e){} finally{ document.getElementById('phEn').style.opacity='1'; } }
+async function loadStory(){ document.getElementById('stEn').style.opacity='.6'; try{ const res=await fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary'); const d=await res.json(); const text=d.extract; document.getElementById('stEn').innerText=text; document.getElementById('stFig').innerText=getFigurada(text,{maxLen: figExpanded?4000:260}); const t=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.substring(0,400))}&langpair=en|es`).then(r=>r.json()); document.getElementById('stEs').innerText=t.responseData.translatedText; }catch(e){} finally{ document.getElementById('stEn').style.opacity='1'; } }
+function toggleFig(){ const btn=document.getElementById('stFigToggle'); figExpanded=!figExpanded; if(btn) btn.innerHTML = figExpanded? '<i class="fas fa-angles-up"></i> Ver menos' : '<i class="fas fa-angles-down"></i> Ver más'; const stText=document.getElementById('stEn').innerText; document.getElementById('stFig').innerText=getFigurada(stText,{maxLen: figExpanded?4000:260}); }
+
+// Cards demo
+let fcDeck=[{en:'get',es:'obtener',ex:'I get up at 7 am.'}], fcCurrent=fcDeck[0];
+function fcInit(){ document.getElementById('fcFront').innerText=fcCurrent.en; document.getElementById('fcBack').innerText=fcCurrent.es; document.getElementById('fcEx').innerText=getFigurada(fcCurrent.ex,{maxLen:200}); }
+function fcSpeak(){ const m=new SpeechSynthesisUtterance(fcCurrent.en+' . '+(fcCurrent.ex||'')); m.lang='en-US'; window.speechSynthesis.speak(m); }
+function fcToggle(){ const elB=document.getElementById('fcBack'); elB.style.display=(elB.style.display==='none'||!elB.style.display)?'block':'none'; }
+function fcSkip(){}
+function fcRate(){}
+function fcAdd(){ const en=document.getElementById('fcNewEn').value.trim(); const es=document.getElementById('fcNewEs').value.trim(); const ex=document.getElementById('fcNewEx').value.trim(); if(!en||!es) return; fcDeck.push({en,es,ex}); fcCurrent=fcDeck[fcDeck.length-1]; fcInit(); document.getElementById('fcNewEn').value=''; document.getElementById('fcNewEs').value=''; document.getElementById('fcNewEx').value=''; }
+function fcReset(){ fcDeck=[{en:'get',es:'obtener',ex:'I get up at 7 am.'}]; fcCurrent=fcDeck[0]; fcInit(); }
+
+// Speak
+let spRec=null; let spHypText="";
+function spUseSuggest(){ const samples=["How are you doing today?","I really like your idea for the project.","Could you please repeat that a bit slower?","Practice makes perfect if you do it every day.","We will meet at seven in the evening."]; const s=samples[Math.floor(Math.random()*samples.length)]; document.getElementById('spInput').value=s; spSetRef(); }
+function spSetRef(){ const v=document.getElementById('spInput').value.trim(); document.getElementById('spRef').innerText=v||'—'; document.getElementById('spFig').innerText=v? getFigurada(v,{maxLen:400}):'—'; document.getElementById('spDiff').innerHTML=''; document.getElementById('spHyp').innerText='—'; document.getElementById('spScore').innerText='Score —'; }
+function spSpeakRef(){ const txt=document.getElementById('spInput').value.trim(); if(!txt) return; window.speechSynthesis.cancel(); const m=new SpeechSynthesisUtterance(txt); m.lang=document.getElementById('spVoice').value; m.rate=1; window.speechSynthesis.speak(m); }
+function spSpeakHyp(){ const txt=spHypText||document.getElementById('spHyp').innerText.trim(); if(!txt||txt==='—') return; window.speechSynthesis.cancel(); const m=new SpeechSynthesisUtterance(txt); m.lang=document.getElementById('spVoice').value; m.rate=1; window.speechSynthesis.speak(m); }
+function spSupports(){ const ok=('webkitSpeechRecognition' in window)||('SpeechRecognition' in window); document.getElementById('spWarn').style.display = ok? 'none':'inline-block'; return ok; }
+function spStart(){ spSetRef(); if(!spSupports()) return; const SR=window.SpeechRecognition||window.webkitSpeechRecognition; spRec=new SR(); spRec.lang='en-US'; spRec.continuous=true; spRec.interimResults=true; let finalText=''; document.getElementById('spHyp').innerText='Listening...'; spRec.onresult=(e)=>{ let interim=''; for(let i=e.resultIndex;i<e.results.length;i++){ const r=e.results[i]; if(r.isFinal){ finalText += r[0].transcript+' '; } else { interim += r[0].transcript; } } const hyp=(finalText+interim).trim(); spHypText=hyp; document.getElementById('spHyp').innerText=hyp||'—'; spScoreAndDiff(); }; spRec.onerror=()=>{ document.getElementById('spHyp').innerText='(Error / try again)'; }; spRec.start(); }
+function spStop(){ if(spRec){ try{ spRec.stop(); }catch{} } }
+function normWords(s){ return (s||'').toLowerCase().replace(/[^a-z\s]/g,'').trim().split(/\s+/).filter(Boolean); }
+function lcsTable(a,b){ const n=a.length,m=b.length; const dp=Array.from({length:n+1},()=>Array(m+1).fill(0)); for(let i=1;i<=n;i++){ for(let j=1;j<=m;j++){ dp[i][j]=(a[i-1]===b[j-1])? dp[i-1][j-1]+1 : Math.max(dp[i-1][j], dp[i][j-1]); } } return dp; }
+function backtrackDiff(a,b,dp){ const out=[]; let i=a.length,j=b.length; while(i>0||j>0){ if(i>0&&j>0&&a[i-1]===b[j-1]){ out.push({t:'ok',w:a[i-1]}); i--; j--; } else if(j>0 && (i===0 || dp[i][j-1]>=dp[i-1][j])) { out.push({t:'extra', w:b[j-1]}); j--; } else { out.push({t:'miss', w:a[i-1]}); i--; } } return out.reverse(); }
+function spScoreAndDiff(){ const ref=normWords(document.getElementById('spRef').innerText); const hyp=normWords(spHypText); if(ref.length===0){ document.getElementById('spScore').innerText='Score —'; document.getElementById('spDiff').innerHTML=''; return; } const dp=lcsTable(ref,hyp); const lcs=dp[ref.length][hyp.length]; const wer=(ref.length - lcs + Math.max(0,hyp.length - lcs)) / Math.max(1,ref.length); const score=Math.max(0, Math.round(100*(1-wer))); document.getElementById('spScore').innerText='Score '+score+'%'; const diff=backtrackDiff(ref,hyp,dp); document.getElementById('spDiff').innerHTML = diff.map(p=>`<span class='${p.t}' style='margin-right:6px'>${p.w}</span>`).join(' '); }
+
+// Init
+window.onload=()=>{ loadPhrase(); loadStory(); spUseSuggest(); reconcileNavLayout(); };
+</script>
+</body>
+</html>
