@@ -1058,64 +1058,116 @@ loadExercise = async ()=>{
 </script>
 <script>
 /* =====================================================
-   ELITE AUDIO · SAFE UI VERSION
+   ELITE FLOATING AUDIO ICON · vFINAL
 ===================================================== */
 
 (function(){
 
-window.EliteAudio = {
-  enabled:false
-};
-
 let audioUnlocked = false;
+let btn;
 
-/* ---------- botón pequeño dentro del speak ---------- */
-function createEnableButton(){
-  if(document.getElementById("eliteEnableAudio")) return;
+/* =================== CREAR ICONO =================== */
+function createFloatingIcon(){
+  if(document.getElementById("eliteFloatAudio")) return;
 
-  const btn = document.createElement("button");
-  btn.id = "eliteEnableAudio";
-  btn.innerText = "🔊 Activar audio";
+  btn = document.createElement("div");
+  btn.id = "eliteFloatAudio";
+  btn.innerHTML = "🔊";
+
   btn.style.cssText = `
-    margin:12px auto;
-    padding:10px 14px;
-    border:none;
-    border-radius:14px;
-    background:#5f7cff;
-    color:white;
-    font-weight:800;
-    display:block;
-    width:fit-content;
+    position:fixed;
+    top:${localStorage.eliteAudioTop || "60%"};
+    left:${localStorage.eliteAudioLeft || "70%"};
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#6b7cff,#35e3ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.6rem;
+    box-shadow:0 12px 30px rgba(0,0,0,.5);
+    z-index:9999;
+    cursor:pointer;
+    user-select:none;
+    touch-action:none;
   `;
 
-  btn.addEventListener("click",()=>{
-    const u = new SpeechSynthesisUtterance("Audio enabled");
-    u.lang = "en-US";
-    speechSynthesis.cancel();
-    speechSynthesis.speak(u);
-    audioUnlocked = true;
-    btn.style.display = "none";
-  });
+  document.body.appendChild(btn);
+  enableDrag(btn);
 
-  document.getElementById("speakArea")?.appendChild(btn);
+  btn.addEventListener("click",unlockAudio);
 }
 
-/* ---------- click palabra ---------- */
+/* =================== AUDIO =================== */
+function unlockAudio(){
+  if(audioUnlocked) return;
+
+  const u = new SpeechSynthesisUtterance("Audio enabled");
+  u.lang = "en-US";
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+
+  audioUnlocked = true;
+  btn.style.opacity = "0.7";
+}
+
+/* =================== DRAG =================== */
+function enableDrag(el){
+  let startX, startY, dragging=false;
+
+  const start = e=>{
+    dragging=true;
+    const t = e.touches ? e.touches[0] : e;
+    startX = t.clientX - el.offsetLeft;
+    startY = t.clientY - el.offsetTop;
+  };
+
+  const move = e=>{
+    if(!dragging) return;
+    const t = e.touches ? e.touches[0] : e;
+
+    let x = t.clientX - startX;
+    let y = t.clientY - startY;
+
+    const maxX = window.innerWidth - el.offsetWidth - 10;
+    const maxY = window.innerHeight - el.offsetHeight - 110; // evita barra inferior
+
+    x = Math.max(10, Math.min(x, maxX));
+    y = Math.max(10, Math.min(y, maxY));
+
+    el.style.left = x+"px";
+    el.style.top = y+"px";
+  };
+
+  const end = ()=>{
+    dragging=false;
+    localStorage.eliteAudioLeft = el.style.left;
+    localStorage.eliteAudioTop = el.style.top;
+  };
+
+  el.addEventListener("mousedown",start);
+  el.addEventListener("touchstart",start,{passive:true});
+  document.addEventListener("mousemove",move);
+  document.addEventListener("touchmove",move,{passive:true});
+  document.addEventListener("mouseup",end);
+  document.addEventListener("touchend",end);
+}
+
+/* =================== CLICK PALABRAS =================== */
 document.addEventListener("click",e=>{
   if(!audioUnlocked) return;
-
-  const w = e.target;
-  if(!w.classList.contains("elite-word")) return;
+  if(!e.target.classList.contains("elite-word")) return;
 
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(w.innerText.trim());
+  const u = new SpeechSynthesisUtterance(e.target.innerText.trim());
   u.lang = "en-US";
   u.rate = 0.9;
   speechSynthesis.speak(u);
 });
 
-/* ---------- iniciar ---------- */
-window.addEventListener("load",createEnableButton);
+/* =================== INIT =================== */
+window.addEventListener("load",createFloatingIcon);
 
 })();
 </script>
