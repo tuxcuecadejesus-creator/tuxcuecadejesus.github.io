@@ -1057,104 +1057,59 @@ loadExercise = async ()=>{
 };
 </script>
 <script>
-/* =========================================================
-   SPEAK COMPATIBILITY LAYER · SAFE MODE
-   - No sobrescribe startSpeak
-   - No rompe otros scripts
-   - Funciona por observación
-========================================================= */
+/* =====================================================
+   ELITE WORD AUDIO · MOBILE + PC SAFE
+===================================================== */
 
 (function(){
 
-/* ---------- TTS palabra ---------- */
-function speakWord(word){
-  if(!word) return;
-  const u = new SpeechSynthesisUtterance(word);
+let selectedWord = "";
+
+/* ---------- crear botón fijo ---------- */
+const audioBtn = document.createElement("button");
+audioBtn.innerHTML = "🔊 Escuchar palabra";
+audioBtn.style.cssText = `
+  display:none;
+  margin-top:12px;
+  padding:12px 18px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(135deg,#6a7cff,#3be6ff);
+  color:white;
+  font-weight:800;
+  font-size:15px;
+`;
+audioBtn.onclick = () => {
+  if(!selectedWord) return;
+  speechSynthesis.cancel();
+  speechSynthesis.resume(); // 🔥 CRÍTICO
+  const u = new SpeechSynthesisUtterance(selectedWord);
   u.lang = "en-US";
   u.rate = 0.9;
-  speechSynthesis.cancel();
   speechSynthesis.speak(u);
-}
+};
 
-/* ---------- normalizar ---------- */
-function norm(t){
-  return t
-    .toLowerCase()
-    .replace(/[^a-z\s]/g,"")
-    .split(/\s+/)
-    .filter(Boolean);
-}
+document.body.appendChild(audioBtn);
 
-/* ---------- procesar resultado ---------- */
-function enhanceSpeakResult(){
-  if(!window.spTarget || !window.spResult) return;
+/* ---------- seleccionar palabra ---------- */
+document.addEventListener("click",e=>{
+  const w = e.target;
+  if(!w.classList.contains("elite-word")) return;
 
-  const target = spTarget.innerText.trim();
-  if(!target) return;
+  selectedWord = w.innerText.trim();
 
-  // si ya está procesado, no repetir
-  if(spResult.querySelector(".elite-word")) return;
-
-  const spokenRaw = spResult.innerText.replace("🗣","").trim();
-  if(!spokenRaw) return;
-
-  const t = norm(target);
-  const s = norm(spokenRaw);
-
-  let html = "";
-  let okCount = 0;
-
-  t.forEach((w,i)=>{
-    const ok = s[i] === w;
-    if(ok) okCount++;
-
-    html += `
-      <span
-        class="elite-word"
-        style="
-          padding:4px 6px;
-          margin:3px;
-          display:inline-block;
-          border-radius:6px;
-          font-weight:600;
-          ${ok
-            ? "background:#2bff8830;color:#baffd5;"
-            : "background:#ff5a5a40;color:#ffd6d6;cursor:pointer;text-decoration:underline;"
-          }
-        "
-        ${ok ? "" : `onclick="(${speakWord.toString()})('${w}')"`}>
-        ${w}
-      </span>
-    `;
+  document.querySelectorAll(".elite-word").forEach(x=>{
+    x.style.outline = "";
   });
 
-  const percent = Math.round((okCount / t.length) * 100);
-
-  spResult.innerHTML = `
-    <div style="margin-bottom:6px">🗣 <b>${spokenRaw}</b></div>
-    <div style="line-height:2">${html}</div>
-    <div style="margin-top:8px;font-weight:900">
-      🎯 Pronunciation:
-      <span style="color:${percent>=70?'#2bff88':'#ff5a5a'}">
-        ${percent}%
-      </span>
-    </div>
-  `;
-}
-
-/* ---------- OBSERVADOR ---------- */
-const observer = new MutationObserver(()=>{
-  enhanceSpeakResult();
+  w.style.outline = "2px solid #3be6ff";
+  audioBtn.style.display = "inline-block";
 });
 
-/* ---------- iniciar ---------- */
-function init(){
-  if(!window.spResult) return;
-  observer.observe(spResult,{childList:true,subtree:true});
-}
-
-document.addEventListener("DOMContentLoaded",init);
-setTimeout(init,1500);
+/* ---------- desbloqueo audio (ANDROID FIX) ---------- */
+document.addEventListener("touchstart",()=>{
+  speechSynthesis.resume();
+},{once:true});
 
 })();
 </script>
