@@ -190,70 +190,15 @@ const trOutput = document.getElementById("trOutput");
 const trFig = document.getElementById("trFig");
 const trDir = {value:"en-es"}; // formato: "en-es"
 
-/* ==================== PRONUNCIACIÓN FIGURADA AVANZADA ==================== */
-function figSpanishAdvanced(text){
-    if(!text) return "";
-    let t = text.toLowerCase();
-
-    // --- CONSONANTES Y COMBINACIONES ---
-    const consonantMap = {
-        "th":"z",
-        "sh":"sh",
-        "ch":"ch",
-        "ph":"f",
-        "ck":"k",
-        "gh":"g",
-        "wr":"r",
-        "kn":"n",
-        "qu":"ku",
-        "wh":"gu"
-    };
-    for(const k in consonantMap){ t = t.replace(new RegExp(k,"g"), consonantMap[k]); }
-
-    // --- SUFIJOS COMUNES ---
-    t = t.replace(/tion\b/g,"shon")
-         .replace(/sion\b/g,"shon")
-         .replace(/cial\b/g,"shal")
-         .replace(/tial\b/g,"shal")
-         .replace(/ing\b/g,"in")
-         .replace(/ed\b/g,"d")
-         .replace(/ly\b/g,"li")
-         .replace(/ous\b/g,"os")
-         .replace(/able\b/g,"eibol")
-         .replace(/ment\b/g,"ment");
-
-    // --- VOCALES Y DIPTONGOS ---
-    const vowelMap = {
-        "ee":"i","ea":"i","ie":"ai","igh":"ai",
-        "ai":"ei","ay":"ei","oa":"ou","ow":"au",
-        "ou":"au","oo":"u","au":"au"
-    };
-    for(const k in vowelMap){ t = t.replace(new RegExp(k,"g"),vowelMap[k]); }
-
-    // --- LETRAS INDIVIDUALES ---
-    t = t.replace(/a/g,"a").replace(/e/g,"e").replace(/i/g,"i").replace(/o/g,"o").replace(/u/g,"u");
-
-    // --- SEPARACIÓN DE SÍLABAS (aproximada) ---
-    t = t.replace(/\b([bcdfghjklmnpqrstvwxyz]*)([aeiou]+)([bcdfghjklmnpqrstvwxyz]*)\b/g,
-        (match,prefix,vowel,suffix)=>`${prefix}${vowel}${suffix}`);
-
-    // --- ELIMINAR CARACTERES NO DESEADOS ---
-    t = t.replace(/[^a-záéíóúñ\s]/gi,"");
-
-    // --- LIMPIAR ESPACIOS ---
-    t = t.replace(/\s+/g," ").trim();
-
-    return t;
-}
-
-/* ==================== TRADUCCIÓN SMART MULTI-FALLBACK ==================== */
+/* ==================== TRADUCCIÓN SMART CON MÚLTIPLES OPCIONES ==================== */
 async function doTranslate(){
     const [from,to] = trDir.value.split("-");
     trOutput.innerText = "Translating...";
     trOutput.innerText = await translateMultiFallback(trInput.value, from, to);
-    trFig.innerText = to==="es" ? figSpanishAdvanced(trOutput.innerText) : "";
+    trFig.innerText = to==="es" ? figSpanish(trOutput.innerText) : "";
 }
 
+// Función principal con varios traductores
 async function translateMultiFallback(text, from, to){
     const translators = [
         translateApertium,
@@ -300,26 +245,16 @@ async function translateLibre(text, from, to){
     return d.translatedText || "";
 }
 
-// 4. DeepL Demo (experimental)
+// 4. DeepL Demo
 async function translateDeepLDemo(text, from, to){
-    // Solo demo pública, puede fallar
-    try{
-        const r = await fetch(`https://www2.deepl.com/jsonrpc?method=LMT_handle_jobs`,{
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({
-                jsonrpc:"2.0",
-                method:"LMT_handle_jobs",
-                params:{
-                    jobs:[{kind:"default",raw_en_sentence:text}],
-                    lang:{source_lang:from.toUpperCase(),target_lang:to.toUpperCase()}
-                },
-                id:1
-            })
-        });
-        const d = await r.json();
-        return d.result?.translations?.[0]?.beams?.[0]?.postprocessed_sentence || "";
-    }catch{return "";}
+    // Usamos demo pública de DeepL (solo para testing, puede fallar)
+    const r = await fetch(`https://www2.deepl.com/jsonrpc?method=LMT_handle_jobs`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({jsonrpc:"2.0",method:"LMT_handle_jobs",params:{jobs:[{kind:"default",raw_en_sentence:text}],lang:{source_lang:from.toUpperCase(),target_lang:to.toUpperCase()}},id:1})
+    });
+    const d = await r.json();
+    return d.result?.translations?.[0]?.beams?.[0]?.postprocessed_sentence || "";
 }
 
 // 5. Fallback local
@@ -327,16 +262,34 @@ async function translateLocal(text, from, to){
     return `[LOCAL TRANSLATION UNAVAILABLE] ${text}`;
 }
 
+/* ==================== PRONUNCIACIÓN FIGURADA AL ESPAÑOL ==================== */
+function figSpanish(text){
+    let t = text.toLowerCase();
+
+    // reemplazos fonéticos
+    t = t.replace(/ph/g,"f").replace(/th/g,"z").replace(/ch/g,"ch");
+    t = t.replace(/sh/g,"sh").replace(/ck/g,"k").replace(/gh/g,"g");
+    t = t.replace(/tion\b/g,"shon").replace(/sion\b/g,"shon").replace(/cial\b/g,"shal").replace(/tial\b/g,"shal");
+    t = t.replace(/ing\b/g,"in").replace(/ed\b/g,"d").replace(/ly\b/g,"li").replace(/ous\b/g,"os");
+    t = t.replace(/ee|ea/g,"i").replace(/ie|igh/g,"ai").replace(/ai|ay/g,"ei").replace(/oa/g,"ou").replace(/ow|ou/g,"au").replace(/oo/g,"u");
+
+    t = t.replace(/\b([bcdfghjklmnpqrstvwxyz]*)([aeiou]+)([bcdfghjklmnpqrstvwxyz]*)\b/g,
+        (match,prefix,vowel,suffix)=>`${prefix}${vowel}${suffix}`);
+    
+    t = t.replace(/[^a-záéíóúñ\s]/gi,"");
+    t = t.replace(/\s+/g," ").trim();
+    return t;
+}
+
 /* ==================== EJEMPLO DE USO ==================== */
-async function testTranslator(){
+async function testTranslate(){
     trInput.value = "Hello, how are you?";
     await doTranslate();
-    console.log("Original:", trInput.value);
     console.log("Traducido:", trOutput.innerText);
     console.log("Figurado:", trFig.innerText);
 }
 
-// testTranslator(); // Descomenta para probar
+// testTranslate(); // Descomenta para probar
 </script>
 </body>
 </html>
