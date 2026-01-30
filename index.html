@@ -1252,6 +1252,172 @@ async function translate(text){
   return educationalFallback();
 }
 </script>
+<script>
+/* =========================================================
+   AUTO-HOOK EXERCISE ENGINE · FINAL
+   Funciona con botón existente SIN tocar HTML
+========================================================= */
+
+/* ================= CONFIG ================= */
+const EX_ENGINE = {
+  geminiKey: window.GEMINI_API_KEY || null,
+  containerId: "exercise-container"
+};
+
+/* ================= UTIL ================= */
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+/* ================= GEMINI ================= */
+async function exerciseFromGemini(){
+  if(!EX_ENGINE.geminiKey) return null;
+  try{
+    const r = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" +
+      EX_ENGINE.geminiKey,
+      {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+          contents:[{
+            parts:[{
+              text:"Create a short English learning exercise with question and answer."
+            }]
+          }]
+        })
+      }
+    );
+    const d = await r.json();
+    const txt=d.candidates?.[0]?.content?.parts?.[0]?.text;
+    if(!txt) return null;
+    return { type:"gemini", content:txt };
+  }catch{ return null; }
+}
+
+/* ================= INTERNET ================= */
+async function exerciseFromInternet(){
+  const sources = [
+    async()=>{
+      const r=await fetch("https://api.quotable.io/random");
+      const d=await r.json();
+      return {
+        type:"translate",
+        instruction:"Translate the sentence into Spanish.",
+        question:d.content
+      };
+    },
+    async()=>{
+      const r=await fetch("https://opentdb.com/api.php?amount=1&type=multiple");
+      const d=await r.json();
+      const q=d.results?.[0];
+      if(!q) return null;
+      return {
+        type:"choice",
+        question:q.question,
+        options:[q.correct_answer,...q.incorrect_answers].sort(()=>Math.random()-0.5),
+        answer:q.correct_answer
+      };
+    },
+    async()=>{
+      const r=await fetch("https://baconipsum.com/api/?paras=1");
+      const d=await r.json();
+      return {
+        type:"reading",
+        instruction:"Read and understand the text.",
+        text:d[0]
+      };
+    }
+  ];
+
+  for(const s of sources){
+    try{
+      const e=await s();
+      if(e) return e;
+    }catch{}
+  }
+  return null;
+}
+
+/* ================= MOTOR ================= */
+async function generateExerciseAuto(){
+  const g=await exerciseFromGemini();
+  if(g) return g;
+
+  const i=await exerciseFromInternet();
+  if(i) return i;
+
+  return {
+    type:"translate",
+    instruction:"Translate the sentence into Spanish.",
+    question:"Learning English helps you communicate better."
+  };
+}
+
+/* ================= RENDER ================= */
+function renderExercise(ex){
+  const el=document.getElementById(EX_ENGINE.containerId);
+  if(!el) return;
+
+  el.innerHTML="";
+
+  if(ex.type==="gemini"){
+    el.innerHTML=`<pre>${ex.content}</pre>`;
+    return;
+  }
+
+  if(ex.type==="choice"){
+    el.innerHTML=`
+      <p>${ex.question}</p>
+      ${ex.options.map(o=>`<button>${o}</button>`).join("")}
+    `;
+    return;
+  }
+
+  if(ex.type==="reading"){
+    el.innerHTML=`
+      <p>${ex.instruction}</p>
+      <p>${ex.text}</p>
+    `;
+    return;
+  }
+
+  el.innerHTML=`
+    <p>${ex.instruction}</p>
+    <p><strong>${ex.question}</strong></p>
+  `;
+}
+
+/* ================= API GLOBAL ================= */
+async function generateNewExercise(){
+  const ex=await generateExerciseAuto();
+  renderExercise(ex);
+}
+
+/* ================= AUTO-HOOK BOTÓN EXISTENTE ================= */
+document.addEventListener("DOMContentLoaded", async ()=>{
+  // 1️⃣ Genera uno al cargar
+  generateNewExercise();
+
+  // 2️⃣ Hook por texto del botón
+  document.body.addEventListener("click", e=>{
+    const t=(e.target.innerText||"").toLowerCase();
+    if(t.includes("nuevo") || t.includes("exercise")){
+      generateNewExercise();
+    }
+  });
+
+  // 3️⃣ Hook por funciones existentes
+  const hooks=["newExercise","nuevoEjercicio","nextExercise"];
+  hooks.forEach(fn=>{
+    if(typeof window[fn]==="function"){
+      const old=window[fn];
+      window[fn]=function(){
+        generateNewExercise();
+        try{ old(); }catch{}
+      };
+    }
+  });
+});
+</script>
 </body>
 
 </html>
