@@ -1057,52 +1057,113 @@ loadExercise = async ()=>{
 };
 </script>
 <script>
-/* ======================================================
-   SPEAK · PRONUNCIACIÓN AL TOCAR PALABRA INCORRECTA
-   v1.0 DEFINITIVO
-====================================================== */
+/* =========================================================
+   SPEAK ENGINE v2.0
+   - Marca palabras correctas / incorrectas
+   - Palabras rojas clickeables con audio
+   - Porcentaje de pronunciación
+========================================================= */
 
-/* ---- reproducir palabra ---- */
+/* --------- TTS palabra --------- */
 function speakWord(word){
   if(!word) return;
   const u = new SpeechSynthesisUtterance(word);
   u.lang = "en-US";
   u.rate = 0.9;
-  u.pitch = 1;
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
 
-/* ---- observar resultados de SPEAK ---- */
-const speakObserver = new MutationObserver(()=>{
-  enableClickableErrors();
-});
-
-/* ---- activar observer ---- */
-(function initSpeakWordAudio(){
-  const target = document.getElementById("spResult");
-  if(!target) return;
-  speakObserver.observe(target,{childList:true,subtree:true});
-})();
-
-/* ---- hacer clickeables las palabras malas ---- */
-function enableClickableErrors(){
-  const badWords = document.querySelectorAll(
-    "#spResult .bad, #spResult .wrong"
-  );
-
-  badWords.forEach(span=>{
-    if(span.dataset.audioReady) return;
-
-    span.dataset.audioReady = "1";
-    span.style.cursor = "pointer";
-    span.style.textDecoration = "underline";
-
-    span.addEventListener("click",()=>{
-      speakWord(span.innerText.trim());
-    });
-  });
+/* --------- normalizar texto --------- */
+function normalize(text){
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s]/g,"")
+    .split(/\s+/)
+    .filter(Boolean);
 }
+
+/* --------- comparar pronunciación --------- */
+function evaluatePronunciation(target, spoken){
+  const t = normalize(target);
+  const s = normalize(spoken);
+
+  let html = "";
+  let correct = 0;
+
+  t.forEach((word,i)=>{
+    const ok = s[i] === word;
+    if(ok) correct++;
+
+    html += `<span 
+      class="${ok ? "good" : "bad"}"
+      style="
+        padding:4px 6px;
+        border-radius:6px;
+        margin:2px;
+        display:inline-block;
+        ${ok
+          ? "background:#2bff8830;color:#baffd5;"
+          : "background:#ff5a5a40;color:#ffd6d6;cursor:pointer;text-decoration:underline;"
+        }
+      "
+      ${ok ? "" : `onclick="speakWord('${word}')"`}
+    >${word}</span> `;
+  });
+
+  const percent = Math.round((correct / t.length) * 100);
+
+  spResult.innerHTML = `
+    <div style="line-height:2">${html}</div>
+    <div style="margin-top:12px;font-weight:900;color:#7bffbf">
+      🎯 Pronunciation: ${percent}%
+    </div>
+  `;
+}
+
+/* =========================================================
+   HOOK DIRECTO AL SPEECH RECOGNITION EXISTENTE
+========================================================= */
+
+/* sobrescribimos SOLO el onresult */
+const _startSpeak = startSpeak;
+startSpeak = function(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    spResult.innerText = "❌ Navegador no soporta Speech";
+    return;
+  }
+
+  if(window._rec){
+    window._rec.stop();
+    window._rec = null;
+    return;
+  }
+
+  const rec = new SR();
+  window._rec = rec;
+
+  rec.lang = "en-US";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+
+  spResult.innerText = "🎙️ Listening...";
+
+  rec.onresult = e=>{
+    const spoken = e.results[0][0].transcript;
+    evaluatePronunciation(spTarget.innerText, spoken);
+  };
+
+  rec.onerror = e=>{
+    spResult.innerText = "❌ Mic error: " + e.error;
+  };
+
+  rec.onend = ()=>{
+    window._rec = null;
+  };
+
+  rec.start();
+};
 </script>
 </body>
 </html>
