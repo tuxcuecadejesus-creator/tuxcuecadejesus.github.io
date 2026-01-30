@@ -6,6 +6,7 @@
 <title>Elite English Pro · Ultimate</title>
 
 <!-- ICONS & FONTS -->
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@700;900&display=swap" rel="stylesheet">
 
@@ -681,28 +682,44 @@ async function loadExercise(){
   });
 }
 </script>
+
+
+<!-- ================== LIBRERÍAS EXTERNAS ================== -->
+<script src="https://unpkg.com/compromise@latest/builds/compromise.min.js"></script>
+<script src="https://unpkg.com/compromise-sentences@latest/builds/compromise-sentences.min.js"></script>
+
 <script>
 /* =========================================================
-   CONTROLLED ENGLISH ENGINE v4.0 (DEFINITIVO)
+   CONTROLLED ENGLISH ENGINE v8.0
+   SUPER · ULTRA · PREMIUM · DEFINITIVE
 ========================================================= */
 
-/* ---------- GRAMMAR BLUEPRINT ---------- */
-const Grammar = {
-  subjects: [
-    {t:"I", p:1}, {t:"You", p:2}, {t:"He", p:3},
-    {t:"She", p:3}, {t:"We", p:1}, {t:"They", p:2}
+/* ================== CONFIGURACIÓN ================== */
+const ENGINE_CONFIG = {
+  level: "A2",        // A1 | A2 | B1
+  mode: "STRICT",     // STRICT | SMART | FREE
+  exercises: true,
+  aiAssist: true
+};
+
+/* ================== BASE DE DATOS ================== */
+const DB = {
+  subjects:[
+    {t:"I",p:1},{t:"You",p:2},{t:"He",p:3},
+    {t:"She",p:3},{t:"We",p:1},{t:"They",p:2}
   ],
-  verbs: [
-    {b:"eat", s:"eats"},
-    {b:"study", s:"studies"},
-    {b:"work", s:"works"},
-    {b:"play", s:"plays"},
-    {b:"read", s:"reads"},
-    {b:"like", s:"likes"},
-    {b:"practice", s:"practices"},
-    {b:"go", s:"goes"}
+  verbs:[
+    {b:"eat",s:"eats"},
+    {b:"study",s:"studies"},
+    {b:"work",s:"works"},
+    {b:"play",s:"plays"},
+    {b:"read",s:"reads"},
+    {b:"like",s:"likes"},
+    {b:"practice",s:"practices"},
+    {b:"go",s:"goes"}
   ],
-  objects: [
+  adverbs:["always","usually","often"],
+  complements:[
     "English every day",
     "at school",
     "in the morning",
@@ -712,81 +729,125 @@ const Grammar = {
   ]
 };
 
-/* ---------- STRONG SANITIZER ---------- */
-function sanitizeSentence(t){
-  if(!t) return null;
+const rnd = a => a[Math.floor(Math.random()*a.length)];
 
+/* =========================================================
+   LAYER 1 — SANITIZER (HARD)
+========================================================= */
+function sanitize(t){
+  if(!t || typeof t!=="string") return null;
   t = t.replace(/\n/g," ").replace(/\s+/g," ").trim();
-
-  // cortar si hay varias frases
   t = t.split(/[!?]/)[0];
-  if(t.match(/\./g)?.length>1){
-    t = t.split(".")[0] + ".";
-  }
-
-  // blacklist EXTREMA
-  const badPatterns = [
-    /don't need to/i,
-    /only the ones/i,
-    /if you're feeling/i,
-    /just kidding/i,
-    /you want to keep/i,
-    /almost always/i,
-    /obviously/i,
-    /trust me/i
-  ];
-  for(const p of badPatterns){
-    if(p.test(t)) return null;
-  }
-
-  // caracteres raros
   if(!/^[A-Za-z0-9 ,.'-]+$/.test(t)) return null;
-
-  return t.endsWith(".") ? t : t+".";
+  return t.endsWith(".") ? t : t + ".";
 }
 
-/* ---------- STRUCTURE VALIDATION ---------- */
-function validateStructure(t){
-  if(!t) return false;
+/* =========================================================
+   LAYER 2 — AI PARSER (COMPROMISE)
+========================================================= */
+function aiParse(t){
+  try{
+    const d = nlp(t);
+    return {
+      subject: d.match('#Pronoun').first().text(),
+      verb: d.verbs().first().text(),
+      negative: d.has('not'),
+      question: d.sentences().isQuestion().length > 0
+    };
+  }catch{
+    return null;
+  }
+}
+
+/* =========================================================
+   LAYER 3 — STRICT PARSER
+========================================================= */
+function strictParse(t){
   const w = t.replace(".","").split(" ");
-  if(w.length < 4 || w.length > 9) return false;
+  const s = DB.subjects.find(x=>x.t===w[0]);
+  if(!s) return null;
 
-  if(!Grammar.subjects.some(s=>w[0]===s.t)) return false;
-  if(!Grammar.verbs.some(v=>w.includes(v.b)||w.includes(v.s))) return false;
+  let i = 1;
+  let neg = false;
 
-  return true;
+  if(w[1]==="do" || w[1]==="does"){
+    neg = true;
+    i += 2;
+  }
+
+  const vWord = w[i];
+  const v = DB.verbs.find(x=>x.b===vWord || x.s===vWord);
+  if(!v) return null;
+
+  if(!neg){
+    if(s.p===3 && vWord!==v.s) return null;
+    if(s.p!==3 && vWord!==v.b) return null;
+  }
+
+  const comp = w.slice(i+1).join(" ");
+  if(!DB.complements.includes(comp)) return null;
+
+  return {subject:s,verb:v,neg};
 }
 
-/* ---------- EDUCATIONAL BUILDER ---------- */
+/* =========================================================
+   LAYER 4 — SMART VALIDATION
+========================================================= */
+function smartValidate(t){
+  if(strictParse(t)) return true;
+  if(ENGINE_CONFIG.aiAssist){
+    const ai = aiParse(t);
+    if(ai && DB.subjects.some(s=>s.t===ai.subject)) return true;
+  }
+  return false;
+}
+
+/* =========================================================
+   LAYER 5 — SAFE GENERATOR (FINAL)
+========================================================= */
 function buildSentence(){
-  const s = rnd(Grammar.subjects);
-  const v = rnd(Grammar.verbs);
-  const o = rnd(Grammar.objects);
+  const s = rnd(DB.subjects);
+  const v = rnd(DB.verbs);
+  const c = rnd(DB.complements);
 
-  const verb = (s.p===3) ? v.s : v.b;
-  return `${s.t} ${verb} ${o}.`;
+  if(ENGINE_CONFIG.level==="A1"){
+    return `${s.t} ${s.p===3?v.s:v.b} ${c}.`;
+  }
+
+  if(ENGINE_CONFIG.level==="A2"){
+    const adv = rnd(DB.adverbs);
+    return `${s.t} ${adv} ${s.p===3?v.s:v.b} ${c}.`;
+  }
+
+  return `Do ${s.t.toLowerCase()} ${v.b} ${c}?`;
 }
 
-/* ---------- SMART PIPELINE ---------- */
-async function smartSentence(sourceFn){
-  let raw=null;
+/* =========================================================
+   ULTRA SMART PIPELINE
+========================================================= */
+async function ultraSentence(sourceFn){
+  let raw = null;
   try{ raw = await sourceFn(); }catch{}
 
-  let clean = sanitizeSentence(raw);
-  if(validateStructure(clean)) return clean;
+  const clean = sanitize(raw);
+  if(clean){
+    if(ENGINE_CONFIG.mode==="FREE") return clean;
+    if(ENGINE_CONFIG.mode==="SMART" && smartValidate(clean)) return clean;
+    if(ENGINE_CONFIG.mode==="STRICT" && strictParse(clean)) return clean;
+  }
 
-  // 🔒 NUNCA DEVUELVE FRASES RARAS
+  // 🔒 GARANTÍA TOTAL
   return buildSentence();
 }
 
 /* =========================================================
-   AUTO-INTEGRACIÓN TOTAL (SIN TOCAR HTML)
+   AUTO-INTEGRACIÓN TOTAL (NO HTML)
 ========================================================= */
 
 /* PHRASES */
 const _lp = loadPhrase;
 loadPhrase = async ()=>{
-  const t = await smartSentence(async()=>{
+  const t = await ultraSentence(async()=>{
     await _lp();
     return phEn.innerText;
   });
@@ -796,42 +857,179 @@ loadPhrase = async ()=>{
 /* SPEAK */
 const _gs = generateSpeak;
 generateSpeak = async ()=>{
-  const t = await smartSentence(async()=>{
+  const t = await ultraSentence(async()=>{
     await _gs();
     return spTarget.innerText;
   });
   renderSpeak(t);
 };
 
-/* EXERCISES */
+/* EXERCISES (100% PEDAGÓGICOS) */
 const _le = loadExercise;
 loadExercise = async ()=>{
-  const base = await smartSentence(async()=>{
+  if(!ENGINE_CONFIG.exercises) return;
+
+  const base = await ultraSentence(async()=>{
     await _le();
     return exQ.innerText.replace("_____","");
   });
 
-  const w = base.replace(".","").split(" ");
-  let i = Math.max(1,Math.floor(Math.random()*(w.length-1)));
-  const correct = w[i];
-  w[i]="_____";
+  const parsed = strictParse(base);
+  if(!parsed){
+    exQ.innerText = base;
+    return;
+  }
 
-  exQ.innerText=w.join(" ");
-  exOpts.innerHTML="";
+  const words = base.replace(".","").split(" ");
+  const correct = words[1];
+  words[1] = "_____";
 
-  const pool = Grammar.verbs.map(v=>v.b).concat(Grammar.verbs.map(v=>v.s));
+  exQ.innerText = words.join(" ");
+  exOpts.innerHTML = "";
+
+  const pool = DB.verbs.map(v=>parsed.subject.p===3?v.s:v.b);
   const opts = new Set([correct]);
+
   while(opts.size<3) opts.add(rnd(pool));
 
   [...opts].sort(()=>Math.random()-0.5).forEach(o=>{
-    const d=document.createElement("div");
-    d.className="option";
-    d.innerText=o;
-    d.onclick=()=>d.classList.add(o===correct?"correct":"wrong");
+    const d = document.createElement("div");
+    d.className = "option";
+    d.innerText = o;
+    d.onclick = ()=>d.classList.add(o===correct?"correct":"wrong");
     exOpts.appendChild(d);
   });
 };
 </script>
+
+<!-- =====================================================
+     ELITE TRANSLATE ES ENGINE v12.0
+     FIXED DIRECTION · HTML SAFE
+===================================================== -->
+
+<script src="https://unpkg.com/compromise@latest/builds/compromise.min.js"></script>
+
+<script>
+/* =====================================================
+   1️⃣ LIMPIEZA TOTAL (ANTI *)
+===================================================== */
+function cleanText(t){
+  if(!t || typeof t !== "string") return "";
+  return t
+    .replace(/[*•_~`]/g,"")
+    .replace(/\s+/g," ")
+    .replace(/\s([,.])/g,"$1")
+    .trim();
+}
+
+/* =====================================================
+   2️⃣ DETECTOR DE INGLÉS
+===================================================== */
+function isEnglish(text){
+  try{
+    const d = nlp(text);
+    return d.match('#Verb').out('array').length > 0 &&
+           /[a-z]/i.test(text);
+  }catch{
+    return /[a-z]/i.test(text);
+  }
+}
+
+/* =====================================================
+   3️⃣ PROTECCIÓN DE NOMBRES CIENTÍFICOS
+===================================================== */
+function protectScientific(text){
+  const names=[];
+  text = text.replace(/\b[A-Z][a-z]{3,}\b/g, m=>{
+    names.push(m);
+    return `§§${names.length-1}§§`;
+  });
+  return {text,names};
+}
+function restoreScientific(text,names){
+  names.forEach((n,i)=>{
+    text=text.replace(`§§${i}§§`,n);
+  });
+  return text;
+}
+
+/* =====================================================
+   4️⃣ REPARADOR DE ESPAÑOL ROTO
+===================================================== */
+function fixBrokenSpanish(t){
+  if(/es un .* genus/i.test(t)){
+    return t
+      .replace(/genus/gi,"género")
+      .replace(/springtails/gi,"colémbolos")
+      .replace(/pertenencia al familiar/gi,"perteneciente a la familia");
+  }
+  return t;
+}
+
+/* =====================================================
+   5️⃣ TRADUCTOR REAL (EN → ES)
+===================================================== */
+async function translateENtoES(text){
+  const engines = [
+    async()=>fetch(
+      "https://libretranslate.com/translate",
+      {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          q:text, source:"en", target:"es", format:"text"
+        })
+      }
+    ).then(r=>r.json()).then(d=>d.translatedText),
+
+    async()=>fetch(
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|es`
+    ).then(r=>r.json()).then(d=>d.responseData?.translatedText)
+  ];
+
+  for(const e of engines){
+    try{
+      const r = await e();
+      if(r && !r.includes("WARNING")) return r;
+    }catch{}
+  }
+  return text;
+}
+
+/* =====================================================
+   6️⃣ PIPELINE DEFINITIVO (SIEMPRE ES)
+===================================================== */
+async function translateToSpanishSAFE(input){
+  let text = cleanText(input);
+  if(!text) return "";
+
+  const sci = protectScientific(text);
+  text = sci.text;
+
+  if(isEnglish(text)){
+    text = await translateENtoES(text);
+  }
+
+  text = restoreScientific(text,sci.names);
+  text = fixBrokenSpanish(text);
+
+  return cleanText(text);
+}
+
+/* =====================================================
+   7️⃣ AUTO-HOOK COMPATIBLE CON TU HTML
+===================================================== */
+if(typeof translate === "function"){
+  const _oldTranslate = translate;
+  translate = async function(text){
+    return translateToSpanishSAFE(text);
+  };
+}
+
+console.log("✅ ELITE TRANSLATE ES ENGINE v12.0 ACTIVE");
+</script>
+
+
 <script>
 /* =========================================================
    ELITE PHONETIC ENGINE v5.0
@@ -1057,55 +1255,109 @@ loadExercise = async ()=>{
 };
 </script>
 <script>
-(function(){
+/* =====================================================
+   EXERCISES ULTRA MAX v3.0
+   Frases ilimitadas · Hueco dinámico · Correcto/Mal marcado
+===================================================== */
 
-let currentWord = "";
+const exPool = ["eat","eats","play","plays","study","studies","go","goes","work","works","read","reads","like","likes","is","are"];
+const exerciseCache = new Set();
+const subjects = ["I","You","He","She","We","They"];
+const verbs = [
+  ["eat","eats"],["play","plays"],["study","studies"],
+  ["work","works"],["read","reads"],["go","goes"],["like","likes"]
+];
+const shortComp = ["at home","every day","now"];
+const mediumComp = ["every day at home","after work","in the morning","with my friends"];
+const longComp = ["every day after work","in the morning at school","with my friends on weekends","after work at home"];
 
-/* ---------- botón flotante ---------- */
-const btn = document.createElement("button");
-btn.innerHTML = "🔊";
-btn.style.cssText = `
-  position:absolute;
-  display:none;
-  padding:8px 12px;
-  border:none;
-  border-radius:50%;
-  background:#4da3ff;
-  color:white;
-  font-size:18px;
-  z-index:9999;
-`;
-document.body.appendChild(btn);
+function rnd(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-btn.onclick = ()=>{
-  if(!currentWord) return;
-  speechSynthesis.cancel();
-  speechSynthesis.resume();
-  const u = new SpeechSynthesisUtterance(currentWord);
-  u.lang = "en-US";
-  u.rate = 0.9;
-  speechSynthesis.speak(u);
-};
+/* ---------- FETCH FRASES ONLINE ---------- */
+async function fetchExerciseOnline(){
+  const sources = [
+    async()=>fetch("https://api.quotable.io/random").then(r=>r.json()).then(d=>d.content),
+    async()=>fetch("https://api.adviceslip.com/advice").then(r=>r.json()).then(d=>d.slip.advice),
+    async()=>fetch("https://www.reddit.com/r/quotes.json?limit=50")
+      .then(r=>r.json()).then(d=>rnd(d.data.children).data.title)
+  ];
+  for(const s of sources){
+    try{
+      const t = await s();
+      if(t && t.split(" ").length>3) return t;
+    }catch{}
+  }
+  return null;
+}
 
-/* ---------- click palabra ---------- */
-document.addEventListener("click",e=>{
-  const w = e.target;
-  if(!w.classList.contains("elite-word")) return;
+/* ---------- GENERADOR DE EXERCISE ULTRA ---------- */
+async function loadExercise(){
+  exOpts.innerHTML="";
 
-  currentWord = w.innerText.trim();
+  let sentence = null;
 
-  const r = w.getBoundingClientRect();
-  btn.style.left = (r.left + window.scrollX + r.width/2 - 18) + "px";
-  btn.style.top = (r.top + window.scrollY - 42) + "px";
-  btn.style.display = "block";
-});
+  // 1️⃣ Gemini AI si está activo
+  if(aiMode.value==="gemini"){
+    try{
+      sentence = await gemini(`
+        Create ONE English sentence suitable for a fill-in-the-blank exercise.
+        CEFR A1–A2, short/medium/long, 4–12 words, clear grammar.
+        Only ONE blank in middle. No idioms, no humor.
+      `);
+      sentence = sentence.trim();
+    }catch{}
+  }
 
-/* ---------- android unlock ---------- */
-document.addEventListener("touchstart",()=>{
-  speechSynthesis.resume();
-},{once:true});
+  // 2️⃣ Frases de Internet
+  if(!sentence){
+    sentence = await fetchExerciseOnline();
+  }
 
-})();
+  // 3️⃣ Generador local infinito
+  while(!sentence || exerciseCache.has(sentence)){
+    const s = rnd(subjects);
+    const v = rnd(verbs);
+    const comp = rnd(rnd([shortComp,mediumComp,longComp]));
+    const verb = (s==="He"||s==="She")? v[1]:v[0];
+    sentence = `${s} ${verb} ${comp}.`;
+  }
+
+  // Guardar cache
+  exerciseCache.add(sentence);
+  if(exerciseCache.size>500) exerciseCache.clear();
+
+  // ---------- Crear hueco dinámico ----------
+  const words = sentence.replace(".","").split(" ");
+  const index = Math.floor(Math.random()*(words.length-1))+1; // evitar primer palabra
+  const correct = words[index];
+  words[index] = "_____";
+  exQ.innerText = words.join(" ");
+
+  // ---------- Crear opciones inteligentes ----------
+  const options = new Set([correct]);
+  while(options.size<3) options.add(rnd(exPool));
+
+  // ---------- Render opciones con feedback ----------
+  [...options].sort(()=>Math.random()-0.5).forEach(o=>{
+    const d = document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+
+    d.onclick = ()=>{
+      // eliminar clases previas
+      d.parentElement.querySelectorAll(".option").forEach(el=>{
+        el.classList.remove("correct","wrong");
+      });
+      if(o===correct){
+        d.classList.add("correct");
+      } else {
+        d.classList.add("wrong");
+      }
+    };
+
+    exOpts.appendChild(d);
+  });
+}
 </script>
 </body>
 
