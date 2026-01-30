@@ -1057,53 +1057,65 @@ loadExercise = async ()=>{
 };
 </script>
 <script>
+/* =====================================================
+   ELITE AUDIO · SAFE UI VERSION
+===================================================== */
+
 (function(){
 
-let currentWord = "";
-
-/* ---------- botón flotante ---------- */
-const btn = document.createElement("button");
-btn.innerHTML = "🔊";
-btn.style.cssText = `
-  position:absolute;
-  display:none;
-  padding:8px 12px;
-  border:none;
-  border-radius:50%;
-  background:#4da3ff;
-  color:white;
-  font-size:18px;
-  z-index:9999;
-`;
-document.body.appendChild(btn);
-
-btn.onclick = ()=>{
-  if(!currentWord) return;
-  speechSynthesis.cancel();
-  speechSynthesis.resume();
-  const u = new SpeechSynthesisUtterance(currentWord);
-  u.lang = "en-US";
-  u.rate = 0.9;
-  speechSynthesis.speak(u);
+window.EliteAudio = {
+  enabled:false
 };
+
+let audioUnlocked = false;
+
+/* ---------- botón pequeño dentro del speak ---------- */
+function createEnableButton(){
+  if(document.getElementById("eliteEnableAudio")) return;
+
+  const btn = document.createElement("button");
+  btn.id = "eliteEnableAudio";
+  btn.innerText = "🔊 Activar audio";
+  btn.style.cssText = `
+    margin:12px auto;
+    padding:10px 14px;
+    border:none;
+    border-radius:14px;
+    background:#5f7cff;
+    color:white;
+    font-weight:800;
+    display:block;
+    width:fit-content;
+  `;
+
+  btn.addEventListener("click",()=>{
+    const u = new SpeechSynthesisUtterance("Audio enabled");
+    u.lang = "en-US";
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+    audioUnlocked = true;
+    btn.style.display = "none";
+  });
+
+  document.getElementById("speakArea")?.appendChild(btn);
+}
 
 /* ---------- click palabra ---------- */
 document.addEventListener("click",e=>{
+  if(!audioUnlocked) return;
+
   const w = e.target;
   if(!w.classList.contains("elite-word")) return;
 
-  currentWord = w.innerText.trim();
-
-  const r = w.getBoundingClientRect();
-  btn.style.left = (r.left + window.scrollX + r.width/2 - 18) + "px";
-  btn.style.top = (r.top + window.scrollY - 42) + "px";
-  btn.style.display = "block";
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(w.innerText.trim());
+  u.lang = "en-US";
+  u.rate = 0.9;
+  speechSynthesis.speak(u);
 });
 
-/* ---------- android unlock ---------- */
-document.addEventListener("touchstart",()=>{
-  speechSynthesis.resume();
-},{once:true});
+/* ---------- iniciar ---------- */
+window.addEventListener("load",createEnableButton);
 
 })();
 </script>
