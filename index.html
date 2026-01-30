@@ -916,5 +916,145 @@ figEN = function(text){
   return phoneticENtoES(text);
 };
 </script>
+<script>
+/* =========================================================
+   GEMINI INFINITE GENERATION ENGINE v6.0
+========================================================= */
+
+/* ---------- SEMILLAS DINÁMICAS ---------- */
+const GeminiSeed = {
+  topics: [
+    "daily life","work","school","travel","technology",
+    "health","friends","family","hobbies","food"
+  ],
+  grammar: [
+    "present simple","present continuous",
+    "past simple","future with will","questions"
+  ],
+  tones: [
+    "neutral","educational","motivational","descriptive"
+  ]
+};
+
+function randomSeed(){
+  return {
+    topic: rnd(GeminiSeed.topics),
+    grammar: rnd(GeminiSeed.grammar),
+    tone: rnd(GeminiSeed.tones),
+    stamp: Date.now()+Math.random()
+  };
+}
+
+/* ---------- PROMPTS FUERTES Y CONTROLADOS ---------- */
+function phrasePrompt(){
+  const s=randomSeed();
+  return `
+Generate ONE short English sentence for language learning.
+Rules:
+- CEFR A1–A2
+- ${s.grammar}
+- Topic: ${s.topic}
+- Tone: ${s.tone}
+- No jokes, no advice, no irony
+- Only ONE sentence
+- Max 9 words
+- End with a period
+Seed:${s.stamp}
+`;
+}
+
+function speakPrompt(){
+  const s=randomSeed();
+  return `
+Give ONE simple English sentence for pronunciation practice.
+Rules:
+- CEFR A1
+- Clear pronunciation
+- ${s.grammar}
+- Topic: ${s.topic}
+- No idioms
+- No commas
+- One sentence only
+Seed:${s.stamp}
+`;
+}
+
+function exercisePrompt(){
+  const s=randomSeed();
+  return `
+Create ONE English sentence suitable for a fill-in-the-blank exercise.
+Rules:
+- CEFR A1–A2
+- ${s.grammar}
+- Topic: ${s.topic}
+- No humor
+- No complex clauses
+- One sentence only
+Seed:${s.stamp}
+`;
+}
+
+/* =========================================================
+   INYECCIÓN AUTOMÁTICA (NO TOCAR BOTONES)
+========================================================= */
+
+/* PHRASES */
+const _gemPhrase = loadPhrase;
+loadPhrase = async ()=>{
+  if(aiMode.value==="gemini"){
+    try{
+      const g = await gemini(phrasePrompt());
+      if(g) return renderPhrase(g.trim());
+    }catch{}
+  }
+  _gemPhrase();
+};
+
+/* SPEAK */
+const _gemSpeak = generateSpeak;
+generateSpeak = async ()=>{
+  if(aiMode.value==="gemini"){
+    try{
+      const g = await gemini(speakPrompt());
+      if(g) return renderSpeak(g.trim());
+    }catch{}
+  }
+  _gemSpeak();
+};
+
+/* EXERCISES */
+const _gemExercise = loadExercise;
+loadExercise = async ()=>{
+  if(aiMode.value==="gemini"){
+    try{
+      const g = await gemini(exercisePrompt());
+      if(g){
+        const sentence=g.trim();
+        const w=sentence.replace(".","").split(" ");
+        let i=Math.max(1,Math.floor(Math.random()*(w.length-1)));
+        const correct=w[i];
+        w[i]="_____";
+
+        exQ.innerText=w.join(" ");
+        exOpts.innerHTML="";
+
+        const pool=["is","are","eat","eats","play","plays","study","studies","go","goes"];
+        const opts=new Set([correct]);
+        while(opts.size<3) opts.add(rnd(pool));
+
+        [...opts].sort(()=>Math.random()-0.5).forEach(o=>{
+          const d=document.createElement("div");
+          d.className="option";
+          d.innerText=o;
+          d.onclick=()=>d.classList.add(o===correct?"correct":"wrong");
+          exOpts.appendChild(d);
+        });
+        return;
+      }
+    }catch{}
+  }
+  _gemExercise();
+};
+</script>
 </body>
 </html>
