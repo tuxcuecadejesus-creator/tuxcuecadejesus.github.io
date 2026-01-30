@@ -1056,5 +1056,53 @@ loadExercise = async ()=>{
   _gemExercise();
 };
 </script>
+<script>
+/* ======================================================
+   SPEAK · PRONUNCIACIÓN AL TOCAR PALABRA INCORRECTA
+   v1.0 DEFINITIVO
+====================================================== */
+
+/* ---- reproducir palabra ---- */
+function speakWord(word){
+  if(!word) return;
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = "en-US";
+  u.rate = 0.9;
+  u.pitch = 1;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+/* ---- observar resultados de SPEAK ---- */
+const speakObserver = new MutationObserver(()=>{
+  enableClickableErrors();
+});
+
+/* ---- activar observer ---- */
+(function initSpeakWordAudio(){
+  const target = document.getElementById("spResult");
+  if(!target) return;
+  speakObserver.observe(target,{childList:true,subtree:true});
+})();
+
+/* ---- hacer clickeables las palabras malas ---- */
+function enableClickableErrors(){
+  const badWords = document.querySelectorAll(
+    "#spResult .bad, #spResult .wrong"
+  );
+
+  badWords.forEach(span=>{
+    if(span.dataset.audioReady) return;
+
+    span.dataset.audioReady = "1";
+    span.style.cursor = "pointer";
+    span.style.textDecoration = "underline";
+
+    span.addEventListener("click",()=>{
+      speakWord(span.innerText.trim());
+    });
+  });
+}
+</script>
 </body>
 </html>
