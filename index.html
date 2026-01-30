@@ -1128,7 +1128,133 @@ loadExercise = async ()=>{
   _gemExercise();
 };
 </script>
+<script>
+/* =========================================================
+   ELITE SPANISH TRANSLATION ENGINE · DEFINITIVE v1.0
+   English → Spanish Semantic Validator & Sanitizer
+========================================================= */
 
+/* ===================== CONFIG ===================== */
+const ES_ENGINE = {
+  minLength: 8,
+  maxSymbolsRatio: 0.12,
+  minSpanishScore: 3,
+  minWordCount: 3,
+  maxRepeats: 3
+};
+
+/* ===================== HELPERS ===================== */
+function normalize(t){
+  return t
+    .toLowerCase()
+    .replace(/[\n\r]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+/* ===================== BASURA DURA ===================== */
+function hasGarbageSymbols(t){
+  return /[*§¶†‡¤0]{2,}|(§\s*){2,}|[|~^]/g.test(t);
+}
+
+function hasBrokenRepetition(t){
+  return /(.)\1{4,}/g.test(t);
+}
+
+function hasWeirdRatio(t){
+  const symbols = t.match(/[^a-záéíóúñü\s.,!?]/gi) || [];
+  return (symbols.length / t.length) > ES_ENGINE.maxSymbolsRatio;
+}
+
+/* ===================== ESPAÑOL REAL ===================== */
+function spanishScore(t){
+  const common = [
+    "el","la","los","las","un","una","unos","unas",
+    "de","del","que","y","en","para","por","con",
+    "es","son","está","están","tiene","tienen",
+    "más","menos","como","cuando","porque","pero"
+  ];
+
+  let score = 0;
+  const low = " " + normalize(t) + " ";
+
+  common.forEach(w=>{
+    if(low.includes(" "+w+" ")) score++;
+  });
+
+  return score;
+}
+
+/* ===================== INGLÉS COLADO ===================== */
+function hasEnglishLeak(t){
+  const english = [
+    "the","and","with","for","that","this",
+    "you","your","have","has","from","will"
+  ];
+  const low = " " + normalize(t) + " ";
+  return english.some(w=>low.includes(" "+w+" "));
+}
+
+/* ===================== COHERENCIA GENERAL ===================== */
+function isCoherentSpanish(t){
+  if(!t) return false;
+  if(t.length < ES_ENGINE.minLength) return false;
+  if(t.split(" ").length < ES_ENGINE.minWordCount) return false;
+  if(hasGarbageSymbols(t)) return false;
+  if(hasBrokenRepetition(t)) return false;
+  if(hasWeirdRatio(t)) return false;
+  if(hasEnglishLeak(t)) return false;
+  if(spanishScore(t) < ES_ENGINE.minSpanishScore) return false;
+  return true;
+}
+
+/* ===================== LIMPIEZA PROFUNDA ===================== */
+function deepClean(t){
+  return t
+    .replace(/[*§¶†‡¤0]/g,"")
+    .replace(/\s{2,}/g," ")
+    .replace(/([.!?])\s*\1+/g,"$1")
+    .replace(/^[^a-záéíóúñü]+/i,"")
+    .replace(/[^a-záéíóúñü.,!? ]+$/i,"")
+    .trim();
+}
+
+/* ===================== FALLBACK SEGURO ===================== */
+async function safeFallbackTranslate(text){
+  try{
+    const r = await fetch(
+      "https://api.mymemory.translated.net/get?q=" +
+      encodeURIComponent(text) +
+      "&langpair=en|es"
+    );
+    const d = await r.json();
+    let t = d.responseData?.translatedText || "";
+    t = deepClean(t);
+    if(isCoherentSpanish(t)) return t;
+  }catch{}
+  return "Traducción no disponible.";
+}
+
+/* ===================== OVERRIDE FINAL ===================== */
+const __translate = translate;
+
+translate = async function(text){
+  let t = "";
+
+  try{
+    t = await __translate(text);
+  }catch{}
+
+  t = deepClean(t || "");
+
+  if(isCoherentSpanish(t)){
+    return t;
+  }
+
+  console.warn("⚠️ Traducción inválida detectada → fallback");
+  return await safeFallbackTranslate(text);
+};
+</script>
 </body>
 
 </html>
