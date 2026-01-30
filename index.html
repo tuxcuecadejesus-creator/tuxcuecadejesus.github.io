@@ -1058,132 +1058,117 @@ loadExercise = async ()=>{
 </script>
 <script>
 /* =====================================================
-   ELITE FLOATING AUDIO ICON · MOBILE SAFE v2.0
+   ELITE FLOAT ICON · ABSOLUTELY SAFE v3.0
 ===================================================== */
 
-(function(){
+var eliteBtn = null;
+var eliteAudioUnlocked = false;
 
-let btn = null;
-let audioUnlocked = false;
+/* --------- CREAR BOTÓN --------- */
+function eliteCreateButton(){
+  if(eliteBtn) return;
 
-/* =================== CREAR ICONO =================== */
-function createFloatingIcon(){
-  if(btn) return;
+  eliteBtn = document.createElement("div");
+  eliteBtn.innerHTML = "🔊";
+  eliteBtn.id = "eliteFloatBtn";
 
-  btn = document.createElement("div");
-  btn.id = "eliteFloatAudio";
-  btn.textContent = "🔊";
+  eliteBtn.style.position = "fixed";
+  eliteBtn.style.width = "56px";
+  eliteBtn.style.height = "56px";
+  eliteBtn.style.borderRadius = "50%";
+  eliteBtn.style.background = "linear-gradient(135deg,#6b7cff,#35e3ff)";
+  eliteBtn.style.display = "flex";
+  eliteBtn.style.alignItems = "center";
+  eliteBtn.style.justifyContent = "center";
+  eliteBtn.style.fontSize = "1.6rem";
+  eliteBtn.style.zIndex = "2147483647";
+  eliteBtn.style.boxShadow = "0 10px 30px rgba(0,0,0,.6)";
+  eliteBtn.style.cursor = "pointer";
+  eliteBtn.style.userSelect = "none";
 
-  btn.style.position = "fixed";
-  btn.style.width = "56px";
-  btn.style.height = "56px";
-  btn.style.borderRadius = "50%";
-  btn.style.background = "linear-gradient(135deg,#6b7cff,#35e3ff)";
-  btn.style.display = "flex";
-  btn.style.alignItems = "center";
-  btn.style.justifyContent = "center";
-  btn.style.fontSize = "1.6rem";
-  btn.style.boxShadow = "0 12px 30px rgba(0,0,0,.5)";
-  btn.style.zIndex = "99999";
-  btn.style.cursor = "pointer";
-  btn.style.userSelect = "none";
+  eliteBtn.style.left = localStorage.eliteX || "70vw";
+  eliteBtn.style.top  = localStorage.eliteY || "55vh";
 
-  // posición segura móvil
-  btn.style.left = localStorage.eliteAudioLeft || "70vw";
-  btn.style.top  = localStorage.eliteAudioTop  || "60vh";
+  document.body.appendChild(eliteBtn);
+  eliteEnableDrag(eliteBtn);
 
-  document.body.appendChild(btn);
-  enableDrag(btn);
-
-  btn.addEventListener("click",()=>{
-    unlockAudio();
-  });
+  eliteBtn.onclick = function(){
+    eliteUnlockAudio();
+  };
 }
 
-/* =================== AUDIO =================== */
-function unlockAudio(){
-  if(audioUnlocked) return;
+/* --------- AUDIO --------- */
+function eliteUnlockAudio(){
+  if(eliteAudioUnlocked) return;
 
-  const u = new SpeechSynthesisUtterance("Audio enabled");
+  var u = new SpeechSynthesisUtterance("Audio ready");
   u.lang = "en-US";
-  u.rate = 1;
-
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 
-  audioUnlocked = true;
-  btn.style.opacity = "0.7";
+  eliteAudioUnlocked = true;
+  eliteBtn.style.opacity = "0.7";
 }
 
-/* =================== DRAG =================== */
-function enableDrag(el){
-  let startX,startY,drag=false;
+/* --------- DRAG --------- */
+function eliteEnableDrag(el){
+  var sx=0, sy=0, drag=false;
 
-  const start = e=>{
-    drag=true;
-    const t = e.touches ? e.touches[0] : e;
-    startX = t.clientX - el.offsetLeft;
-    startY = t.clientY - el.offsetTop;
+  el.onpointerdown = function(e){
+    drag = true;
+    sx = e.clientX - el.offsetLeft;
+    sy = e.clientY - el.offsetTop;
+    el.setPointerCapture(e.pointerId);
   };
 
-  const move = e=>{
+  document.onpointermove = function(e){
     if(!drag) return;
-    const t = e.touches ? e.touches[0] : e;
 
-    let x = t.clientX - startX;
-    let y = t.clientY - startY;
+    var x = e.clientX - sx;
+    var y = e.clientY - sy;
 
-    const maxX = window.innerWidth - el.offsetWidth - 10;
-    const maxY = window.innerHeight - el.offsetHeight - 120;
+    var maxX = window.innerWidth - el.offsetWidth - 8;
+    var maxY = window.innerHeight - el.offsetHeight - 120;
 
-    x = Math.max(10,Math.min(x,maxX));
-    y = Math.max(10,Math.min(y,maxY));
+    if(x < 8) x = 8;
+    if(y < 8) y = 8;
+    if(x > maxX) x = maxX;
+    if(y > maxY) y = maxY;
 
-    el.style.left = x+"px";
-    el.style.top  = y+"px";
+    el.style.left = x + "px";
+    el.style.top  = y + "px";
   };
 
-  const end = ()=>{
-    drag=false;
-    localStorage.eliteAudioLeft = el.style.left;
-    localStorage.eliteAudioTop  = el.style.top;
+  document.onpointerup = function(){
+    if(!drag) return;
+    drag = false;
+    localStorage.eliteX = el.style.left;
+    localStorage.eliteY = el.style.top;
   };
-
-  el.addEventListener("mousedown",start);
-  el.addEventListener("touchstart",start,{passive:true});
-  document.addEventListener("mousemove",move);
-  document.addEventListener("touchmove",move,{passive:true});
-  document.addEventListener("mouseup",end);
-  document.addEventListener("touchend",end);
 }
 
-/* =================== PALABRAS ROJAS =================== */
-document.addEventListener("click",e=>{
-  if(!audioUnlocked) return;
+/* --------- CLICK PALABRAS --------- */
+document.addEventListener("pointerdown",function(e){
+  if(!eliteAudioUnlocked) return;
   if(!e.target.classList.contains("elite-word")) return;
 
-  const word = e.target.innerText.trim();
+  var word = e.target.innerText.trim();
   if(!word) return;
 
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(word);
+  var u = new SpeechSynthesisUtterance(word);
   u.lang = "en-US";
   u.rate = 0.9;
+  speechSynthesis.cancel();
   speechSynthesis.speak(u);
 });
 
-/* =================== ACTIVADOR MÓVIL =================== */
-/* crea el icono SOLO tras la primera interacción */
-function firstTouch(){
-  createFloatingIcon();
-  document.removeEventListener("touchstart",firstTouch);
-  document.removeEventListener("mousedown",firstTouch);
-}
-
-document.addEventListener("touchstart",firstTouch,{once:true});
-document.addEventListener("mousedown",firstTouch,{once:true});
-
-})();
+/* --------- LOOP DE SEGURIDAD --------- */
+var eliteInterval = setInterval(function(){
+  if(document.body){
+    eliteCreateButton();
+    clearInterval(eliteInterval);
+  }
+},300);
 </script>
 </body>
 </html>
