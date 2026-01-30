@@ -1,922 +1,709 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Elite English Pro · Ultimate</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+ <meta name="apple-mobile-web-app-capable" content="yes"/>
+ <meta name="mobile-web-app-capable" content="yes"/>
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+ <meta name="format-detection" content="telephone=no"/>
+  <meta name="color-scheme" content="dark"/>
+  <meta name="theme-color" content="#050812"/>
+  <title>Elite English Pro · Premium Definitive v3</title>
 
-<!-- ICONS & FONTS -->
+  <!-- Premium single-file web app UI (no external dependencies) -->
+  <style>
+    :root{
+      --bg:#050812;
+      --bg2:#0a0f2a;
+      --card:#12183a;
+      --card2:#0b0f2e;
+      --glass:#ffffff12;
+      --stroke:#ffffff14;
+      --text:#f4f6ff;
+      --muted:#aab3d9;
+      --brand:#7b7cff;
+      --brand2:#35e3ff;
+      --gold:#ffd479;
+      --ok:#2bff88;
+      --bad:#ff5a5a;
+      --shadow:0 40px 120px rgba(0,0,0,.65);
+      --shadow2:0 18px 60px rgba(0,0,0,.45);
+      --radius:28px;
+      --radius2:18px;
+      --radius3:14px;
+      --focus:0 0 0 4px rgba(53,227,255,.20);
+    }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@700;900&display=swap" rel="stylesheet">
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 650px at 50% -280px,#1c2570,var(--bg)),
+        radial-gradient(900px 600px at -20% 40%, rgba(53,227,255,.10), transparent 60%),
+        radial-gradient(900px 600px at 120% 55%, rgba(123,124,255,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      padding-bottom: calc(120px + env(safe-area-inset-bottom));
+      overflow-x:hidden;
+    }
 
-<style>
-/* ==================== THEME ==================== */
-:root{
---bg:#050812;
---card:#12183a;
---card2:#0b0f2e;
---glass:#ffffff12;
---text:#f4f6ff;
---muted:#aab3d9;
---brand:#7b7cff;
---brand2:#35e3ff;
---gold:#ffd479;
---ok:#2bff88;
---bad:#ff5a5a;
+    /* Top App Bar */
+    header{
+      padding: calc(14px + env(safe-area-inset-top)) 18px 14px;
+      background:#050812dd;
+      backdrop-filter: blur(24px);
+      position:sticky;
+      top:0;
+      z-index:60;
+      border-bottom:1px solid var(--stroke);
+    }
+    .appbar{
+      max-width:1060px;
+      margin:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      user-select:none;
+    }
+    .logo{
+      width:38px;height:38px;
+      border-radius:14px;
+      background:linear-gradient(135deg,var(--brand),var(--brand2));
+      box-shadow:0 16px 40px rgba(0,0,0,.35);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo::after{
+      content:"";
+      position:absolute;inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), transparent 55%);
+      transform: rotate(18deg);
+    }
+    .brand h1{
+      margin:0;
+      font-size:.95rem;
+      letter-spacing:.14em;
+      font-weight:950;
+    }
+    .brand small{display:block;color:var(--muted);font-weight:800;letter-spacing:.04em;margin-top:2px}
+
+    .statusbar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--glass);
+      border:1px solid var(--stroke);
+      color:#cfe2ff;
+      font-weight:900;
+      font-size:.78rem;
+      letter-spacing:.02em;
+      user-select:none;
+    }
+    .dot{width:8px;height:8px;border-radius:99px;background:var(--ok);box-shadow:0 0 0 4px rgba(43,255,136,.14)}
+    .dot.off{background:var(--bad);box-shadow:0 0 0 4px rgba(255,90,90,.14)}
+
+    .container{max-width:1060px;margin:auto;padding:22px}
+
+    /* Cards */
+    .card{
+      background:linear-gradient(180deg,var(--card),var(--card2));
+      border-radius:var(--radius);
+      padding:24px;
+      margin-bottom:22px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--stroke);
+      position:relative;
+      overflow:hidden;
+      isolation:isolate;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background:
+        radial-gradient(900px 500px at 10% 20%, rgba(53,227,255,.10), transparent 60%),
+        radial-gradient(900px 500px at 90% 30%, rgba(123,124,255,.10), transparent 60%);
+      z-index:-1;
+      opacity:.9;
+    }
+
+    .badge{
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      color:#bcd1ff;
+      margin-bottom:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .badge small{color:#9fb1ff;font-weight:850;letter-spacing:.06em;opacity:.95}
+
+    .title-en{
+      font-weight:950;
+      font-size:1.55rem;
+      line-height:1.25;
+      margin:0;
+      overflow-wrap:anywhere;
+    }
+    .text-es{color:var(--muted);margin-top:10px;line-height:1.5;overflow-wrap:anywhere}
+    .text-fig{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      color:var(--gold);
+      background:#0008;
+      padding:12px 14px;
+      border-radius:var(--radius3);
+      margin-top:12px;
+      border:1px solid #ffffff12;
+      overflow-wrap:anywhere;
+    }
+
+    .controls{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
+
+    .btn-icon{
+      width:48px;height:48px;border-radius:50%;border:none;
+      background:linear-gradient(135deg,var(--brand),var(--brand2));
+      color:#fff;cursor:pointer;
+      transition:transform .15s, filter .15s, box-shadow .15s;
+      display:inline-flex;align-items:center;justify-content:center;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    .btn-icon:hover{transform:scale(1.08);filter:brightness(1.05);box-shadow:0 16px 42px rgba(0,0,0,.42)}
+    .btn-icon:active{transform:scale(0.98)}
+
+    .btn-main{
+      width:100%;padding:16px;border:none;border-radius:22px;
+      background:linear-gradient(135deg,var(--brand),var(--brand2));
+      font-weight:950;color:#fff;margin-top:16px;cursor:pointer;
+      transition:transform .15s, filter .15s;
+      box-shadow:0 14px 40px rgba(0,0,0,.35);
+      letter-spacing:.03em;
+    }
+    .btn-main:hover{transform:scale(1.02);filter:brightness(1.04)}
+    .btn-main:active{transform:scale(0.99)}
+
+    .btn-ghost{
+      width:100%;padding:14px;border:1px solid #ffffff22;border-radius:18px;
+      background:#ffffff0f;color:#fff;margin-top:10px;cursor:pointer;
+      transition:background .15s, transform .15s;
+      font-weight:900;
+    }
+    .btn-ghost:hover{background:#ffffff16;transform:translateY(-1px)}
+    .btn-ghost:active{transform:translateY(0)}
+
+    .tab{display:none; animation:fade .18s ease-out}
+    .tab.active{display:block}
+    @keyframes fade{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    .option{
+      background:#ffffff12;padding:14px;border-radius:14px;margin-top:10px;
+      cursor:pointer;transition:background .15s, transform .10s, border-color .15s;
+      border:1px solid transparent;user-select:none;
+    }
+    .option:hover{background:#ffffff18;transform:translateY(-1px)}
+    .option.correct{background:#2bff8828;border-color:#2bff8870}
+    .option.wrong{background:#ff5a5a24;border-color:#ff5a5a70}
+
+    nav{
+  position:fixed;left:0;right:0;bottom:0;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, #050812f2, #050812fa);
+  backdrop-filter: blur(32px) saturate(140%);
+  z-index:70;border-top:1px solid var(--stroke);
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:10px;
+  align-items:center;
+}
+nav button{
+  all:unset;cursor:pointer;
+  width:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;font-size:.66rem;font-weight:950;color:#9aa3d0;
+  transition:transform .15s, color .15s, background .15s, box-shadow .15s, border-color .15s;
+  user-select:none;
+  padding:12px 10px;border-radius:18px;
+  border:1px solid transparent;
+}
+nav button:hover{background:#ffffff12;transform:translateY(-2px)}
+nav button:active{transform:translateY(0)}
+nav button:focus-visible{box-shadow:var(--focus)}
+nav button .ico{font-size:1.35rem;line-height:1}
+nav button.active{
+  color:var(--text);
+  transform:translateY(-3px);
+  background:linear-gradient(135deg, rgba(123,124,255,.34), rgba(53,227,255,.26));
+  border-color:rgba(53,227,255,.35);
+  box-shadow:0 18px 55px rgba(0,0,0,.48);
+}
+@media (min-width: 560px){
+  nav{display:flex;justify-content:space-around;align-items:center;gap:0;}
+  nav button{width:auto;flex:1 1 0;min-width:78px;padding:12px 12px;}
+}
+@media (max-width: 380px){
+  nav{gap:8px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));}
+  nav button{padding:10px 8px;font-size:.62rem}
+  nav button .ico{font-size:1.25rem}
 }
 
-*{box-sizing:border-box}
-body{
-margin:0;
-font-family:Inter;
-color:var(--text);
-background:radial-gradient(1200px 700px at 50% -300px,#1c2570,#050812);
-padding-bottom:110px;
+    input,select,textarea{
+      width:100%;border:none;border-radius:14px;padding:14px;
+      background:#0007;color:#fff;font-size:1rem;outline:none;
+      border:1px solid var(--stroke);
+      transition:box-shadow .12s, border-color .12s;
+    }
+    input:focus,select:focus,textarea:focus{box-shadow:var(--focus); border-color:rgba(53,227,255,.40)}
+    textarea{min-height:128px;resize:none}
+
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .row > *{flex:1 1 260px}
+    .small{font-size:.92rem;color:var(--muted);line-height:1.35}
+    .divider{height:1px;background:#ffffff12;margin:16px 0}
+
+    .pill{
+      display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;
+      background:var(--glass);color:#cfe2ff;font-weight:950;font-size:.78rem;
+      margin-top:10px;border:1px solid var(--stroke);
+    }
+
+    .toast{
+      position:fixed;left:50%;bottom:108px;transform:translateX(-50%);
+      background:#0b0f2ee6;border:1px solid #ffffff18;border-radius:16px;
+      padding:12px 14px;min-width:260px;max-width:min(620px, calc(100vw - 30px));
+      box-shadow:0 20px 70px rgba(0,0,0,.45);
+      display:none;z-index:100;backdrop-filter: blur(18px);
+    }
+    .toast.show{display:block;animation:pop .16s ease-out}
+    @keyframes pop{from{transform:translateX(-50%) translateY(10px);opacity:.6}to{transform:translateX(-50%) translateY(0);opacity:1}}
+    .toast .t-title{font-weight:950;letter-spacing:.02em}
+    .toast .t-body{color:var(--muted);margin-top:4px;font-size:.92rem}
+
+    .svg{width:20px;height:20px;display:block}
+
+    /* Translator grid */
+    .translator-grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media (min-width: 860px){
+      .translator-grid{grid-template-columns:1fr auto 1fr;align-items:stretch}
+    }
+    .swap{
+      display:flex;flex-direction:column;gap:10px;justify-content:center
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size:.78rem;
+      padding:4px 8px;
+      border-radius:10px;
+      background:#0008;
+      border:1px solid #ffffff12;
+      color:#cfe2ff;
+      display:inline-block;
+    }
+  
+/* ===== Premium app polish (final) ===== */
+header{display:none !important;}
+.container{padding-top:12px;}
+:root{--navH: 168px;}
+body{padding-bottom: calc(var(--navH) + 22px + env(safe-area-inset-bottom));}
+@media (min-width: 560px){:root{--navH: 98px;} body{padding-bottom: calc(var(--navH) + 20px + env(safe-area-inset-bottom));}}
+
+
+/* ===== Mobile bottom nav compact (v6) ===== */
+@media (max-width: 520px){
+  nav{gap:8px; padding:8px 10px calc(8px + env(safe-area-inset-bottom));}
+  nav button{padding:10px 8px; gap:5px; border-radius:16px; font-size:.60rem;}
+  nav button .ico{font-size:1.18rem;}
+}
+@media (max-width: 380px){
+  nav{gap:7px; padding:7px 8px calc(7px + env(safe-area-inset-bottom));}
+  nav button{padding:9px 7px; font-size:.58rem;}
+  nav button .ico{font-size:1.12rem;}
 }
 
-/* ==================== HEADER ==================== */
-header{
-padding:18px;
-font-family:Outfit;
-font-weight:900;
-text-align:center;
-background:#050812dd;
-backdrop-filter:blur(24px);
-position:sticky;
-top:0;
-z-index:10;
-letter-spacing:.08em;
+/* ===== Premium forms & layout fixes ===== */
+input, select, textarea{max-width:100%;font-size:16px;}
+textarea{min-height:170px;line-height:1.45;}
+#tab-translator textarea{background: linear-gradient(180deg, rgba(0,0,0,.50), rgba(0,0,0,.28));border-color: rgba(255,255,255,.16);}
+#tab-translator textarea:focus{border-color: rgba(53,227,255,.55)}
+#tab-translator .translator-grid{gap:16px}
+#tab-translator .controls{justify-content:flex-start}
+#tab-translator .swap{align-items:center}
+#tab-translator .swap .pill{width:100%;justify-content:center}
+
+#tab-speak .row{gap:12px}
+#tab-speak input{width:100%}
+#spResult{background:#ffffff0a;border:1px solid #ffffff12;border-radius:16px;padding:12px 14px;min-height:52px}
+
+#tab-global .row{align-items:flex-end}
+#tab-global input, #tab-global select{width:100%}
+
+@media (max-width: 520px){
+  .row{flex-direction:column;}
+  .row > *{flex:1 1 auto;}
+  #tab-translator .swap{display:none;}
+  textarea{min-height:190px;}
 }
 
-/* ==================== LAYOUT ==================== */
-.container{max-width:900px;margin:auto;padding:24px}
-.card{
-background:linear-gradient(180deg,var(--card),var(--card2));
-border-radius:28px;
-padding:26px;
-margin-bottom:28px;
-box-shadow:0 40px 120px rgba(0,0,0,.65);
-}
-
-/* ==================== TEXT ==================== */
-.badge{
-font-size:.7rem;
-font-weight:900;
-letter-spacing:.12em;
-color:#bcd1ff;
-margin-bottom:12px;
-}
-.text-en{font-family:Outfit;font-size:1.6rem;line-height:1.3}
-.text-es{color:var(--muted);margin-top:10px}
-.text-fig{
-font-family:monospace;
-color:var(--gold);
-background:#0008;
-padding:14px;
-border-radius:14px;
-margin-top:12px;
-}
-
-/* ==================== CONTROLS ==================== */
-.controls{
-display:flex;
-gap:12px;
-margin-top:14px;
-flex-wrap:wrap;
-}
-.btn-icon{
-width:48px;height:48px;
-border-radius:50%;
-border:none;
-background:linear-gradient(135deg,var(--brand),var(--brand2));
-color:#fff;
-font-size:1.1rem;
-cursor:pointer;
-transition:.15s;
-}
-.btn-icon:hover{transform:scale(1.12)}
-
-.btn-main{
-width:100%;
-padding:16px;
-border:none;
-border-radius:22px;
-background:linear-gradient(135deg,var(--brand),var(--brand2));
-font-family:Outfit;
-font-weight:900;
-color:#fff;
-margin-top:18px;
-cursor:pointer;
-transition:.15s;
-}
-.btn-main:hover{transform:scale(1.04)}
-
-/* ==================== TABS ==================== */
-.tab{display:none}
-.tab.active{display:block}
-
-/* ==================== EXERCISES ==================== */
-.option{
-background:#ffffff14;
-padding:14px;
-border-radius:14px;
-margin-top:10px;
-cursor:pointer;
-transition:.15s;
-}
-.option:hover{background:#ffffff20}
-.correct{background:#2bff8830}
-.wrong{background:#ff5a5a40}
-
-/* ==================== NAV ==================== */
-nav{
-position:fixed;
-bottom:0;left:0;right:0;
-height:88px;
-background:#050812f2;
-backdrop-filter:blur(30px);
-display:flex;
-justify-content:space-around;
-align-items:center;
-}
-nav div{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:6px;
-font-size:.65rem;
-font-weight:900;
-color:#9aa3d0;
-cursor:pointer;
-transition:.15s;
-}
-nav i{font-size:1.5rem}
-nav .active{
-color:var(--brand2);
-transform:translateY(-6px);
-}
-
-/* ==================== INPUTS ==================== */
-textarea,input,select{
-width:100%;
-border:none;
-border-radius:14px;
-padding:14px;
-background:#0007;
-color:#fff;
-font-size:1rem;
-}
-textarea{min-height:140px;resize:none}
 </style>
 </head>
 
 <body>
-
-<header>ELITE ENGLISH PRO</header>
+<header>
+  <div class="appbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>ELITE ENGLISH PRO</h1>
+        <small>Premium Web App · Offline-first</small>
+      </div>
+    </div>
+    <div class="statusbar">
+      <div class="chip" id="chipNet"><span class="dot" id="dotNet"></span><span id="netTxt">Online</span></div>
+      <div class="chip" id="chipAI"><span class="dot off" id="dotAI"></span><span id="aiTxt">AI: OFF</span></div>
+    </div>
+  </div>
+</header>
 
 <div class="container">
 
-<!-- ==================== PHRASES ==================== -->
-<section id="phrases" class="tab active">
-<div class="card">
-<div class="badge">PHRASES</div>
-<div id="phEn" class="text-en"></div>
-<div id="phFig" class="text-fig"></div>
-<div id="phEs" class="text-es"></div>
+  <!-- PHRASES -->
+  <section id="tab-phrases" class="tab active">
+    <div class="card">
+      <div class="badge"><span>PHRASES</span><small id="ph-meta">Unlimited · Smart fallback</small></div>
+      <p id="phEn" class="title-en"></p>
+      <div id="phFig" class="text-fig"></div>
+      <div id="phEs" class="text-es"></div>
+      <div class="controls">
+        <button class="btn-icon" id="phPlay" title="Play EN">
+          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M9 7v10l9-5-9-5Z" fill="white"/></svg>
+        </button>
+        <button class="btn-icon" id="phSlow" title="Slow EN">
+          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M12 21a9 9 0 1 0-9-9" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="btn-icon" id="phDuo" title="EN then ES">
+          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M3 5h18v14H3V5Z" stroke="white" stroke-width="2"/><path d="M7 9h4M7 13h6" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 9h3M14 13h3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <button class="btn-main" id="phNew">NEW PHRASE</button>
+      <div class="pill" id="phStatus" style="display:none"></div>
+      <p class="small">Tip: atajos — <span class="kbd">P</span> nueva frase · <span class="kbd">T</span> traductor</p>
+    </div>
+  </section>
 
-<div class="controls">
-<button class="btn-icon" onclick="tts(phEn.innerText,'en',1)"><i class="fas fa-play"></i></button>
-<button class="btn-icon" onclick="tts(phEn.innerText,'en',0.6)"><i class="fas fa-snail"></i></button>
-<button class="btn-icon" onclick="duo(phEn.innerText,phEs.innerText)"><i class="fas fa-globe"></i></button>
+  <!-- STORIES -->
+  <section id="tab-stories" class="tab">
+    <div class="card">
+      <div class="badge"><span>STORIES</span><small id="st-meta">Wikipedia random summary</small></div>
+      <p id="stTitle" class="title-en"></p>
+      <div id="stEn" class="text-es" style="margin-top:10px;color:#e9edff"></div>
+      <div id="stFig" class="text-fig"></div>
+      <div id="stEs" class="text-es"></div>
+      <div class="controls">
+        <button class="btn-icon" id="stPlay" title="Play EN">
+          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M9 7v10l9-5-9-5Z" fill="white"/></svg>
+        </button>
+        <button class="btn-icon" id="stSlow" title="Slow EN">
+          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M12 21a9 9 0 1 0-9-9" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="btn-icon" id="stDuo" title="EN then ES">
+          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M3 5h18v14H3V5Z" stroke="white" stroke-width="2"/><path d="M7 9h4M7 13h6" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 9h3M14 13h3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <button class="btn-main" id="stNew">NEW STORY</button>
+      <div class="pill" id="stStatus" style="display:none"></div>
+      <p class="small">Si Wikipedia falla (sin internet), se usa un generador local ilimitado.</p>
+    </div>
+  </section>
+
+  <!-- SPEAK -->
+  <section id="tab-speak" class="tab">
+    <div class="card">
+      <div class="badge"><span>SPEAK</span><small id="sp-meta">Unlimited · Custom phrase enabled</small></div>
+
+      <p id="spTarget" class="title-en"></p>
+      <div id="spFig" class="text-fig"></div>
+      <div id="spEs" class="text-es"></div>
+
+      <div class="controls">
+        <button class="btn-icon" id="spPlay" title="Play EN">
+          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M9 7v10l9-5-9-5Z" fill="white"/></svg>
+        </button>
+        <button class="btn-icon" id="spMic" title="Mic">
+          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Z" stroke="white" stroke-width="2"/><path d="M19 11a7 7 0 0 1-14 0" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M12 18v3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div>
+          <label class="small">✅ Escribe tu propia frase para practicar (opcional):</label>
+          <input id="spCustom" type="text" placeholder="Type your own English sentence..."/>
+        </div>
+        <div>
+          <label class="small">&nbsp;</label>
+          <button class="btn-ghost" id="spUseCustom">Use my phrase</button>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <div>
+          <label class="small">Si no hay micrófono, escribe lo que dijiste:</label>
+          <input id="spManual" type="text" placeholder="I always practice English after work."/>
+        </div>
+        <div>
+          <label class="small">&nbsp;</label>
+          <button class="btn-ghost" id="spEvalManual">Evaluate typed speech</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div id="spResult" class="text-es"></div>
+
+      <button class="btn-main" id="spNew">NEW PHRASE</button>
+      <div class="pill" id="spStatus" style="display:none"></div>
+      <p class="small">Tip: el micrófono suele requerir HTTPS/localhost. En modo manual siempre funciona.</p>
+    </div>
+  </section>
+
+  <!-- EXERCISES -->
+  <section id="tab-exercises" class="tab">
+    <div class="card">
+      <div class="badge"><span>EXERCISES</span><small id="ex-meta">Unlimited · Always new</small></div>
+      <p id="exQ" class="title-en"></p>
+      <div id="exOpts"></div>
+      <button class="btn-main" id="exNew">NEW EXERCISE</button>
+      <div class="pill" id="exStatus" style="display:none"></div>
+      <p class="small">Siempre genera ejercicios nuevos. Si no hay internet, usa generador local ilimitado.</p>
+    </div>
+  </section>
+
+  <!-- TRANSLATOR -->
+  <section id="tab-translator" class="tab">
+    <div class="card">
+      <div class="badge"><span>TRANSLATOR</span><small id="tr-meta">ES ⇄ EN · Online + Offline</small></div>
+
+      <div class="row" style="margin-bottom:10px">
+        <div>
+          <label class="small">Modo</label>
+          <select id="trMode">
+            <option value="auto">AUTO (detect)</option>
+            <option value="en-es">EN → ES</option>
+            <option value="es-en">ES → EN</option>
+          </select>
+        </div>
+        <div>
+          <label class="small">Acciones rápidas</label>
+          <button class="btn-ghost" id="trSwap">Swap</button>
+        </div>
+      </div>
+
+      <div class="translator-grid">
+        <div>
+          <label class="small">Texto</label>
+          <textarea id="trIn" placeholder="Escribe aquí (English o Español)..."></textarea>
+          <div class="controls">
+            <button class="btn-icon" id="trSpeakIn" title="TTS input">🔊</button>
+            <button class="btn-icon" id="trCopyIn" title="Copy input">📋</button>
+            <button class="btn-icon" id="trClear" title="Clear">✖</button>
+          </div>
+        </div>
+
+        <div class="swap" aria-hidden="true">
+          <div class="pill">Atajos</div>
+          <div class="small">Traducir: <span class="kbd">Ctrl</span>+<span class="kbd">Enter</span></div>
+          <div class="small">Swap: <span class="kbd">Alt</span>+<span class="kbd">S</span></div>
+        </div>
+
+        <div>
+          <label class="small">Resultado</label>
+          <textarea id="trOut" placeholder="Translation result..." readonly></textarea>
+          <div class="controls">
+            <button class="btn-icon" id="trSpeakOut" title="TTS output">🔊</button>
+            <button class="btn-icon" id="trCopyOut" title="Copy output">📋</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-main" id="trGo">TRANSLATE</button>
+      <div class="pill" id="trStatus" style="display:none"></div>
+      <p class="small">El traductor usa MyMemory cuando hay internet. Si falla, usa traducción offline aproximada. (Nunca se rompe.)</p>
+    </div>
+  </section>
+
+  <!-- GLOBAL -->
+  <section id="tab-global" class="tab">
+    <div class="card">
+      <div class="badge"><span>GLOBAL · SETTINGS</span><small>Premium stable engine</small></div>
+      <div class="row">
+        <div>
+          <label class="small">Gemini API Key (se guarda solo en tu navegador)</label>
+          <input id="geminiKey" type="password" placeholder="Paste your Gemini API Key"/>
+        </div>
+        <div>
+          <label class="small">AI Mode</label>
+          <select id="aiMode">
+            <option value="off">OFF (Robust fallback)</option>
+            <option value="gemini">GEMINI (Optional)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-main" id="saveGlobal">SAVE SETTINGS</button>
+      <button class="btn-ghost" id="testGemini">Test Gemini</button>
+      <div class="divider"></div>
+      <div id="globalStatus" class="text-es"></div>
+      <p class="small">Si Gemini no responde, el sistema seguirá generando contenido ilimitado (internet + generador local).</p>
+    </div>
+  </section>
+
 </div>
 
-<button class="btn-main" onclick="loadPhrase()">NEW PHRASE</button>
-</div>
-</section>
-
-<!-- ==================== STORIES ==================== -->
-<section id="stories" class="tab">
-<div class="card">
-<div class="badge">STORIES</div>
-<div id="stEn" class="text-en"></div>
-<div id="stFig" class="text-fig"></div>
-<div id="stEs" class="text-es"></div>
-
-<div class="controls">
-<button class="btn-icon" onclick="tts(stEn.innerText,'en',1)"><i class="fas fa-play"></i></button>
-<button class="btn-icon" onclick="tts(stEn.innerText,'en',0.6)"><i class="fas fa-snail"></i></button>
-<button class="btn-icon" onclick="duo(stEn.innerText,stEs.innerText)"><i class="fas fa-globe"></i></button>
-</div>
-
-<button class="btn-main" onclick="loadStory()">NEW STORY</button>
-</div>
-</section>
-
-<!-- ==================== SPEAK ==================== -->
-<section id="speak" class="tab">
-<div class="card">
-<div class="badge">SPEAK</div>
-<div id="spTarget" class="text-en"></div>
-<div id="spFig" class="text-fig"></div>
-<div id="spEs" class="text-es"></div>
-
-<div class="controls">
-<button class="btn-icon" onclick="tts(spTarget.innerText,'en',1)"><i class="fas fa-play"></i></button>
-<button class="btn-icon" onclick="startSpeak()"><i class="fas fa-microphone"></i></button>
-</div>
-
-<div id="spResult" class="text-es"></div>
-<button class="btn-main" onclick="generateSpeak()">NEW PHRASE</button>
-</div>
-</section>
-
-<!-- ==================== EXERCISES ==================== -->
-<section id="exercises" class="tab">
-<div class="card">
-<div class="badge">EXERCISES</div>
-<div id="exQ" class="text-en"></div>
-<div id="exOpts"></div>
-<button class="btn-main" onclick="loadExercise()">NEW EXERCISE</button>
-</div>
-</section>
-
-<!-- ==================== GLOBAL ==================== -->
-<section id="global" class="tab">
-<div class="card">
-<div class="badge">GLOBAL · AI SETTINGS</div>
-<input id="geminiKey" type="password" placeholder="Paste your Gemini API Key">
-<select id="aiMode">
-<option value="off">OFF (Fallback)</option>
-<option value="gemini">GEMINI</option>
-</select>
-<button class="btn-main" onclick="saveGlobal()">SAVE SETTINGS</button>
-<div id="globalStatus" class="text-es"></div>
-</div>
-</section>
-
-</div>
-
-<!-- ==================== NAV ==================== -->
-<nav>
-<div class="active" onclick="tab('phrases',this)"><i class="fas fa-bolt"></i><span>PHRASES</span></div>
-<div onclick="tab('stories',this)"><i class="fas fa-book"></i><span>STORIES</span></div>
-<div onclick="tab('speak',this)"><i class="fas fa-microphone"></i><span>SPEAK</span></div>
-<div onclick="tab('exercises',this)"><i class="fas fa-dumbbell"></i><span>EXERCISES</span></div>
-<div onclick="tab('global',this)"><i class="fas fa-gear"></i><span>GLOBAL</span></div>
+<nav id="bottomNav">
+  <button class="active" data-tab="tab-phrases"><div class="ico">⚡</div><span>PHRASES</span></button>
+  <button data-tab="tab-stories"><div class="ico">📖</div><span>STORIES</span></button>
+  <button data-tab="tab-speak"><div class="ico">🎙️</div><span>SPEAK</span></button>
+  <button data-tab="tab-exercises"><div class="ico">🏋️</div><span>EXERCISES</span></button>
+  <button data-tab="tab-translator"><div class="ico">🌐</div><span>TRANSLATE</span></button>
+  <button data-tab="tab-global"><div class="ico">⚙️</div><span>GLOBAL</span></button>
 </nav>
 
-<!-- ==================== CORE SCRIPT ==================== -->
-<script>
-/* Helpers */
-const $=id=>document.getElementById(id);
-const phEn=$("phEn"),phFig=$("phFig"),phEs=$("phEs");
-const stEn=$("stEn"),stFig=$("stFig"),stEs=$("stEs");
-const spTarget=$("spTarget"),spFig=$("spFig"),spEs=$("spEs"),spResult=$("spResult");
-const exQ=$("exQ"),exOpts=$("exOpts");
-const geminiKey=$("geminiKey"),aiMode=$("aiMode"),globalStatus=$("globalStatus");
-
-/* NAV */
-function tab(id,el){
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-$(id).classList.add("active");
-document.querySelectorAll("nav div").forEach(n=>n.classList.remove("active"));
-el.classList.add("active");
-}
-
-/* AUDIO */
-function tts(text,lang,rate){
-if(!text)return;
-const u=new SpeechSynthesisUtterance(text);
-u.lang=lang==="en"?"en-US":"es-ES";
-u.rate=rate;
-speechSynthesis.cancel();
-speechSynthesis.speak(u);
-}
-function duo(en,es){
-tts(en,"en",1);
-setTimeout(()=>tts(es,"es",1),1200);
-}
-
-/* PRONUNCIACIÓN FIGURADA */
-function figEN(t){
-return t.toLowerCase()
-.replace(/ph/g,"f")
-.replace(/th/g,"z")
-.replace(/ing\b/g,"in");
-}
-
-/* INIT SAFE */
-(function(){
-geminiKey.value=localStorage.getItem("GEMINI_KEY")||"";
-aiMode.value=localStorage.getItem("AI_MODE")||"off";
-})();
-</script>
-
-<!-- 🔥 AQUÍ PUEDES PEGAR TUS SCRIPTS FALLBACK PRO SIN CAMBIAR NADA 🔥 -->
-<script>
-/* ======================================================
-   ELITE ENGLISH PRO · FALLBACK ENGINE v1.0
-   Compatible 100% con el HTML base
-====================================================== */
-
-/* ==================== UTIL ==================== */
-const sleep = ms => new Promise(r=>setTimeout(r,ms));
-const rnd = arr => arr[Math.floor(Math.random()*arr.length)];
-
-/* ==================== PRONUNCIACIÓN FIGURADA PRO ==================== */
-function figEN(text){
-  if(!text) return "";
-  let t = text.toLowerCase();
-
-  const rules = [
-    [/ph/g,"f"], [/th/g,"z"], [/sh/g,"sh"], [/ch/g,"ch"],
-    [/ck/g,"k"], [/gh/g,"g"], [/qu/g,"ku"],
-    [/tion\b/g,"shon"], [/sion\b/g,"shon"],
-    [/ing\b/g,"in"], [/ed\b/g,"d"], [/ly\b/g,"li"],
-    [/ough/g,"of"], [/igh/g,"ai"],
-    [/ee|ea/g,"i"], [/oo/g,"u"], [/ai|ay/g,"ei"],
-    [/ow|ou/g,"au"]
-  ];
-  rules.forEach(r=>t=t.replace(r[0],r[1]));
-  return t.replace(/[^a-záéíóúñ\s]/g,"").replace(/\s+/g," ").trim();
-}
-
-/* ==================== TRADUCTOR ROBUSTO ==================== */
-async function translate(text){
-  const engines = [
-    async()=>fetch(`https://apertium.org/apy/translate?langpair=en|es&q=${encodeURIComponent(text)}`).then(r=>r.json()).then(d=>d.responseData?.translatedText),
-    async()=>fetch(`https://libretranslate.com/translate`,{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({q:text,source:"en",target:"es"})
-    }).then(r=>r.json()).then(d=>d.translatedText),
-    async()=>fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|es`).then(r=>r.json()).then(d=>d.responseData?.translatedText)
-  ];
-
-  for(const e of engines){
-    try{
-      const r = await e();
-      if(r && !r.includes("MYMEMORY WARNING")) return r;
-    }catch{}
-  }
-  return text;
-}
-
-/* ==================== FUENTES DE FRASES ==================== */
-async function getPhraseOnline(){
-  const sources = [
-    async()=>fetch("https://api.quotable.io/random").then(r=>r.json()).then(d=>d.content),
-    async()=>fetch("https://api.adviceslip.com/advice").then(r=>r.json()).then(d=>d.slip.advice),
-    async()=>fetch("https://bible-api.com/john%203:16").then(r=>r.json()).then(d=>d.text),
-    async()=>fetch("https://www.reddit.com/r/quotes.json?limit=50")
-      .then(r=>r.json())
-      .then(d=>rnd(d.data.children).data.title)
-  ];
-  for(const s of sources){
-    try{
-      const t = await s();
-      if(t && t.length<160) return t;
-    }catch{}
-  }
-  return null;
-}
-
-/* ==================== FRASES ==================== */
-async function loadPhrase(){
-  let text=null;
-  try{
-    if(aiMode.value==="gemini") text = await gemini("Give a short, logical English phrase");
-  }catch{}
-  if(!text) text = await getPhraseOnline();
-  if(!text) text = rnd(localPhrases);
-
-  phEn.innerText=text;
-  phFig.innerText=figEN(text);
-  phEs.innerText=await translate(text);
-}
-
-const localPhrases=[
-  "Learning English opens new opportunities.",
-  "Practice every day to improve your skills.",
-  "Confidence grows with repetition.",
-  "Small steps lead to big results."
-];
-
-/* ==================== STORIES ==================== */
-async function loadStory(){
-  let text=null;
-  try{
-    if(aiMode.value==="gemini") text = await gemini("Create a short English story, simple and logical.");
-  }catch{}
-  if(!text){
-    try{
-      const r=await fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary");
-      const d=await r.json();
-      text=d.extract;
-    }catch{}
-  }
-  if(!text) text=rnd(localStories);
-
-  stEn.innerText=text;
-  stFig.innerText=figEN(text);
-  stEs.innerText=await translate(text);
-}
-
-const localStories=[
-  "Tom wakes up early and goes to work every morning.",
-  "Anna studies English because she wants a better job.",
-  "The dog runs in the park and plays with children."
-];
-
-/* ==================== SPEAK ==================== */
-async function generateSpeak(){
-  let text=null;
-  try{
-    if(aiMode.value==="gemini") text=await gemini("Give one short sentence for English pronunciation practice.");
-  }catch{}
-  if(!text) text=await getPhraseOnline();
-  if(!text) text=rnd(localPhrases);
-
-  spTarget.innerText=text;
-  spFig.innerText=figEN(text);
-  spEs.innerText=await translate(text);
-  spResult.innerText="";
-}
-
-/* ==================== VOICE RECOGNITION ==================== */
-let recognition=null;
-function startSpeak(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){spResult.innerText="❌ Speech not supported";return;}
-  recognition=new SR();
-  recognition.lang="en-US";
-  recognition.onresult=e=>spResult.innerText="🗣 "+e.results[0][0].transcript;
-  recognition.onerror=e=>spResult.innerText="❌ "+e.error;
-  recognition.start();
-}
-
-/* ==================== EXERCISES ==================== */
-async function loadExercise(){
-  let q=null,opts=null,correct=null;
-
-  try{
-    if(aiMode.value==="gemini"){
-      const g=await gemini("Create a simple English grammar question with 3 options. Mark correct with *");
-      if(g){
-        const l=g.split("\n").filter(x=>x.trim());
-        q=l[0]; opts=l.slice(1,4).map(x=>x.replace("*",""));
-        correct=l.find(x=>x.includes("*")).replace("*","");
-      }
-    }
-  }catch{}
-
-  if(!q){
-    const e=rnd(localExercises);
-    q=e.q; opts=e.opts; correct=e.opts[e.correct];
-  }
-
-  exQ.innerText=q;
-  exOpts.innerHTML="";
-  opts.sort(()=>Math.random()-0.5).forEach(o=>{
-    const d=document.createElement("div");
-    d.className="option";
-    d.innerText=o;
-    d.onclick=()=>d.classList.add(o===correct?"correct":"wrong");
-    exOpts.appendChild(d);
-  });
-}
-
-const localExercises=[
-  {q:"She ___ English every day.",opts:["study","studies","studying"],correct:1},
-  {q:"I ___ to work yesterday.",opts:["go","went","gone"],correct:1},
-  {q:"They ___ playing now.",opts:["is","are","am"],correct:1}
-];
-
-/* ==================== GLOBAL ==================== */
-function saveGlobal(){
-  localStorage.setItem("GEMINI_KEY",geminiKey.value);
-  localStorage.setItem("AI_MODE",aiMode.value);
-  globalStatus.innerText="✅ Settings saved";
-}
-
-/* ==================== AUTO INIT ==================== */
-(async()=>{
-  await loadPhrase();
-  await loadStory();
-  await generateSpeak();
-  await loadExercise();
-})();
-</script>
-<script>
-/* ======================================================
-   SPEAK PRONUNCIATION EVALUATOR v1.0
-====================================================== */
-
-function normalizeText(t){
-  return t
-    .toLowerCase()
-    .replace(/[^a-z\s]/g,"")
-    .replace(/\s+/g," ")
-    .trim();
-}
-
-function similarity(a,b){
-  if(a===b) return 1;
-  if(Math.abs(a.length-b.length)>2) return 0;
-  let matches=0;
-  for(let i=0;i<Math.min(a.length,b.length);i++){
-    if(a[i]===b[i]) matches++;
-  }
-  return matches/Math.max(a.length,b.length);
-}
-
-function evaluatePronunciation(target, spoken){
-  const tWords = normalizeText(target).split(" ");
-  const sWords = normalizeText(spoken).split(" ");
-
-  let html="";
-  let correct=0;
-
-  tWords.forEach((w,i)=>{
-    const sw = sWords[i] || "";
-    const score = similarity(w,sw);
-
-    if(score>=0.75){
-      html+=`<span style="color:#2ecc71;font-weight:600">${w}</span> `;
-      correct++;
-    }else{
-      html+=`<span style="color:#e74c3c;font-weight:600">${w}</span> `;
-    }
-  });
-
-  const percent = Math.round((correct/tWords.length)*100);
-  return {html,percent};
-}
-
-/* ==================== AUTO HOOK ==================== */
-const originalStartSpeak = startSpeak;
-
-startSpeak = function(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){
-    spResult.innerText="❌ Speech not supported";
-    return;
-  }
-
-  const recognition=new SR();
-  recognition.lang="en-US";
-
-  recognition.onresult=e=>{
-    const spoken = e.results[0][0].transcript;
-    const target = spTarget.innerText;
-
-    const result = evaluatePronunciation(target,spoken);
-
-    spResult.innerHTML = `
-      <div style="margin-bottom:6px">🗣 <b>${spoken}</b></div>
-      <div>${result.html}</div>
-      <div style="margin-top:8px;font-weight:700">
-        🎯 Pronunciation: 
-        <span style="color:${result.percent>=70?"#2ecc71":"#e74c3c"}">
-          ${result.percent}%
-        </span>
-      </div>
-    `;
-  };
-
-  recognition.onerror=e=>{
-    spResult.innerText="❌ "+e.error;
-  };
-
-  recognition.start();
-};
-</script>
-<script>
-/* ======================================================
-   EXERCISE ENGINE PRO v2.0 (STABLE)
-====================================================== */
-
-const exerciseCache = new Set();
-
-/* ---------- GENERADORES LÓGICOS ---------- */
-function generateSentence(){
-  const subjects = ["I","You","He","She","We","They"];
-  const verbs = [
-    ["eat","eats"],["play","plays"],["study","studies"],
-    ["work","works"],["read","reads"],["write","writes"],
-    ["go","goes"],["like","likes"]
-  ];
-  const objects = [
-    "every day","at school","in the morning",
-    "after work","with my friends","at home"
-  ];
-
-  const s = rnd(subjects);
-  const v = rnd(verbs);
-  const o = rnd(objects);
-
-  const verb = (s==="He"||s==="She") ? v[1] : v[0];
-  return `${s} ${verb} ${o}.`;
-}
-
-/* ---------- EJERCICIO DESDE API REAL ---------- */
-async function fetchExerciseOnline(){
-  try{
-    const r = await fetch("https://api.quotable.io/random");
-    const d = await r.json();
-    if(d && d.content){
-      return d.content.replace(/[^\w\s.]/g,"");
-    }
-  }catch{}
-  return null;
-}
-
-/* ---------- EJERCICIO FINAL ---------- */
-async function loadExercise(){
-  exOpts.innerHTML="";
-  let sentence=null;
-
-  /* 1️⃣ Gemini */
-  try{
-    if(aiMode.value==="gemini"){
-      const g = await gemini("Create a simple English grammar sentence.");
-      if(g) sentence = g.trim();
-    }
-  }catch{}
-
-  /* 2️⃣ Internet (API real, sin CORS) */
-  if(!sentence){
-    sentence = await fetchExerciseOnline();
-  }
-
-  /* 3️⃣ Generador ilimitado */
-  while(!sentence || exerciseCache.has(sentence)){
-    sentence = generateSentence();
-  }
-
-  exerciseCache.add(sentence);
-  if(exerciseCache.size>200) exerciseCache.clear();
-
-  /* ---------- Crear hueco ---------- */
-  const words = sentence.replace(".","").split(" ");
-  let index = Math.floor(Math.random()*(words.length-1))+1;
-  const correct = words[index];
-  words[index] = "_____";
-
-  exQ.innerText = words.join(" ");
-
-  /* ---------- Opciones ---------- */
-  const options = new Set([correct]);
-  const pool = ["is","are","was","were","eat","eats","play","plays","study","studies","go","goes"];
-
-  while(options.size<3){
-    options.add(rnd(pool));
-  }
-
-  [...options].sort(()=>Math.random()-0.5).forEach(o=>{
-    const d=document.createElement("div");
-    d.className="option";
-    d.innerText=o;
-    d.onclick=()=>d.classList.add(o===correct?"correct":"wrong");
-    exOpts.appendChild(d);
-  });
-}
-</script>
-
-
-<!-- ================== LIBRERÍAS EXTERNAS ================== -->
-<script src="https://unpkg.com/compromise@latest/builds/compromise.min.js"></script>
-<script src="https://unpkg.com/compromise-sentences@latest/builds/compromise-sentences.min.js"></script>
+<div class="toast" id="toast"><div class="t-title" id="toastTitle">Info</div><div class="t-body" id="toastBody"></div></div>
 
 <script>
-/* =========================================================
-   CONTROLLED ENGLISH ENGINE v8.0
-   SUPER · ULTRA · PREMIUM · DEFINITIVE
-========================================================= */
+"use strict";
 
-/* ================== CONFIGURACIÓN ================== */
-const ENGINE_CONFIG = {
-  level: "A2",        // A1 | A2 | B1
-  mode: "STRICT",     // STRICT | SMART | FREE
-  exercises: true,
-  aiAssist: true
-};
+/* ===================== CORE HELPERS ===================== */
+const $ = (id) => document.getElementById(id);
+const rnd = (arr) => arr[Math.floor(Math.random()*arr.length)];
+const sleep = (ms) => new Promise(r=>setTimeout(r,ms));
 
-/* ================== BASE DE DATOS ================== */
-const DB = {
-  subjects:[
-    {t:"I",p:1},{t:"You",p:2},{t:"He",p:3},
-    {t:"She",p:3},{t:"We",p:1},{t:"They",p:2}
-  ],
-  verbs:[
-    {b:"eat",s:"eats"},
-    {b:"study",s:"studies"},
-    {b:"work",s:"works"},
-    {b:"play",s:"plays"},
-    {b:"read",s:"reads"},
-    {b:"like",s:"likes"},
-    {b:"practice",s:"practices"},
-    {b:"go",s:"goes"}
-  ],
-  adverbs:["always","usually","often"],
-  complements:[
-    "English every day",
-    "at school",
-    "in the morning",
-    "after work",
-    "with my friends",
-    "at home"
-  ]
-};
+const UI = Object.freeze({
+  tabs: () => Array.from(document.querySelectorAll(".tab")),
+  navBtns: () => Array.from(document.querySelectorAll("nav button")),
 
-const rnd = a => a[Math.floor(Math.random()*a.length)];
+  phEn: $("phEn"), phFig: $("phFig"), phEs: $("phEs"), phStatus: $("phStatus"), phMeta: $("ph-meta"),
+  stTitle: $("stTitle"), stEn: $("stEn"), stFig: $("stFig"), stEs: $("stEs"), stStatus: $("stStatus"), stMeta: $("st-meta"),
+  spTarget: $("spTarget"), spFig: $("spFig"), spEs: $("spEs"), spResult: $("spResult"), spStatus: $("spStatus"), spMeta: $("sp-meta"),
+  spManual: $("spManual"), spCustom: $("spCustom"),
+  exQ: $("exQ"), exOpts: $("exOpts"), exStatus: $("exStatus"), exMeta: $("ex-meta"),
 
-/* =========================================================
-   LAYER 1 — SANITIZER (HARD)
-========================================================= */
-function sanitize(t){
-  if(!t || typeof t!=="string") return null;
-  t = t.replace(/\n/g," ").replace(/\s+/g," ").trim();
-  t = t.split(/[!?]/)[0];
-  if(!/^[A-Za-z0-9 ,.'-]+$/.test(t)) return null;
-  return t.endsWith(".") ? t : t + ".";
+  // Translator
+  trMode: $("trMode"), trIn: $("trIn"), trOut: $("trOut"), trStatus: $("trStatus"), trMeta: $("tr-meta"),
+
+  geminiKey: $("geminiKey"), aiMode: $("aiMode"), globalStatus: $("globalStatus"),
+
+  chipNet: $("chipNet"), dotNet: $("dotNet"), netTxt: $("netTxt"),
+  chipAI: $("chipAI"), dotAI: $("dotAI"), aiTxt: $("aiTxt"),
+
+  toast: $("toast"), toastTitle: $("toastTitle"), toastBody: $("toastBody")
+});
+
+const STORE = Object.freeze({
+  GEMINI_KEY: "EEP_GEMINI_KEY",
+  AI_MODE: "EEP_AI_MODE"
+});
+
+function safeGet(key, fallback=""){
+  try{ return localStorage.getItem(key) ?? fallback; }catch{ return fallback; }
+}
+function safeSet(key, value){
+  try{ localStorage.setItem(key, value); }catch{}
 }
 
-/* =========================================================
-   LAYER 2 — AI PARSER (COMPROMISE)
-========================================================= */
-function aiParse(t){
+let toastTimer = null;
+function toast(title, body, ms=2300){
+  UI.toastTitle.textContent = title;
+  UI.toastBody.textContent = body;
+  UI.toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>UI.toast.classList.remove("show"), ms);
+}
+function pill(el, text, ms=1200){
+  el.textContent = text;
+  el.style.display = "inline-flex";
+  if(ms>0) setTimeout(()=> el.style.display = "none", ms);
+}
+
+/* ===================== STATUS CHIPS ===================== */
+function updateNetChip(){
+  const online = navigator.onLine;
+  UI.netTxt.textContent = online ? "Online" : "Offline";
+  UI.dotNet.classList.toggle("off", !online);
+}
+function updateAIChip(){
+  const mode = UI.aiMode.value;
+  const on = (mode === "gemini");
+  UI.aiTxt.textContent = on ? "AI: GEMINI" : "AI: OFF";
+  UI.dotAI.classList.toggle("off", !on);
+}
+window.addEventListener("online", updateNetChip);
+window.addEventListener("offline", updateNetChip);
+
+/* ===================== TABS ===================== */
+function setTab(tabId){
+  UI.tabs().forEach(t=>t.classList.remove("active"));
+  $(tabId)?.classList.add("active");
+  UI.navBtns().forEach(b=>b.classList.remove("active"));
+  const activeBtn = document.querySelector(`nav button[data-tab="${tabId}"]`);
+  activeBtn?.classList.add("active");
+}
+UI.navBtns().forEach(btn=> btn.addEventListener("click", ()=>setTab(btn.dataset.tab)));
+
+/* ===================== AUDIO TTS ===================== */
+function tts(text, lang="en", rate=1){
+  if(!text) return;
   try{
-    const d = nlp(t);
-    return {
-      subject: d.match('#Pronoun').first().text(),
-      verb: d.verbs().first().text(),
-      negative: d.has('not'),
-      question: d.sentences().isQuestion().length > 0
-    };
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = (lang==="en") ? "en-US" : "es-ES";
+    u.rate = rate;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
   }catch{
-    return null;
+    toast("Audio", "Tu navegador no soporta TTS.");
+  }
+}
+async function duo(en, es){
+  if(en) tts(en, "en", 1);
+  await sleep(1100);
+  if(es) tts(es, "es", 1);
+}
+
+/* ===================== FETCH WITH TIMEOUT ===================== */
+async function fetchJson(url,{timeoutMs=7000,method="GET",headers={},body=null}={}){
+  const controller = new AbortController();
+  const t = setTimeout(()=>controller.abort(), timeoutMs);
+  try{
+    const res = await fetch(url, {method, headers, body, signal: controller.signal});
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    return await res.json();
+  } finally {
+    clearTimeout(t);
   }
 }
 
-/* =========================================================
-   LAYER 3 — STRICT PARSER
-========================================================= */
-function strictParse(t){
-  const w = t.replace(".","").split(" ");
-  const s = DB.subjects.find(x=>x.t===w[0]);
-  if(!s) return null;
-
-  let i = 1;
-  let neg = false;
-
-  if(w[1]==="do" || w[1]==="does"){
-    neg = true;
-    i += 2;
-  }
-
-  const vWord = w[i];
-  const v = DB.verbs.find(x=>x.b===vWord || x.s===vWord);
-  if(!v) return null;
-
-  if(!neg){
-    if(s.p===3 && vWord!==v.s) return null;
-    if(s.p!==3 && vWord!==v.b) return null;
-  }
-
-  const comp = w.slice(i+1).join(" ");
-  if(!DB.complements.includes(comp)) return null;
-
-  return {subject:s,verb:v,neg};
-}
-
-/* =========================================================
-   LAYER 4 — SMART VALIDATION
-========================================================= */
-function smartValidate(t){
-  if(strictParse(t)) return true;
-  if(ENGINE_CONFIG.aiAssist){
-    const ai = aiParse(t);
-    if(ai && DB.subjects.some(s=>s.t===ai.subject)) return true;
-  }
-  return false;
-}
-
-/* =========================================================
-   LAYER 5 — SAFE GENERATOR (FINAL)
-========================================================= */
-function buildSentence(){
-  const s = rnd(DB.subjects);
-  const v = rnd(DB.verbs);
-  const c = rnd(DB.complements);
-
-  if(ENGINE_CONFIG.level==="A1"){
-    return `${s.t} ${s.p===3?v.s:v.b} ${c}.`;
-  }
-
-  if(ENGINE_CONFIG.level==="A2"){
-    const adv = rnd(DB.adverbs);
-    return `${s.t} ${adv} ${s.p===3?v.s:v.b} ${c}.`;
-  }
-
-  return `Do ${s.t.toLowerCase()} ${v.b} ${c}?`;
-}
-
-/* =========================================================
-   ULTRA SMART PIPELINE
-========================================================= */
-async function ultraSentence(sourceFn){
-  let raw = null;
-  try{ raw = await sourceFn(); }catch{}
-
-  const clean = sanitize(raw);
-  if(clean){
-    if(ENGINE_CONFIG.mode==="FREE") return clean;
-    if(ENGINE_CONFIG.mode==="SMART" && smartValidate(clean)) return clean;
-    if(ENGINE_CONFIG.mode==="STRICT" && strictParse(clean)) return clean;
-  }
-
-  // 🔒 GARANTÍA TOTAL
-  return buildSentence();
-}
-
-/* =========================================================
-   AUTO-INTEGRACIÓN TOTAL (NO HTML)
-========================================================= */
-
-/* PHRASES */
-const _lp = loadPhrase;
-loadPhrase = async ()=>{
-  const t = await ultraSentence(async()=>{
-    await _lp();
-    return phEn.innerText;
-  });
-  renderPhrase(t);
-};
-
-/* SPEAK */
-const _gs = generateSpeak;
-generateSpeak = async ()=>{
-  const t = await ultraSentence(async()=>{
-    await _gs();
-    return spTarget.innerText;
-  });
-  renderSpeak(t);
-};
-
-/* EXERCISES (100% PEDAGÓGICOS) */
-const _le = loadExercise;
-loadExercise = async ()=>{
-  if(!ENGINE_CONFIG.exercises) return;
-
-  const base = await ultraSentence(async()=>{
-    await _le();
-    return exQ.innerText.replace("_____","");
-  });
-
-  const parsed = strictParse(base);
-  if(!parsed){
-    exQ.innerText = base;
-    return;
-  }
-
-  const words = base.replace(".","").split(" ");
-  const correct = words[1];
-  words[1] = "_____";
-
-  exQ.innerText = words.join(" ");
-  exOpts.innerHTML = "";
-
-  const pool = DB.verbs.map(v=>parsed.subject.p===3?v.s:v.b);
-  const opts = new Set([correct]);
-
-  while(opts.size<3) opts.add(rnd(pool));
-
-  [...opts].sort(()=>Math.random()-0.5).forEach(o=>{
-    const d = document.createElement("div");
-    d.className = "option";
-    d.innerText = o;
-    d.onclick = ()=>d.classList.add(o===correct?"correct":"wrong");
-    exOpts.appendChild(d);
-  });
-};
-</script>
-
-
-
-<script>
-/* =========================================================
-   ELITE PHONETIC ENGINE v5.0
-   English → Spanish Figurative Pronunciation
-========================================================= */
-
+/* ===================== PHONETIC ENGINE ===================== */
 function phoneticENtoES(text){
   if(!text) return "";
-
-  let t = " " + text.toLowerCase() + " ";
-
-  /* ---------- PALABRAS IRREGULARES (CRÍTICO) ---------- */
-  const dictionary = {
+  let t = (" " + text.toLowerCase() + " ");
+  const dict = {
     "the":"de","this":"dis","that":"dat","these":"díis","those":"dóus",
     "think":"zink","thing":"zin","thought":"zót",
     "through":"zrú","though":"dóu","there":"der","their":"der","they":"dei",
@@ -929,495 +716,799 @@ function phoneticENtoES(text){
     "work":"uérk","world":"uérld",
     "practice":"práctis","english":"ínglish"
   };
-
-  for(const w in dictionary){
-    t = t.replace(new RegExp(`\\b${w}\\b`,"g"),dictionary[w]);
+  for(const w in dict){
+    t = t.replace(new RegExp(`\\b${w}\\b`, "g"), dict[w]);
   }
 
-  /* ---------- CONSONANTES COMPLEJAS ---------- */
-  t = t.replace(/th/g,"z");        // this → zis
-  t = t.replace(/sh/g,"sh");       // she → shi
-  t = t.replace(/ch/g,"ch");       // chair → cher
-  t = t.replace(/ph/g,"f");        // phone → foun
-  t = t.replace(/ck/g,"k");
-  t = t.replace(/gh\b/g,"");
-  t = t.replace(/ng\b/g,"ng");
+  t = t.replace(/th/g,"z")
+       .replace(/sh/g,"sh")
+       .replace(/ch/g,"ch")
+       .replace(/ph/g,"f")
+       .replace(/ck/g,"k")
+       .replace(/gh\\b/g,"")
+       .replace(/ng\\b/g,"ng")
+       .replace(/ee/g,"ii")
+       .replace(/ea/g,"í")
+       .replace(/oo/g,"u")
+       .replace(/ou/g,"au")
+       .replace(/ow/g,"au")
+       .replace(/igh/g,"ái")
+       .replace(/ai/g,"éi")
+       .replace(/ay/g,"éi")
+       .replace(/ie/g,"ái")
+       .replace(/oa/g,"óu")
+       .replace(/tion\\b/g,"shon")
+       .replace(/sion\\b/g,"shon")
+       .replace(/ed\\b/g,"d")
+       .replace(/ing\\b/g,"in")
+       .replace(/ly\\b/g,"li")
+       .replace(/er\\b/g,"er")
+       .replace(/wr/g,"r")
+       .replace(/h/g,"");
 
-  /* ---------- VOCALES LARGAS / CORTAS ---------- */
-  t = t.replace(/ee/g,"ii");       // see → sii
-  t = t.replace(/ea/g,"í");        // eat → ít
-  t = t.replace(/oo/g,"u");        // food → fud
-  t = t.replace(/ou/g,"au");       // house → haus
-  t = t.replace(/ow/g,"au");       // now → nau
-  t = t.replace(/igh/g,"ái");      // night → náit
-  t = t.replace(/ai/g,"éi");       // rain → réin
-  t = t.replace(/ay/g,"éi");
-  t = t.replace(/ie/g,"ái");
-  t = t.replace(/oa/g,"óu");
-
-  /* ---------- TERMINACIONES ---------- */
-  t = t.replace(/tion\b/g,"shon"); // nation → néishon
-  t = t.replace(/sion\b/g,"shon");
-  t = t.replace(/ed\b/g,"d");      // worked → uérkd
-  t = t.replace(/ing\b/g,"in");    // working → uérkin
-  t = t.replace(/ly\b/g,"li");     // slowly → slóuli
-  t = t.replace(/er\b/g,"er");     // teacher → tícher
-
-  /* ---------- R / L / H ---------- */
-  t = t.replace(/wr/g,"r");        // write → ráit
-  t = t.replace(/r/g,"r");         // suave
-  t = t.replace(/h/g,"");          // house → aus
-
-  /* ---------- VOCALES SUAVES ---------- */
-  t = t.replace(/\ba\b/g,"a");
-  t = t.replace(/\be\b/g,"e");
-  t = t.replace(/\bi\b/g,"i");
-  t = t.replace(/\bo\b/g,"o");
-  t = t.replace(/\bu\b/g,"a");
-
-  /* ---------- LIMPIEZA ---------- */
-  t = t.replace(/[^a-záéíóúñü\s]/gi,"");
-  t = t.replace(/\s+/g," ").trim();
-
-  return t;
+  return t.replace(/[^a-záéíóúñü\s]/gi,"").replace(/\s+/g," ").trim();
 }
 
-/* ---------- AUTO-HOOK (NO TOCAR HTML) ---------- */
-const _figEN = figEN;
-figEN = function(text){
-  return phoneticENtoES(text);
-};
-</script>
-<script>
-/* =========================================================
-   GEMINI INFINITE GENERATION ENGINE v6.0
-========================================================= */
-
-/* ---------- SEMILLAS DINÁMICAS ---------- */
-const GeminiSeed = {
-  topics: [
-    "daily life","work","school","travel","technology",
-    "health","friends","family","hobbies","food"
-  ],
-  grammar: [
-    "present simple","present continuous",
-    "past simple","future with will","questions"
-  ],
-  tones: [
-    "neutral","educational","motivational","descriptive"
-  ]
-};
-
-function randomSeed(){
-  return {
-    topic: rnd(GeminiSeed.topics),
-    grammar: rnd(GeminiSeed.grammar),
-    tone: rnd(GeminiSeed.tones),
-    stamp: Date.now()+Math.random()
-  };
-}
-
-/* ---------- PROMPTS FUERTES Y CONTROLADOS ---------- */
-function phrasePrompt(){
-  const s=randomSeed();
-  return `
-Generate ONE short English sentence for language learning.
-Rules:
-- CEFR A1–A2
-- ${s.grammar}
-- Topic: ${s.topic}
-- Tone: ${s.tone}
-- No jokes, no advice, no irony
-- Only ONE sentence
-- Max 9 words
-- End with a period
-Seed:${s.stamp}
-`;
-}
-
-function speakPrompt(){
-  const s=randomSeed();
-  return `
-Give ONE simple English sentence for pronunciation practice.
-Rules:
-- CEFR A1
-- Clear pronunciation
-- ${s.grammar}
-- Topic: ${s.topic}
-- No idioms
-- No commas
-- One sentence only
-Seed:${s.stamp}
-`;
-}
-
-function exercisePrompt(){
-  const s=randomSeed();
-  return `
-Create ONE English sentence suitable for a fill-in-the-blank exercise.
-Rules:
-- CEFR A1–A2
-- ${s.grammar}
-- Topic: ${s.topic}
-- No humor
-- No complex clauses
-- One sentence only
-Seed:${s.stamp}
-`;
-}
-
-/* =========================================================
-   INYECCIÓN AUTOMÁTICA (NO TOCAR BOTONES)
-========================================================= */
-
-/* PHRASES */
-const _gemPhrase = loadPhrase;
-loadPhrase = async ()=>{
-  if(aiMode.value==="gemini"){
-    try{
-      const g = await gemini(phrasePrompt());
-      if(g) return renderPhrase(g.trim());
-    }catch{}
-  }
-  _gemPhrase();
-};
-
-/* SPEAK */
-const _gemSpeak = generateSpeak;
-generateSpeak = async ()=>{
-  if(aiMode.value==="gemini"){
-    try{
-      const g = await gemini(speakPrompt());
-      if(g) return renderSpeak(g.trim());
-    }catch{}
-  }
-  _gemSpeak();
-};
-
-/* EXERCISES */
-const _gemExercise = loadExercise;
-loadExercise = async ()=>{
-  if(aiMode.value==="gemini"){
-    try{
-      const g = await gemini(exercisePrompt());
-      if(g){
-        const sentence=g.trim();
-        const w=sentence.replace(".","").split(" ");
-        let i=Math.max(1,Math.floor(Math.random()*(w.length-1)));
-        const correct=w[i];
-        w[i]="_____";
-
-        exQ.innerText=w.join(" ");
-        exOpts.innerHTML="";
-
-        const pool=["is","are","eat","eats","play","plays","study","studies","go","goes"];
-        const opts=new Set([correct]);
-        while(opts.size<3) opts.add(rnd(pool));
-
-        [...opts].sort(()=>Math.random()-0.5).forEach(o=>{
-          const d=document.createElement("div");
-          d.className="option";
-          d.innerText=o;
-          d.onclick=()=>d.classList.add(o===correct?"correct":"wrong");
-          exOpts.appendChild(d);
-        });
-        return;
-      }
-    }catch{}
-  }
-  _gemExercise();
-};
-</script>
-<script>
-/* =========================================================
-   ULTIMATE TRANSLATION ENGINE · FINAL
-   EN → ES | Semantic + UX Safe
-========================================================= */
-
-/* ================== CONFIG ================== */
-const CONF = {
-  minLength: 6,
-  minSpanishScore: 4
-};
-
-/* ================== UTIL ================== */
+/* ===================== TRANSLATION (ONLINE + OFFLINE, BIDIRECTIONAL) ===================== */
 function clean(t){
-  return (t||"")
-    .replace(/[*§•]/g,"")
-    .replace(/\s+/g," ")
-    .trim();
+  return (t ?? "").replace(/[*§•]/g, "").replace(/\s+/g, " ").trim();
 }
-
-function norm(t){
-  return " " + clean(t).toLowerCase() + " ";
-}
-
-/* ================== DETECTORES ================== */
-function hasGarbage(t){
-  return /[*§•]/.test(t);
-}
-
-function hasEnglishOrder(t){
-  return /(album de estudio por|banda de metal thrash|por americano|liberado en \d{4} por)/i.test(t);
-}
-
-function spanishScore(t){
-  const words=[
-    "es","fue","una","un","de","del","la","el",
-    "álbum","banda","grupo","lanzado","publicado",
-    "en","por","para"
-  ];
-  let s=0;
-  const l=norm(t);
-  words.forEach(w=>{
-    if(l.includes(" "+w+" ")) s++;
-  });
-  return s;
-}
-
-/* ================== RECONSTRUCTOR ================== */
-function reconstruct(t){
-  // Caso álbum / banda (Wikipedia rota)
-  if(/álbum de estudio/i.test(t)){
-    const name = clean(t.split(" es ")[0]);
-    return `${name} es un álbum de estudio de una banda de thrash metal, publicado en la década de 1990.`;
-  }
-
-  // Caso frases cortas mal traducidas
-  if(t.length < 40){
-    return clean(t);
-  }
-
-  return null;
-}
-
-/* ================== TRADUCCIÓN EXTERNA ================== */
-async function softTranslate(text){
-  try{
-    const r = await fetch(
-      "https://api.mymemory.translated.net/get?q=" +
-      encodeURIComponent(text) +
-      "&langpair=en|es"
-    );
-    const d = await r.json();
-    return clean(d.responseData?.translatedText || "");
-  }catch{
-    return "";
-  }
-}
-
-/* ================== FALLBACK EDUCATIVO ================== */
-function educationalFallback(){
-  const safe=[
+function educationalFallbackES(){
+  return rnd([
     "Esta es una frase para practicar inglés.",
     "Esta oración sirve como ejemplo de aprendizaje.",
     "Practica esta frase en inglés.",
     "Esta es una frase sencilla para estudiar inglés."
-  ];
-  return safe[Math.floor(Math.random()*safe.length)];
+  ]);
+}
+function educationalFallbackEN(){
+  return rnd([
+    "This is a sentence to practice English.",
+    "This sentence is an example for learning.",
+    "Practice this sentence in English.",
+    "This is a simple sentence for study."
+  ]);
 }
 
-/* ================== API FINAL ================== */
-async function translate(text){
-  if(!text || text.length < 2){
-    return educationalFallback();
+const MINI_DICT_EN_ES = Object.freeze({
+  "i":"yo","you":"tú","he":"él","she":"ella","we":"nosotros","they":"ellos",
+  "always":"siempre","usually":"usualmente","often":"a menudo","sometimes":"a veces","never":"nunca",
+  "practice":"practico","practices":"practica","study":"estudio","studies":"estudia",
+  "work":"trabajo","works":"trabaja","go":"voy","goes":"va","eat":"como","eats":"come",
+  "play":"juego","plays":"juega","read":"leo","reads":"lee","write":"escribo","writes":"escribe",
+  "listen":"escucho","listens":"escucha","learn":"aprendo","learns":"aprende","speak":"hablo","speaks":"habla",
+  "english":"inglés","after":"después","before":"antes","school":"escuela","home":"casa",
+  "morning":"mañana","day":"día","every":"cada","with":"con","my":"mi","friends":"amigos",
+  "at":"en","in":"en","to":"a","a":"un","the":"el","and":"y","is":"es","are":"son",
+  "today":"hoy","yesterday":"ayer","weekend":"fin de semana"
+});
+
+// Build reverse dictionary (best effort). In collisions, keep first.
+const MINI_DICT_ES_EN = (()=>{
+  const rev = {};
+  for(const [en, es] of Object.entries(MINI_DICT_EN_ES)){
+    const key = String(es).toLowerCase();
+    if(!rev[key]) rev[key] = en;
   }
+  // add common spanish function words
+  Object.assign(rev, {
+    "hola":"hello",
+    "buenos":"good",
+    "buenas":"good",
+    "gracias":"thanks",
+    "por":"for",
+    "favor":"please",
+    "yo":"i",
+    "tú":"you",
+    "tu":"your",
+    "él":"he",
+    "el":"the",
+    "ella":"she",
+    "nosotros":"we",
+    "ellos":"they",
+    "en":"in",
+    "con":"with",
+    "cada":"every",
+    "siempre":"always",
+    "nunca":"never",
+    "hoy":"today",
+    "ayer":"yesterday"
+  });
+  return Object.freeze(rev);
+})();
 
-  let t = "";
+function offlineTranslateWordByWord(text, dir){
+  // dir: 'en-es' or 'es-en'
+  const t = clean(text);
+  if(!t) return (dir === 'en-es') ? educationalFallbackES() : educationalFallbackEN();
 
-  // 1️⃣ Intento directo
-  t = await softTranslate(text);
-
-  // 2️⃣ Limpieza
-  t = clean(t);
-
-  // 3️⃣ Reconstrucción si está rota
-  if(hasGarbage(t) || hasEnglishOrder(t)){
-    const r = reconstruct(t);
-    if(r) return r;
+  if(dir === 'en-es'){
+    const words = t.toLowerCase().replace(/[^a-z\s']/g, "").split(/\s+/).filter(Boolean);
+    if(!words.length) return educationalFallbackES();
+    const out = words.map(w => MINI_DICT_EN_ES[w] ?? w);
+    return "Traducción aproximada: " + out.join(" ") + ".";
+  }else{
+    // remove accents partially by keeping letters + accents; map by lowercase.
+    const words = t.toLowerCase().replace(/[^a-záéíóúñü\s]/g, "").split(/\s+/).filter(Boolean);
+    if(!words.length) return educationalFallbackEN();
+    const out = words.map(w => MINI_DICT_ES_EN[w] ?? w);
+    return "Approx. translation: " + out.join(" ") + ".";
   }
-
-  // 4️⃣ Score de español
-  if(t.length >= CONF.minLength && spanishScore(t) >= CONF.minSpanishScore){
-    return t;
-  }
-
-  // 5️⃣ Último intento simplificado
-  const retry = clean(await softTranslate(text));
-  if(retry.length >= CONF.minLength){
-    return retry;
-  }
-
-  // 6️⃣ UX SAFE ABSOLUTO
-  return educationalFallback();
-}
-</script>
-<script>
-/* =========================================================
-   AUTO-HOOK EXERCISE ENGINE · FINAL
-   Funciona con botón existente SIN tocar HTML
-========================================================= */
-
-/* ================= CONFIG ================= */
-const EX_ENGINE = {
-  geminiKey: window.GEMINI_API_KEY || null,
-  containerId: "exercise-container"
-};
-
-/* ================= UTIL ================= */
-const sleep = ms => new Promise(r=>setTimeout(r,ms));
-
-/* ================= GEMINI ================= */
-async function exerciseFromGemini(){
-  if(!EX_ENGINE.geminiKey) return null;
-  try{
-    const r = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" +
-      EX_ENGINE.geminiKey,
-      {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({
-          contents:[{
-            parts:[{
-              text:"Create a short English learning exercise with question and answer."
-            }]
-          }]
-        })
-      }
-    );
-    const d = await r.json();
-    const txt=d.candidates?.[0]?.content?.parts?.[0]?.text;
-    if(!txt) return null;
-    return { type:"gemini", content:txt };
-  }catch{ return null; }
 }
 
-/* ================= INTERNET ================= */
-async function exerciseFromInternet(){
+async function translateMyMemory(text, dir){
+  // dir: 'en-es' or 'es-en'
+  const t = clean(text);
+  if(!t) return "";
+  const pair = dir === 'en-es' ? 'en|es' : 'es|en';
+  const url = "https://api.mymemory.translated.net/get?q=" + encodeURIComponent(t) + "&langpair=" + pair;
+  const data = await fetchJson(url, {timeoutMs: 7500});
+  return clean(data?.responseData?.translatedText ?? "");
+}
+
+function detectLang(text){
+  // Simple heuristic: Spanish if contains accented letters or many common Spanish words.
+  const t = (text||"").toLowerCase();
+  if(/[áéíóúñü]/.test(t)) return 'es';
+  const esHits = [" el "," la "," de "," que "," y "," en "," por ","para ","hola","gracias","buenos"].reduce((a,w)=> a + (t.includes(w)?1:0), 0);
+  const enHits = [" the "," and "," to "," of "," in "," for ","with ","hello","thanks"].reduce((a,w)=> a + (t.includes(w)?1:0), 0);
+  return (esHits >= enHits) ? 'es' : 'en';
+}
+
+async function translate(text, mode){
+  // mode: auto, en-es, es-en
+  const t = clean(text);
+  if(!t) return {out:"", used:"-"};
+
+  let dir = mode;
+  if(mode === 'auto'){
+    dir = (detectLang(t) === 'es') ? 'es-en' : 'en-es';
+  }
+
+  // Online first (if possible)
+  if(navigator.onLine){
+    try{
+      const out = await translateMyMemory(t, dir);
+      if(out && out.length >= 2) return {out, used:"MyMemory"};
+    }catch{}
+  }
+
+  // Offline fallback
+  const off = offlineTranslateWordByWord(t, dir);
+  return {out: off, used:"Offline"};
+}
+
+/* ===================== GEMINI (OPTIONAL) ===================== */
+async function gemini(prompt){
+  if(UI.aiMode.value !== "gemini") throw new Error("AI mode OFF");
+  const key = UI.geminiKey.value.trim();
+  if(!key) throw new Error("Missing Gemini key");
+
+  const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + encodeURIComponent(key);
+  const body = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] });
+
+  const data = await fetchJson(endpoint, {
+    method: "POST",
+    timeoutMs: 9000,
+    headers: {"Content-Type":"application/json"},
+    body
+  });
+
+  const out = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if(!out) throw new Error("Gemini empty");
+  return String(out).trim();
+}
+
+/* ===================== UNLIMITED GENERATORS ===================== */
+const GEN = Object.freeze({
+  subjects: ["I","You","He","She","We","They"],
+  adverbs: ["always","usually","often","sometimes","never"],
+  verbs: [
+    {b:"practice", s:"practices"},
+    {b:"study", s:"studies"},
+    {b:"work", s:"works"},
+    {b:"read", s:"reads"},
+    {b:"write", s:"writes"},
+    {b:"listen", s:"listens"},
+    {b:"learn", s:"learns"},
+    {b:"speak", s:"speaks"},
+    {b:"go", s:"goes"},
+    {b:"cook", s:"cooks"},
+    {b:"walk", s:"walks"}
+  ],
+  objects: [
+    "English every day",
+    "at school",
+    "in the morning",
+    "after work",
+    "with my friends",
+    "at home",
+    "on the weekend",
+    "before dinner",
+    "at the park",
+    "in my free time"
+  ],
+  extras: [
+    "to improve my skills",
+    "to feel more confident",
+    "because it helps me",
+    "to communicate better",
+    "for my future",
+    "to learn new words"
+  ],
+  storyStarts: ["Today,","Yesterday,","In the morning,","After work,","On the weekend,"],
+  storyPeople: ["Tom","Ana","Luis","Sara","David","Maria"],
+  storyPlaces: ["at home","at school","in the park","at work","in the city"],
+  storyActions: ["practices English","studies new words","listens to a short story","speaks with a friend","reads a simple text"]
+});
+
+function buildSentence(){
+  const s = rnd(GEN.subjects);
+  const adv = rnd(GEN.adverbs);
+  const v = rnd(GEN.verbs);
+  const obj = rnd(GEN.objects);
+  const extra = Math.random() < 0.55 ? (" " + rnd(GEN.extras)) : "";
+  const verb = (s === "He" || s === "She") ? v.s : v.b;
+  return `${s} ${adv} ${verb} ${obj}${extra}.`.replace(/\s+/g, " ").trim();
+}
+
+function buildSpeakSentence(){
+  const s = rnd(["I","You","He","She","We","They"]);
+  const v = rnd([{b:"practice",s:"practices"},{b:"study",s:"studies"},{b:"work",s:"works"},{b:"speak",s:"speaks"},{b:"read",s:"reads"}]);
+  const obj = rnd(["English every day","at home","after work","in the morning","with friends"]);
+  const verb = (s === "He" || s === "She") ? v.s : v.b;
+  return `${s} ${verb} ${obj}.`;
+}
+
+function buildLocalStory(){
+  const start = rnd(GEN.storyStarts);
+  const name = rnd(GEN.storyPeople);
+  const place = rnd(GEN.storyPlaces);
+  const action1 = rnd(GEN.storyActions);
+  const action2 = rnd(GEN.storyActions);
+  const end = rnd(["He feels more confident.","She feels more confident.","They learn something new.","It becomes a good habit.","It helps a lot."]);
+  const s1 = `${start} ${name} is ${place}.`;
+  const s2 = `${name} ${action1}.`;
+  const s3 = (action2 !== action1) ? `${name} also ${action2}.` : `${name} repeats the practice.`;
+  return `${s1} ${s2} ${s3} ${end}`.replace(/\s+/g, " ").trim();
+}
+
+/* ===================== ONLINE SOURCES ===================== */
+async function getOnlinePhrase(){
   const sources = [
-    async()=>{
-      const r=await fetch("https://api.quotable.io/random");
-      const d=await r.json();
-      return {
-        type:"translate",
-        instruction:"Translate the sentence into Spanish.",
-        question:d.content
-      };
-    },
-    async()=>{
-      const r=await fetch("https://opentdb.com/api.php?amount=1&type=multiple");
-      const d=await r.json();
-      const q=d.results?.[0];
-      if(!q) return null;
-      return {
-        type:"choice",
-        question:q.question,
-        options:[q.correct_answer,...q.incorrect_answers].sort(()=>Math.random()-0.5),
-        answer:q.correct_answer
-      };
-    },
-    async()=>{
-      const r=await fetch("https://baconipsum.com/api/?paras=1");
-      const d=await r.json();
-      return {
-        type:"reading",
-        instruction:"Read and understand the text.",
-        text:d[0]
-      };
+    async()=> (await fetchJson("https://api.quotable.io/random", {timeoutMs: 6500}))?.content,
+    async()=> (await fetchJson("https://api.adviceslip.com/advice", {timeoutMs: 6500}))?.slip?.advice,
+    async()=> {
+      const d = await fetchJson("https://baconipsum.com/api/?type=meat-and-filler&sentences=1", {timeoutMs: 6500});
+      return Array.isArray(d) ? d[0] : null;
     }
   ];
-
   for(const s of sources){
     try{
-      const e=await s();
-      if(e) return e;
+      const t = clean(await s());
+      if(t && t.length >= 6 && t.length <= 160) return t;
     }catch{}
   }
   return null;
 }
 
-/* ================= MOTOR ================= */
-async function generateExerciseAuto(){
-  const g=await exerciseFromGemini();
-  if(g) return g;
-
-  const i=await exerciseFromInternet();
-  if(i) return i;
-
-  return {
-    type:"translate",
-    instruction:"Translate the sentence into Spanish.",
-    question:"Learning English helps you communicate better."
-  };
+async function getWikipediaStory(){
+  const url = "https://en.wikipedia.org/api/rest_v1/page/random/summary";
+  const d = await fetchJson(url, {timeoutMs: 8000});
+  const title = clean(d?.title ?? "Wikipedia");
+  const extract = clean(d?.extract ?? "");
+  if(!extract || extract.length < 60) throw new Error("Wikipedia short");
+  return { title, extract };
 }
 
-/* ================= RENDER ================= */
-function renderExercise(ex){
-  const el=document.getElementById(EX_ENGINE.containerId);
-  if(!el) return;
+/* ===================== CACHES (AVOID REPEATS) ===================== */
+const mem = {
+  phrases: new Set(),
+  speak: new Set(),
+  exercises: new Set(),
+  stories: new Set()
+};
+function cacheAdd(set, value, max=340){
+  if(!value) return;
+  set.add(value);
+  if(set.size > max) set.clear();
+}
+function isRepeat(set, value){ return set.has(value); }
 
-  el.innerHTML="";
-
-  if(ex.type==="gemini"){
-    el.innerHTML=`<pre>${ex.content}</pre>`;
-    return;
-  }
-
-  if(ex.type==="choice"){
-    el.innerHTML=`
-      <p>${ex.question}</p>
-      ${ex.options.map(o=>`<button>${o}</button>`).join("")}
-    `;
-    return;
-  }
-
-  if(ex.type==="reading"){
-    el.innerHTML=`
-      <p>${ex.instruction}</p>
-      <p>${ex.text}</p>
-    `;
-    return;
-  }
-
-  el.innerHTML=`
-    <p>${ex.instruction}</p>
-    <p><strong>${ex.question}</strong></p>
-  `;
+/* ===================== RENDER ===================== */
+async function renderPhrase(en, meta){
+  const text = clean(en).replace(/\s+/g, " ").trim();
+  const safe = text.endsWith(".") ? text : (text + ".");
+  UI.phEn.textContent = safe;
+  UI.phFig.textContent = phoneticENtoES(safe);
+  UI.phEs.textContent = (await translate(safe, 'en-es')).out;
+  UI.phMeta.textContent = meta;
+  pill(UI.phStatus, "✅ Ready", 1100);
 }
 
-/* ================= API GLOBAL ================= */
-async function generateNewExercise(){
-  const ex=await generateExerciseAuto();
-  renderExercise(ex);
+async function renderStory(title, en, meta){
+  const safeTitle = clean(title) || "Wikipedia";
+  const text = clean(en).replace(/\s+/g, " ").trim();
+  UI.stTitle.textContent = safeTitle;
+  UI.stEn.textContent = text;
+  UI.stFig.textContent = phoneticENtoES(text);
+  UI.stEs.textContent = (await translate(text, 'en-es')).out;
+  UI.stMeta.textContent = meta;
+  pill(UI.stStatus, "✅ Ready", 1100);
 }
 
-/* ================= AUTO-HOOK BOTÓN EXISTENTE ================= */
-document.addEventListener("DOMContentLoaded", async ()=>{
-  // 1️⃣ Genera uno al cargar
-  generateNewExercise();
+async function renderSpeak(en, meta){
+  const text = clean(en).replace(/\s+/g, " ").trim();
+  const safe = text.endsWith(".") ? text : (text + ".");
+  UI.spTarget.textContent = safe;
+  UI.spFig.textContent = phoneticENtoES(safe);
+  UI.spEs.textContent = (await translate(safe, 'en-es')).out;
+  UI.spMeta.textContent = meta;
+  UI.spResult.textContent = "";
+  UI.spManual.value = "";
+  pill(UI.spStatus, "✅ Ready", 1100);
+}
 
-  // 2️⃣ Hook por texto del botón
-  document.body.addEventListener("click", e=>{
-    const t=(e.target.innerText||"").toLowerCase();
-    if(t.includes("nuevo") || t.includes("exercise")){
-      generateNewExercise();
+function renderExercise(question, options, correct, meta){
+  UI.exQ.textContent = question;
+  UI.exOpts.innerHTML = "";
+  options.forEach(o=>{
+    const d = document.createElement("div");
+    d.className = "option";
+    d.textContent = o;
+    d.addEventListener("click", ()=> d.classList.add(o === correct ? "correct" : "wrong"));
+    UI.exOpts.appendChild(d);
+  });
+  UI.exMeta.textContent = meta;
+  pill(UI.exStatus, "✅ Ready", 1100);
+}
+
+/* ===================== PIPELINES ===================== */
+async function loadPhrase(){
+  pill(UI.phStatus, "⏳ Loading...", 900);
+
+  if(UI.aiMode.value === "gemini"){
+    try{
+      const g = await gemini(
+        "Generate ONE short English sentence for language learning.\n"+
+        "Rules: CEFR A1–A2, no jokes, no irony, no advice, max 10 words, end with a period."
+      );
+      const text = clean(g);
+      if(text && !isRepeat(mem.phrases, text)){
+        cacheAdd(mem.phrases, text);
+        return renderPhrase(text, "Gemini");
+      }
+    }catch{}
+  }
+
+  try{
+    const online = await getOnlinePhrase();
+    if(online && !isRepeat(mem.phrases, online)){
+      cacheAdd(mem.phrases, online);
+      return renderPhrase(online, "Internet");
     }
+  }catch{}
+
+  for(let i=0;i<6;i++){
+    const local = buildSentence();
+    if(local && !isRepeat(mem.phrases, local)){
+      cacheAdd(mem.phrases, local);
+      return renderPhrase(local, "Local generator");
+    }
+  }
+
+  return renderPhrase(buildSentence(), "Local generator");
+}
+
+async function loadStory(){
+  pill(UI.stStatus, "⏳ Loading...", 900);
+
+  try{
+    const w = await getWikipediaStory();
+    const key = w.title + "::" + w.extract.slice(0, 80);
+    if(!isRepeat(mem.stories, key)){
+      cacheAdd(mem.stories, key);
+      return renderStory(w.title, w.extract, "Wikipedia");
+    }
+  }catch{}
+
+  try{
+    const d = await fetchJson("https://baconipsum.com/api/?type=meat-and-filler&paras=1", {timeoutMs: 6500});
+    const text = clean(Array.isArray(d) ? d[0] : "");
+    if(text && text.length > 60){
+      const key = "bacon::" + text.slice(0, 80);
+      if(!isRepeat(mem.stories, key)){
+        cacheAdd(mem.stories, key);
+        return renderStory("Reading practice", text, "Internet fallback");
+      }
+    }
+  }catch{}
+
+  for(let i=0;i<6;i++){
+    const s = buildLocalStory();
+    const key = "local::" + s.slice(0, 80);
+    if(!isRepeat(mem.stories, key)){
+      cacheAdd(mem.stories, key);
+      return renderStory("Mini story", s, "Local generator");
+    }
+  }
+  return renderStory("Mini story", buildLocalStory(), "Local generator");
+}
+
+async function generateSpeak(){
+  pill(UI.spStatus, "⏳ Loading...", 900);
+
+  if(UI.aiMode.value === "gemini"){
+    try{
+      const g = await gemini(
+        "Give ONE simple English sentence for pronunciation practice.\n"+
+        "Rules: CEFR A1, no idioms, no commas, max 8 words, end with a period."
+      );
+      const text = clean(g);
+      if(text && !isRepeat(mem.speak, text)){
+        cacheAdd(mem.speak, text);
+        return renderSpeak(text, "Gemini");
+      }
+    }catch{}
+  }
+
+  try{
+    const online = await getOnlinePhrase();
+    if(online){
+      const short = online.split(/[.!?]/)[0].trim();
+      const s = (short.length > 90) ? short.slice(0, 90) : short;
+      if(s && !isRepeat(mem.speak, s)){
+        cacheAdd(mem.speak, s);
+        return renderSpeak(s, "Internet");
+      }
+    }
+  }catch{}
+
+  for(let i=0;i<6;i++){
+    const local = buildSpeakSentence();
+    if(local && !isRepeat(mem.speak, local)){
+      cacheAdd(mem.speak, local);
+      return renderSpeak(local, "Local generator");
+    }
+  }
+
+  return renderSpeak(buildSpeakSentence(), "Local generator");
+}
+
+/* ===================== EXERCISES ===================== */
+function makeBlank(sentence){
+  const words = sentence.replace(/\.$/, "").split(" ").filter(Boolean);
+  let idx = Math.min(2, words.length-1);
+  if(idx < 1) idx = 1;
+  const correct = words[idx] || words[0];
+  words[idx] = "_____";
+  return {question: words.join(" "), correct};
+}
+function buildOptions(correct){
+  const pool = ["is","are","was","were","practice","practices","study","studies","work","works","read","reads","write","writes","go","goes","speak","speaks","learn","learns"]; 
+  const set = new Set([correct]);
+  while(set.size < 3) set.add(rnd(pool));
+  return Array.from(set).sort(()=>Math.random()-0.5);
+}
+
+async function loadExercise(){
+  pill(UI.exStatus, "⏳ Loading...", 900);
+
+  if(UI.aiMode.value === "gemini"){
+    try{
+      const g = await gemini(
+        "Create ONE English sentence suitable for a fill-in-the-blank exercise.\n"+
+        "Rules: CEFR A1–A2, present simple, end with a period.\nReturn only the sentence."
+      );
+      const sentence = clean(g);
+      if(sentence && sentence.length > 6){
+        const {question, correct} = makeBlank(sentence.endsWith(".") ? sentence : (sentence+"."));
+        const key = question + "::" + correct;
+        if(!isRepeat(mem.exercises, key)){
+          cacheAdd(mem.exercises, key);
+          return renderExercise(question, buildOptions(correct), correct, "Gemini");
+        }
+      }
+    }catch{}
+  }
+
+  try{
+    const online = await getOnlinePhrase();
+    if(online){
+      const sentence = clean(online);
+      const {question, correct} = makeBlank(sentence.endsWith(".") ? sentence : (sentence+"."));
+      const key = "net::" + question;
+      if(!isRepeat(mem.exercises, key)){
+        cacheAdd(mem.exercises, key);
+        return renderExercise(question, buildOptions(correct), correct, "Internet");
+      }
+    }
+  }catch{}
+
+  for(let i=0;i<8;i++){
+    const sentence = buildSentence();
+    const {question, correct} = makeBlank(sentence);
+    const key = "local::" + question;
+    if(!isRepeat(mem.exercises, key)){
+      cacheAdd(mem.exercises, key);
+      return renderExercise(question, buildOptions(correct), correct, "Local generator");
+    }
+  }
+
+  const sentence = buildSentence();
+  const {question, correct} = makeBlank(sentence);
+  return renderExercise(question, buildOptions(correct), correct, "Local generator");
+}
+
+/* ===================== SPEAK EVALUATION ===================== */
+function normalizeText(t){
+  return clean(t).toLowerCase().replace(/[^a-z\s']/g, "").replace(/\s+/g, " ").trim();
+}
+function editDistance(a,b){
+  a = a || ""; b = b || "";
+  const m=a.length, n=b.length;
+  const dp = Array.from({length:m+1}, ()=> new Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) dp[i][0]=i;
+  for(let j=0;j<=n;j++) dp[0][j]=j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      const cost = a[i-1]===b[j-1] ? 0 : 1;
+      dp[i][j] = Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+cost);
+    }
+  }
+  return dp[m][n];
+}
+function simWord(w1,w2){
+  if(!w1&&!w2) return 1;
+  if(!w1||!w2) return 0;
+  const dist = editDistance(w1,w2);
+  const max = Math.max(w1.length, w2.length) || 1;
+  return 1 - (dist/max);
+}
+function evaluatePronunciation(target, spoken){
+  const t = normalizeText(target).split(" ").filter(Boolean);
+  const s = normalizeText(spoken).split(" ").filter(Boolean);
+  let i=0, j=0, correct=0;
+  const parts=[];
+  while(i<t.length){
+    const tw = t[i];
+    const sw = s[j] ?? "";
+    const scoreHere = simWord(tw, sw);
+    const scoreSkip = simWord(tw, s[j+1] ?? "");
+    let best = scoreHere;
+    if(scoreSkip > scoreHere){ best = scoreSkip; j += 1; }
+    const ok = best >= 0.72;
+    if(ok) correct++;
+    parts.push({word:tw, ok});
+    i++; j++;
+  }
+  return {parts, percent: Math.round((correct/Math.max(1,t.length))*100)};
+}
+function renderPronResult(spoken){
+  const target = UI.spTarget.textContent;
+  const {parts, percent} = evaluatePronunciation(target, spoken);
+  UI.spResult.textContent = "";
+
+  const top = document.createElement("div");
+  top.style.marginBottom = "8px";
+  top.append("🗣 ");
+  const b = document.createElement("b");
+  b.textContent = spoken;
+  top.appendChild(b);
+
+  const line = document.createElement("div");
+  parts.forEach(p=>{
+    const s = document.createElement("span");
+    s.textContent = p.word + " ";
+    s.style.fontWeight = "900";
+    s.style.color = p.ok ? "#2ecc71" : "#e74c3c";
+    line.appendChild(s);
   });
 
-  // 3️⃣ Hook por funciones existentes
-  const hooks=["newExercise","nuevoEjercicio","nextExercise"];
-  hooks.forEach(fn=>{
-    if(typeof window[fn]==="function"){
-      const old=window[fn];
-      window[fn]=function(){
-        generateNewExercise();
-        try{ old(); }catch{}
+  const score = document.createElement("div");
+  score.style.marginTop = "10px";
+  score.style.fontWeight = "950";
+  score.textContent = "🎯 Pronunciation: ";
+  const pct = document.createElement("span");
+  pct.textContent = percent + "%";
+  pct.style.color = (percent>=70) ? "#2ecc71" : "#e74c3c";
+  score.appendChild(pct);
+
+  UI.spResult.appendChild(top);
+  UI.spResult.appendChild(line);
+  UI.spResult.appendChild(score);
+}
+
+function startSpeak(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    toast("Micrófono", "SpeechRecognition no disponible. Usa modo manual.");
+    return;
+  }
+  try{
+    const rec = new SR();
+    rec.lang = "en-US";
+    rec.interimResults = false;
+    UI.spResult.textContent = "🎙️ Listening...";
+    rec.onresult = (e)=>{
+      const spoken = e.results?.[0]?.[0]?.transcript ?? "";
+      renderPronResult(spoken);
+    };
+    rec.onerror = (e)=>{
+      UI.spResult.textContent = "❌ " + (e.error || "Error");
+    };
+    rec.start();
+  }catch{
+    toast("Micrófono", "No se pudo iniciar. Usa modo manual.");
+  }
+}
+
+/* ===================== CUSTOM SPEAK PHRASE ===================== */
+async function useCustomSpeakPhrase(){
+  const custom = clean(UI.spCustom.value);
+  if(!custom){ toast("SPEAK", "Escribe una frase en inglés primero."); return; }
+  cacheAdd(mem.speak, custom);
+  await renderSpeak(custom, "Custom");
+  toast("SPEAK", "Frase personalizada cargada.", 1600);
+}
+
+/* ===================== TRANSLATOR ===================== */
+async function doTranslate(){
+  const input = UI.trIn.value;
+  const mode = UI.trMode.value;
+  pill(UI.trStatus, "⏳ Translating...", 1000);
+  const res = await translate(input, mode);
+  UI.trOut.value = res.out;
+  UI.trMeta.textContent = `ES ⇄ EN · ${res.used} · ${mode.toUpperCase()}`;
+  pill(UI.trStatus, "✅ Done", 1200);
+}
+
+function swapTranslator(){
+  const a = UI.trIn.value;
+  UI.trIn.value = UI.trOut.value;
+  UI.trOut.value = a;
+  // swap mode if explicit
+  if(UI.trMode.value === 'en-es') UI.trMode.value = 'es-en';
+  else if(UI.trMode.value === 'es-en') UI.trMode.value = 'en-es';
+  toast("Translator", "Swap listo.", 1400);
+}
+
+async function copyText(val){
+  try{
+    await navigator.clipboard.writeText(val);
+    toast("Clipboard", "Copiado.", 1400);
+  }catch{
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = val;
+    document.body.appendChild(ta);
+    ta.select();
+    try{ document.execCommand('copy'); toast("Clipboard", "Copiado.", 1400);}catch{ toast("Clipboard", "No se pudo copiar.", 1800); }
+    ta.remove();
+  }
+}
+
+/* ===================== SETTINGS ===================== */
+function loadSettings(){
+  UI.geminiKey.value = safeGet(STORE.GEMINI_KEY, "");
+  UI.aiMode.value = safeGet(STORE.AI_MODE, "off");
+}
+function saveSettings(){
+  safeSet(STORE.GEMINI_KEY, UI.geminiKey.value);
+  safeSet(STORE.AI_MODE, UI.aiMode.value);
+  UI.globalStatus.textContent = "✅ Settings saved.";
+  updateAIChip();
+  // Measure bottom nav to avoid covering content
+  try{
+    const nav = document.getElementById("bottomNav");
+    if(nav){
+      const setH = ()=>{
+        const h = Math.ceil(nav.getBoundingClientRect().height);
+        document.documentElement.style.setProperty("--navH", h+"px");
       };
+      setH();
+      window.addEventListener("resize", setH);
     }
-  });
+  }catch{}
+  toast("Settings", "Guardado correctamente.");
+}
+
+/* ===================== WIRE EVENTS ===================== */
+// PHRASES
+$("phPlay").addEventListener("click", ()=> tts(UI.phEn.textContent, "en", 1));
+$("phSlow").addEventListener("click", ()=> tts(UI.phEn.textContent, "en", 0.65));
+$("phDuo").addEventListener("click", ()=> duo(UI.phEn.textContent, UI.phEs.textContent));
+$("phNew").addEventListener("click", loadPhrase);
+
+// STORIES
+$("stPlay").addEventListener("click", ()=> tts(UI.stEn.textContent, "en", 1));
+$("stSlow").addEventListener("click", ()=> tts(UI.stEn.textContent, "en", 0.65));
+$("stDuo").addEventListener("click", ()=> duo(UI.stEn.textContent, UI.stEs.textContent));
+$("stNew").addEventListener("click", loadStory);
+
+// SPEAK
+$("spPlay").addEventListener("click", ()=> tts(UI.spTarget.textContent, "en", 1));
+$("spMic").addEventListener("click", startSpeak);
+$("spNew").addEventListener("click", generateSpeak);
+$("spUseCustom").addEventListener("click", useCustomSpeakPhrase);
+$("spEvalManual").addEventListener("click", ()=>{
+  const typed = clean(UI.spManual.value);
+  if(!typed){ toast("Manual", "Escribe lo que dijiste para evaluar."); return; }
+  renderPronResult(typed);
 });
+
+// EXERCISES
+$("exNew").addEventListener("click", loadExercise);
+
+// TRANSLATOR
+$("trGo").addEventListener("click", doTranslate);
+$("trSwap").addEventListener("click", swapTranslator);
+$("trClear").addEventListener("click", ()=>{ UI.trIn.value=""; UI.trOut.value=""; toast("Translator","Limpio.",1200); });
+$("trCopyIn").addEventListener("click", ()=> copyText(UI.trIn.value));
+$("trCopyOut").addEventListener("click", ()=> copyText(UI.trOut.value));
+$("trSpeakIn").addEventListener("click", ()=>{
+  const mode = UI.trMode.value;
+  const text = clean(UI.trIn.value);
+  if(!text) return toast("TTS","No hay texto.",1200);
+  const lang = (mode === 'es-en') ? 'es' : (mode === 'en-es' ? 'en' : (detectLang(text)==='es'?'es':'en'));
+  tts(text, lang, 1);
+});
+$("trSpeakOut").addEventListener("click", ()=>{
+  const mode = UI.trMode.value;
+  const text = clean(UI.trOut.value);
+  if(!text) return toast("TTS","No hay texto.",1200);
+  const lang = (mode === 'es-en') ? 'en' : (mode === 'en-es' ? 'es' : (detectLang(text)==='es'?'es':'en'));
+  tts(text, lang, 1);
+});
+
+UI.trIn.addEventListener('keydown', (e)=>{
+  if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
+    e.preventDefault();
+    doTranslate();
+  }
+  if(e.altKey && (e.key.toLowerCase() === 's')){
+    e.preventDefault();
+    swapTranslator();
+  }
+});
+
+// SETTINGS
+$("saveGlobal").addEventListener("click", saveSettings);
+$("testGemini").addEventListener("click", async ()=>{
+  UI.globalStatus.textContent = "⏳ Testing Gemini...";
+  try{
+    const out = await gemini("Say hello in ONE short English sentence. End with a period.");
+    UI.globalStatus.textContent = "✅ Gemini OK: " + clean(out);
+    toast("Gemini", "Conexión OK.");
+  }catch(e){
+    UI.globalStatus.textContent = "❌ Gemini failed: " + (e?.message || e);
+    toast("Gemini", "Falló. Se usará fallback ilimitado.");
+  }
+});
+
+// Keyboard shortcuts
+window.addEventListener('keydown', (e)=>{
+  if(e.target && ['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+  const k = e.key.toLowerCase();
+  if(k === 'p') loadPhrase();
+  if(k === 't') setTab('tab-translator');
+});
+
+/* ===================== INIT ===================== */
+(async function init(){
+  loadSettings();
+  updateNetChip();
+  updateAIChip();
+
+  await loadPhrase();
+  await loadStory();
+  await generateSpeak();
+  await loadExercise();
+
+  if(!navigator.onLine){
+    toast("Offline", "Sin internet: contenido ilimitado con generador local.", 2800);
+  }
+})();
 </script>
 </body>
-
 </html>
