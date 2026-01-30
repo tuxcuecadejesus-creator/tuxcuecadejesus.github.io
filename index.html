@@ -1058,13 +1058,15 @@ loadExercise = async ()=>{
 </script>
 <script>
 /* =========================================================
-   SPEAK ENGINE v2.0
-   - Marca palabras correctas / incorrectas
-   - Palabras rojas clickeables con audio
-   - Porcentaje de pronunciación
+   SPEAK COMPATIBILITY LAYER · SAFE MODE
+   - No sobrescribe startSpeak
+   - No rompe otros scripts
+   - Funciona por observación
 ========================================================= */
 
-/* --------- TTS palabra --------- */
+(function(){
+
+/* ---------- TTS palabra ---------- */
 function speakWord(word){
   if(!word) return;
   const u = new SpeechSynthesisUtterance(word);
@@ -1074,96 +1076,87 @@ function speakWord(word){
   speechSynthesis.speak(u);
 }
 
-/* --------- normalizar texto --------- */
-function normalize(text){
-  return text
+/* ---------- normalizar ---------- */
+function norm(t){
+  return t
     .toLowerCase()
-    .replace(/[^\w\s]/g,"")
+    .replace(/[^a-z\s]/g,"")
     .split(/\s+/)
     .filter(Boolean);
 }
 
-/* --------- comparar pronunciación --------- */
-function evaluatePronunciation(target, spoken){
-  const t = normalize(target);
-  const s = normalize(spoken);
+/* ---------- procesar resultado ---------- */
+function enhanceSpeakResult(){
+  if(!window.spTarget || !window.spResult) return;
+
+  const target = spTarget.innerText.trim();
+  if(!target) return;
+
+  // si ya está procesado, no repetir
+  if(spResult.querySelector(".elite-word")) return;
+
+  const spokenRaw = spResult.innerText.replace("🗣","").trim();
+  if(!spokenRaw) return;
+
+  const t = norm(target);
+  const s = norm(spokenRaw);
 
   let html = "";
-  let correct = 0;
+  let okCount = 0;
 
-  t.forEach((word,i)=>{
-    const ok = s[i] === word;
-    if(ok) correct++;
+  t.forEach((w,i)=>{
+    const ok = s[i] === w;
+    if(ok) okCount++;
 
-    html += `<span 
-      class="${ok ? "good" : "bad"}"
-      style="
-        padding:4px 6px;
-        border-radius:6px;
-        margin:2px;
-        display:inline-block;
-        ${ok
-          ? "background:#2bff8830;color:#baffd5;"
-          : "background:#ff5a5a40;color:#ffd6d6;cursor:pointer;text-decoration:underline;"
-        }
-      "
-      ${ok ? "" : `onclick="speakWord('${word}')"`}
-    >${word}</span> `;
+    html += `
+      <span
+        class="elite-word"
+        style="
+          padding:4px 6px;
+          margin:3px;
+          display:inline-block;
+          border-radius:6px;
+          font-weight:600;
+          ${ok
+            ? "background:#2bff8830;color:#baffd5;"
+            : "background:#ff5a5a40;color:#ffd6d6;cursor:pointer;text-decoration:underline;"
+          }
+        "
+        ${ok ? "" : `onclick="(${speakWord.toString()})('${w}')"`}>
+        ${w}
+      </span>
+    `;
   });
 
-  const percent = Math.round((correct / t.length) * 100);
+  const percent = Math.round((okCount / t.length) * 100);
 
   spResult.innerHTML = `
+    <div style="margin-bottom:6px">🗣 <b>${spokenRaw}</b></div>
     <div style="line-height:2">${html}</div>
-    <div style="margin-top:12px;font-weight:900;color:#7bffbf">
-      🎯 Pronunciation: ${percent}%
+    <div style="margin-top:8px;font-weight:900">
+      🎯 Pronunciation:
+      <span style="color:${percent>=70?'#2bff88':'#ff5a5a'}">
+        ${percent}%
+      </span>
     </div>
   `;
 }
 
-/* =========================================================
-   HOOK DIRECTO AL SPEECH RECOGNITION EXISTENTE
-========================================================= */
+/* ---------- OBSERVADOR ---------- */
+const observer = new MutationObserver(()=>{
+  enhanceSpeakResult();
+});
 
-/* sobrescribimos SOLO el onresult */
-const _startSpeak = startSpeak;
-startSpeak = function(){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){
-    spResult.innerText = "❌ Navegador no soporta Speech";
-    return;
-  }
+/* ---------- iniciar ---------- */
+function init(){
+  if(!window.spResult) return;
+  observer.observe(spResult,{childList:true,subtree:true});
+}
 
-  if(window._rec){
-    window._rec.stop();
-    window._rec = null;
-    return;
-  }
+document.addEventListener("DOMContentLoaded",init);
+setTimeout(init,1500);
 
-  const rec = new SR();
-  window._rec = rec;
-
-  rec.lang = "en-US";
-  rec.interimResults = false;
-  rec.maxAlternatives = 1;
-
-  spResult.innerText = "🎙️ Listening...";
-
-  rec.onresult = e=>{
-    const spoken = e.results[0][0].transcript;
-    evaluatePronunciation(spTarget.innerText, spoken);
-  };
-
-  rec.onerror = e=>{
-    spResult.innerText = "❌ Mic error: " + e.error;
-  };
-
-  rec.onend = ()=>{
-    window._rec = null;
-  };
-
-  rec.start();
-};
+})();
 </script>
 </body>
 </html>
