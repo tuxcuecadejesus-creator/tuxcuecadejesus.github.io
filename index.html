@@ -3,97 +3,234 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Elite English Pro · Definitivo</title>
+<title>Elite English Pro · Ultimate</title>
 
+<!-- ICONS & FONTS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@700;900&display=swap" rel="stylesheet">
 
 <style>
+/* ==================== THEME ==================== */
 :root{
---bg:#050812;--card:#12183a;--card2:#0b0f2e;--glass:#ffffff12;
---text:#f4f6ff;--muted:#aab3d9;--brand:#7b7cff;--brand2:#35e3ff;
---gold:#ffd479;--ok:#2bff88;--bad:#ff5a5a;
+--bg:#050812;
+--card:#12183a;
+--card2:#0b0f2e;
+--glass:#ffffff12;
+--text:#f4f6ff;
+--muted:#aab3d9;
+--brand:#7b7cff;
+--brand2:#35e3ff;
+--gold:#ffd479;
+--ok:#2bff88;
+--bad:#ff5a5a;
 }
+
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter;color:var(--text);background:radial-gradient(1200px 700px at 50% -300px,#1c2570,#050812);padding-bottom:110px}
-header{padding:18px;font-family:Outfit;font-weight:900;text-align:center;background:#050812dd;backdrop-filter:blur(24px);position:sticky;top:0;z-index:10}
+body{
+margin:0;
+font-family:Inter;
+color:var(--text);
+background:radial-gradient(1200px 700px at 50% -300px,#1c2570,#050812);
+padding-bottom:110px;
+}
+
+/* ==================== HEADER ==================== */
+header{
+padding:18px;
+font-family:Outfit;
+font-weight:900;
+text-align:center;
+background:#050812dd;
+backdrop-filter:blur(24px);
+position:sticky;
+top:0;
+z-index:10;
+letter-spacing:.08em;
+}
+
+/* ==================== LAYOUT ==================== */
 .container{max-width:900px;margin:auto;padding:24px}
-.card{background:linear-gradient(180deg,var(--card),var(--card2));border-radius:28px;padding:26px;margin-bottom:28px;box-shadow:0 40px 120px rgba(0,0,0,.65)}
-.badge{font-size:.7rem;font-weight:900;letter-spacing:.12em;color:#bcd1ff;margin-bottom:12px}
+.card{
+background:linear-gradient(180deg,var(--card),var(--card2));
+border-radius:28px;
+padding:26px;
+margin-bottom:28px;
+box-shadow:0 40px 120px rgba(0,0,0,.65);
+}
+
+/* ==================== TEXT ==================== */
+.badge{
+font-size:.7rem;
+font-weight:900;
+letter-spacing:.12em;
+color:#bcd1ff;
+margin-bottom:12px;
+}
 .text-en{font-family:Outfit;font-size:1.6rem;line-height:1.3}
 .text-es{color:var(--muted);margin-top:10px}
-.text-fig{font-family:monospace;color:var(--gold);background:#0008;padding:14px;border-radius:14px;margin-top:12px}
-.controls{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
-.btn-icon{width:48px;height:48px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-size:1.1rem;cursor:pointer;transition:transform .15s}
-.btn-icon:hover{transform:scale(1.1)}
-.btn-main{width:100%;padding:16px;border:none;border-radius:22px;background:linear-gradient(135deg,var(--brand),var(--brand2));font-family:Outfit;font-weight:900;color:#fff;margin-top:18px;cursor:pointer;transition:transform .15s}
-.btn-main:hover{transform:scale(1.03)}
-.tab{display:none}.tab.active{display:block}
-.option{background:#ffffff14;padding:14px;border-radius:14px;margin-top:10px;cursor:pointer;}
-.correct{background:#2bff8830}.wrong{background:#ff5a5a40}
-nav{position:fixed;bottom:0;left:0;right:0;height:88px;background:#050812f2;backdrop-filter:blur(30px);display:flex;justify-content:space-around;align-items:center}
-nav div{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.65rem;font-weight:900;color:#9aa3d0;cursor:pointer}
+.text-fig{
+font-family:monospace;
+color:var(--gold);
+background:#0008;
+padding:14px;
+border-radius:14px;
+margin-top:12px;
+}
+
+/* ==================== CONTROLS ==================== */
+.controls{
+display:flex;
+gap:12px;
+margin-top:14px;
+flex-wrap:wrap;
+}
+.btn-icon{
+width:48px;height:48px;
+border-radius:50%;
+border:none;
+background:linear-gradient(135deg,var(--brand),var(--brand2));
+color:#fff;
+font-size:1.1rem;
+cursor:pointer;
+transition:.15s;
+}
+.btn-icon:hover{transform:scale(1.12)}
+
+.btn-main{
+width:100%;
+padding:16px;
+border:none;
+border-radius:22px;
+background:linear-gradient(135deg,var(--brand),var(--brand2));
+font-family:Outfit;
+font-weight:900;
+color:#fff;
+margin-top:18px;
+cursor:pointer;
+transition:.15s;
+}
+.btn-main:hover{transform:scale(1.04)}
+
+/* ==================== TABS ==================== */
+.tab{display:none}
+.tab.active{display:block}
+
+/* ==================== EXERCISES ==================== */
+.option{
+background:#ffffff14;
+padding:14px;
+border-radius:14px;
+margin-top:10px;
+cursor:pointer;
+transition:.15s;
+}
+.option:hover{background:#ffffff20}
+.correct{background:#2bff8830}
+.wrong{background:#ff5a5a40}
+
+/* ==================== NAV ==================== */
+nav{
+position:fixed;
+bottom:0;left:0;right:0;
+height:88px;
+background:#050812f2;
+backdrop-filter:blur(30px);
+display:flex;
+justify-content:space-around;
+align-items:center;
+}
+nav div{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:6px;
+font-size:.65rem;
+font-weight:900;
+color:#9aa3d0;
+cursor:pointer;
+transition:.15s;
+}
 nav i{font-size:1.5rem}
-nav .active{color:var(--brand2);transform:translateY(-4px)}
-textarea,input,select{width:100%;border:none;border-radius:14px;padding:14px;background:#0007;color:#fff}
+nav .active{
+color:var(--brand2);
+transform:translateY(-6px);
+}
+
+/* ==================== INPUTS ==================== */
+textarea,input,select{
+width:100%;
+border:none;
+border-radius:14px;
+padding:14px;
+background:#0007;
+color:#fff;
+font-size:1rem;
+}
 textarea{min-height:140px;resize:none}
 </style>
 </head>
+
 <body>
 
 <header>ELITE ENGLISH PRO</header>
 
 <div class="container">
 
-<!-- FRASES -->
+<!-- ==================== PHRASES ==================== -->
 <section id="phrases" class="tab active">
 <div class="card">
 <div class="badge">PHRASES</div>
 <div id="phEn" class="text-en"></div>
 <div id="phFig" class="text-fig"></div>
 <div id="phEs" class="text-es"></div>
+
 <div class="controls">
 <button class="btn-icon" onclick="tts(phEn.innerText,'en',1)"><i class="fas fa-play"></i></button>
 <button class="btn-icon" onclick="tts(phEn.innerText,'en',0.6)"><i class="fas fa-snail"></i></button>
 <button class="btn-icon" onclick="duo(phEn.innerText,phEs.innerText)"><i class="fas fa-globe"></i></button>
 </div>
+
 <button class="btn-main" onclick="loadPhrase()">NEW PHRASE</button>
 </div>
 </section>
 
-<!-- HISTORIAS -->
+<!-- ==================== STORIES ==================== -->
 <section id="stories" class="tab">
 <div class="card">
 <div class="badge">STORIES</div>
 <div id="stEn" class="text-en"></div>
 <div id="stFig" class="text-fig"></div>
 <div id="stEs" class="text-es"></div>
+
 <div class="controls">
 <button class="btn-icon" onclick="tts(stEn.innerText,'en',1)"><i class="fas fa-play"></i></button>
 <button class="btn-icon" onclick="tts(stEn.innerText,'en',0.6)"><i class="fas fa-snail"></i></button>
 <button class="btn-icon" onclick="duo(stEn.innerText,stEs.innerText)"><i class="fas fa-globe"></i></button>
 </div>
+
 <button class="btn-main" onclick="loadStory()">NEW STORY</button>
 </div>
 </section>
 
-<!-- SPEAK -->
+<!-- ==================== SPEAK ==================== -->
 <section id="speak" class="tab">
 <div class="card">
 <div class="badge">SPEAK</div>
 <div id="spTarget" class="text-en"></div>
 <div id="spFig" class="text-fig"></div>
 <div id="spEs" class="text-es"></div>
+
 <div class="controls">
 <button class="btn-icon" onclick="tts(spTarget.innerText,'en',1)"><i class="fas fa-play"></i></button>
 <button class="btn-icon" onclick="startSpeak()"><i class="fas fa-microphone"></i></button>
 </div>
-<div id="spResult"></div>
+
+<div id="spResult" class="text-es"></div>
 <button class="btn-main" onclick="generateSpeak()">NEW PHRASE</button>
 </div>
 </section>
 
-<!-- EXERCISES -->
+<!-- ==================== EXERCISES ==================== -->
 <section id="exercises" class="tab">
 <div class="card">
 <div class="badge">EXERCISES</div>
@@ -103,14 +240,14 @@ textarea{min-height:140px;resize:none}
 </div>
 </section>
 
-<!-- GLOBAL -->
+<!-- ==================== GLOBAL ==================== -->
 <section id="global" class="tab">
 <div class="card">
 <div class="badge">GLOBAL · AI SETTINGS</div>
 <input id="geminiKey" type="password" placeholder="Paste your Gemini API Key">
 <select id="aiMode">
-<option value="off">OFF (Fallback Internet + Local)</option>
-<option value="gemini">GEMINI (Priority)</option>
+<option value="off">OFF (Fallback)</option>
+<option value="gemini">GEMINI</option>
 </select>
 <button class="btn-main" onclick="saveGlobal()">SAVE SETTINGS</button>
 <div id="globalStatus" class="text-es"></div>
@@ -119,6 +256,7 @@ textarea{min-height:140px;resize:none}
 
 </div>
 
+<!-- ==================== NAV ==================== -->
 <nav>
 <div class="active" onclick="tab('phrases',this)"><i class="fas fa-bolt"></i><span>PHRASES</span></div>
 <div onclick="tab('stories',this)"><i class="fas fa-book"></i><span>STORIES</span></div>
@@ -127,8 +265,9 @@ textarea{min-height:140px;resize:none}
 <div onclick="tab('global',this)"><i class="fas fa-gear"></i><span>GLOBAL</span></div>
 </nav>
 
+<!-- ==================== CORE SCRIPT ==================== -->
 <script>
-// Helpers
+/* Helpers */
 const $=id=>document.getElementById(id);
 const phEn=$("phEn"),phFig=$("phFig"),phEs=$("phEs");
 const stEn=$("stEn"),stFig=$("stFig"),stEs=$("stEs");
@@ -136,160 +275,646 @@ const spTarget=$("spTarget"),spFig=$("spFig"),spEs=$("spEs"),spResult=$("spResul
 const exQ=$("exQ"),exOpts=$("exOpts");
 const geminiKey=$("geminiKey"),aiMode=$("aiMode"),globalStatus=$("globalStatus");
 
-// NAV
-function tab(id,el){document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll("nav div").forEach(n=>n.classList.remove("active"));el.classList.add("active");}
-
-// AUDIO
-function tts(text,lang,rate){if(!text)return;const u=new SpeechSynthesisUtterance(text);u.lang=lang==="en"?"en-US":"es-ES";u.rate=rate;speechSynthesis.cancel();speechSynthesis.speak(u);}
-function duo(en,es){tts(en,"en",1);setTimeout(()=>tts(es,"es",1),1200);}
-function figEN(t){return t.toLowerCase().replace(/th/g,"d").replace(/ph/g,"f").replace(/ing\b/g,"in");}
-
-// Gemini API
-async function gemini(prompt){
-const key=localStorage.getItem("GEMINI_KEY");
-if(!key)throw 0;
-const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`,{
-method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
-const d=await r.json();
-return d.candidates?.[0]?.content?.parts?.[0]?.text;
+/* NAV */
+function tab(id,el){
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+$(id).classList.add("active");
+document.querySelectorAll("nav div").forEach(n=>n.classList.remove("active"));
+el.classList.add("active");
 }
 
-// Translate
-async function translate(t){try{const r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(t)}&langpair=en|es`);return(await r.json()).responseData.translatedText;}catch{return t;}}
+/* AUDIO */
+function tts(text,lang,rate){
+if(!text)return;
+const u=new SpeechSynthesisUtterance(text);
+u.lang=lang==="en"?"en-US":"es-ES";
+u.rate=rate;
+speechSynthesis.cancel();
+speechSynthesis.speak(u);
+}
+function duo(en,es){
+tts(en,"en",1);
+setTimeout(()=>tts(es,"es",1),1200);
+}
 
-// FRASES
-async function loadPhrase(){try{if(aiMode.value==="gemini"){const g=await gemini("Give a short motivational English phrase");if(g)return renderPhrase(g);}throw 0;}catch{try{const r=await fetch("https://api.adviceslip.com/advice");renderPhrase((await r.json()).slip.advice);}catch{const local=["Practice makes perfect.","Consistency is key.","Learning never stops."];renderPhrase(local[Math.floor(Math.random()*local.length)]);}}}
-async function renderPhrase(t){phEn.innerText=t;phFig.innerText=figEN(t);phEs.innerText=await translate(t);}
+/* PRONUNCIACIÓN FIGURADA */
+function figEN(t){
+return t.toLowerCase()
+.replace(/ph/g,"f")
+.replace(/th/g,"z")
+.replace(/ing\b/g,"in");
+}
 
-// HISTORIAS
-async function loadStory(){try{if(aiMode.value==="gemini"){const g=await gemini("Generate a short English story for learning English, 2-3 sentences.");if(g)return renderStory(g);throw 0;}const r=await fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary");const d=await r.json();if(d.extract)renderStory(d.extract);else throw 0;}catch{const localStories=["John loves to play football every weekend.","Maria goes to the library to read interesting books.","The cat jumped over the fence and ran away."];renderStory(localStories[Math.floor(Math.random()*localStories.length)]);}}
-async function renderStory(t){stEn.innerText=t;stFig.innerText=figEN(t);stEs.innerText=await translate(t);}
+/* INIT SAFE */
+(function(){
+geminiKey.value=localStorage.getItem("GEMINI_KEY")||"";
+aiMode.value=localStorage.getItem("AI_MODE")||"off";
+})();
+</script>
 
-// SPEAK
+<!-- 🔥 AQUÍ PUEDES PEGAR TUS SCRIPTS FALLBACK PRO SIN CAMBIAR NADA 🔥 -->
+<script>
+/* ======================================================
+   ELITE ENGLISH PRO · FALLBACK ENGINE v1.0
+   Compatible 100% con el HTML base
+====================================================== */
+
+/* ==================== UTIL ==================== */
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+const rnd = arr => arr[Math.floor(Math.random()*arr.length)];
+
+/* ==================== PRONUNCIACIÓN FIGURADA PRO ==================== */
+function figEN(text){
+  if(!text) return "";
+  let t = text.toLowerCase();
+
+  const rules = [
+    [/ph/g,"f"], [/th/g,"z"], [/sh/g,"sh"], [/ch/g,"ch"],
+    [/ck/g,"k"], [/gh/g,"g"], [/qu/g,"ku"],
+    [/tion\b/g,"shon"], [/sion\b/g,"shon"],
+    [/ing\b/g,"in"], [/ed\b/g,"d"], [/ly\b/g,"li"],
+    [/ough/g,"of"], [/igh/g,"ai"],
+    [/ee|ea/g,"i"], [/oo/g,"u"], [/ai|ay/g,"ei"],
+    [/ow|ou/g,"au"]
+  ];
+  rules.forEach(r=>t=t.replace(r[0],r[1]));
+  return t.replace(/[^a-záéíóúñ\s]/g,"").replace(/\s+/g," ").trim();
+}
+
+/* ==================== TRADUCTOR ROBUSTO ==================== */
+async function translate(text){
+  const engines = [
+    async()=>fetch(`https://apertium.org/apy/translate?langpair=en|es&q=${encodeURIComponent(text)}`).then(r=>r.json()).then(d=>d.responseData?.translatedText),
+    async()=>fetch(`https://libretranslate.com/translate`,{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({q:text,source:"en",target:"es"})
+    }).then(r=>r.json()).then(d=>d.translatedText),
+    async()=>fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|es`).then(r=>r.json()).then(d=>d.responseData?.translatedText)
+  ];
+
+  for(const e of engines){
+    try{
+      const r = await e();
+      if(r && !r.includes("MYMEMORY WARNING")) return r;
+    }catch{}
+  }
+  return text;
+}
+
+/* ==================== FUENTES DE FRASES ==================== */
+async function getPhraseOnline(){
+  const sources = [
+    async()=>fetch("https://api.quotable.io/random").then(r=>r.json()).then(d=>d.content),
+    async()=>fetch("https://api.adviceslip.com/advice").then(r=>r.json()).then(d=>d.slip.advice),
+    async()=>fetch("https://bible-api.com/john%203:16").then(r=>r.json()).then(d=>d.text),
+    async()=>fetch("https://www.reddit.com/r/quotes.json?limit=50")
+      .then(r=>r.json())
+      .then(d=>rnd(d.data.children).data.title)
+  ];
+  for(const s of sources){
+    try{
+      const t = await s();
+      if(t && t.length<160) return t;
+    }catch{}
+  }
+  return null;
+}
+
+/* ==================== FRASES ==================== */
+async function loadPhrase(){
+  let text=null;
+  try{
+    if(aiMode.value==="gemini") text = await gemini("Give a short, logical English phrase");
+  }catch{}
+  if(!text) text = await getPhraseOnline();
+  if(!text) text = rnd(localPhrases);
+
+  phEn.innerText=text;
+  phFig.innerText=figEN(text);
+  phEs.innerText=await translate(text);
+}
+
+const localPhrases=[
+  "Learning English opens new opportunities.",
+  "Practice every day to improve your skills.",
+  "Confidence grows with repetition.",
+  "Small steps lead to big results."
+];
+
+/* ==================== STORIES ==================== */
+async function loadStory(){
+  let text=null;
+  try{
+    if(aiMode.value==="gemini") text = await gemini("Create a short English story, simple and logical.");
+  }catch{}
+  if(!text){
+    try{
+      const r=await fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary");
+      const d=await r.json();
+      text=d.extract;
+    }catch{}
+  }
+  if(!text) text=rnd(localStories);
+
+  stEn.innerText=text;
+  stFig.innerText=figEN(text);
+  stEs.innerText=await translate(text);
+}
+
+const localStories=[
+  "Tom wakes up early and goes to work every morning.",
+  "Anna studies English because she wants a better job.",
+  "The dog runs in the park and plays with children."
+];
+
+/* ==================== SPEAK ==================== */
+async function generateSpeak(){
+  let text=null;
+  try{
+    if(aiMode.value==="gemini") text=await gemini("Give one short sentence for English pronunciation practice.");
+  }catch{}
+  if(!text) text=await getPhraseOnline();
+  if(!text) text=rnd(localPhrases);
+
+  spTarget.innerText=text;
+  spFig.innerText=figEN(text);
+  spEs.innerText=await translate(text);
+  spResult.innerText="";
+}
+
+/* ==================== VOICE RECOGNITION ==================== */
 let recognition=null;
-function startSpeak(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){spResult.innerText="❌ Navegador no soporta Speech";return;}if(recognition){recognition.stop();recognition=null;spResult.innerText="🛑 Grabación detenida";return;}recognition=new SR();recognition.lang="en-US";recognition.interimResults=false;recognition.maxAlternatives=1;spResult.innerText="🎙️ Grabando...";recognition.onresult=e=>spResult.innerText="🗣️ "+e.results[0][0].transcript;recognition.onerror=e=>{spResult.innerText="❌ Mic error: "+e.error;recognition=null;};recognition.onend=()=>recognition=null;recognition.start();}
-async function generateSpeak(){try{if(aiMode.value==="gemini"){const g=await gemini("Give a short English sentence for pronunciation");if(g)return renderSpeak(g);}throw 0;}catch{try{const r=await fetch("https://api.adviceslip.com/advice");renderSpeak((await r.json()).slip.advice);}catch{const local=["Practice makes perfect.","Consistency is key.","Learning never stops."];renderSpeak(local[Math.floor(Math.random()*local.length)]);}}}
-async function renderSpeak(t){spTarget.innerText=t;spFig.innerText=figEN(t);spEs.innerText=await translate(t);spResult.innerText="";}
+function startSpeak(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){spResult.innerText="❌ Speech not supported";return;}
+  recognition=new SR();
+  recognition.lang="en-US";
+  recognition.onresult=e=>spResult.innerText="🗣 "+e.results[0][0].transcript;
+  recognition.onerror=e=>spResult.innerText="❌ "+e.error;
+  recognition.start();
+}
 
-// EJERCICIOS
-const localExercises=[{q:"She ___ English every day.",opts:["study","studies","studying"],correct:1},{q:"I ___ to the gym yesterday.",opts:["go","went","gone"],correct:1},{q:"He usually ___ breakfast at 7am.",opts:["eat","eats","eating"],correct:1},{q:"They ___ playing soccer now.",opts:["is","are","am"],correct:1}];
-async function loadExercise(){exQ.innerText=""; exOpts.innerHTML="";try{if(aiMode.value==="gemini"){const g=await gemini("Create a simple English grammar exercise: 1 question and 3 options, mark the correct with *");if(g){renderExerciseFromText(g);return;}throw "fallback";}const r=await fetch("https://opentdb.com/api.php?amount=1&type=multiple&encode=url3986");const data=await r.json();if(data.results && data.results.length>0){const q=data.results[0];const question=decodeURIComponent(q.question);const correct_answer=decodeURIComponent(q.correct_answer);const incorrect_answers=q.incorrect_answers.map(a=>decodeURIComponent(a));renderExercise(question,[...incorrect_answers,correct_answer],correct_answer);return;}throw "fallback";}catch{const e=localExercises[Math.floor(Math.random()*localExercises.length)];renderExercise(e.q,e.opts,e.opts[e.correct]);}}
-function renderExerciseFromText(text){const lines=text.split("\n").filter(l=>l.trim());if(lines.length<4){loadExercise();return;}const question=lines[0].replace(/^Q:\s*/,"");const options=lines.slice(1,4).map(o=>o.replace(/^\-\s*/,"").replace("*",""));const correct=lines.slice(1,4).find(o=>o.includes("*"))?.replace("*","")||options[0];renderExercise(question,options,correct);}
-function renderExercise(question,options,correct){exQ.innerText=question; exOpts.innerHTML=""; options.sort(()=>Math.random()-0.5).forEach(o=>{let div=document.createElement("div");div.className="option";div.innerText=o;div.onclick=()=>div.classList.add(o===correct?"correct":"wrong");exOpts.appendChild(div);});}
+/* ==================== EXERCISES ==================== */
+async function loadExercise(){
+  let q=null,opts=null,correct=null;
 
-// GLOBAL
-function saveGlobal(){localStorage.setItem("GEMINI_KEY",geminiKey.value);localStorage.setItem("AI_MODE",aiMode.value);globalStatus.innerText="✅ Guardado";}
+  try{
+    if(aiMode.value==="gemini"){
+      const g=await gemini("Create a simple English grammar question with 3 options. Mark correct with *");
+      if(g){
+        const l=g.split("\n").filter(x=>x.trim());
+        q=l[0]; opts=l.slice(1,4).map(x=>x.replace("*",""));
+        correct=l.find(x=>x.includes("*")).replace("*","");
+      }
+    }
+  }catch{}
 
-// INIT
-(function(){geminiKey.value=localStorage.getItem("GEMINI_KEY")||""; aiMode.value=localStorage.getItem("AI_MODE")||"off"; loadPhrase(); generateSpeak(); loadExercise(); loadStory();})();
+  if(!q){
+    const e=rnd(localExercises);
+    q=e.q; opts=e.opts; correct=e.opts[e.correct];
+  }
+
+  exQ.innerText=q;
+  exOpts.innerHTML="";
+  opts.sort(()=>Math.random()-0.5).forEach(o=>{
+    const d=document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+    d.onclick=()=>d.classList.add(o===correct?"correct":"wrong");
+    exOpts.appendChild(d);
+  });
+}
+
+const localExercises=[
+  {q:"She ___ English every day.",opts:["study","studies","studying"],correct:1},
+  {q:"I ___ to work yesterday.",opts:["go","went","gone"],correct:1},
+  {q:"They ___ playing now.",opts:["is","are","am"],correct:1}
+];
+
+/* ==================== GLOBAL ==================== */
+function saveGlobal(){
+  localStorage.setItem("GEMINI_KEY",geminiKey.value);
+  localStorage.setItem("AI_MODE",aiMode.value);
+  globalStatus.innerText="✅ Settings saved";
+}
+
+/* ==================== AUTO INIT ==================== */
+(async()=>{
+  await loadPhrase();
+  await loadStory();
+  await generateSpeak();
+  await loadExercise();
+})();
 </script>
 <script>
-/* ==================== CONFIG ==================== */
-const trInput = document.getElementById("trInput");
-const trOutput = document.getElementById("trOutput");
-const trFig = document.getElementById("trFig");
-const trDir = {value:"en-es"}; // formato: "en-es"
+/* ======================================================
+   SPEAK PRONUNCIATION EVALUATOR v1.0
+====================================================== */
 
-/* ==================== TRADUCCIÓN SMART CON MÚLTIPLES OPCIONES ==================== */
-async function doTranslate(){
-    const [from,to] = trDir.value.split("-");
-    trOutput.innerText = "Translating...";
-    trOutput.innerText = await translateMultiFallback(trInput.value, from, to);
-    trFig.innerText = to==="es" ? figSpanish(trOutput.innerText) : "";
+function normalizeText(t){
+  return t
+    .toLowerCase()
+    .replace(/[^a-z\s]/g,"")
+    .replace(/\s+/g," ")
+    .trim();
 }
 
-// Función principal con varios traductores
-async function translateMultiFallback(text, from, to){
-    const translators = [
-        translateApertium,
-        translateMyMemory,
-        translateLibre,
-        translateDeepLDemo,
-        translateLocal
-    ];
-    
-    for(const tr of translators){
-        try{
-            const result = await tr(text, from, to);
-            if(result && result.trim()!=="") return result;
-        }catch(e){console.warn(tr.name+" failed", e);}
+function similarity(a,b){
+  if(a===b) return 1;
+  if(Math.abs(a.length-b.length)>2) return 0;
+  let matches=0;
+  for(let i=0;i<Math.min(a.length,b.length);i++){
+    if(a[i]===b[i]) matches++;
+  }
+  return matches/Math.max(a.length,b.length);
+}
+
+function evaluatePronunciation(target, spoken){
+  const tWords = normalizeText(target).split(" ");
+  const sWords = normalizeText(spoken).split(" ");
+
+  let html="";
+  let correct=0;
+
+  tWords.forEach((w,i)=>{
+    const sw = sWords[i] || "";
+    const score = similarity(w,sw);
+
+    if(score>=0.75){
+      html+=`<span style="color:#2ecc71;font-weight:600">${w}</span> `;
+      correct++;
+    }else{
+      html+=`<span style="color:#e74c3c;font-weight:600">${w}</span> `;
     }
-    
-    return "[Translation unavailable]";
+  });
+
+  const percent = Math.round((correct/tWords.length)*100);
+  return {html,percent};
 }
 
-/* ==================== TRADUCTORES ==================== */
+/* ==================== AUTO HOOK ==================== */
+const originalStartSpeak = startSpeak;
 
-// 1. Apertium
-async function translateApertium(text, from, to){
-    const r = await fetch(`https://apertium.org/apy/translate?langpair=${from}|${to}&q=${encodeURIComponent(text)}`);
+startSpeak = function(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+    spResult.innerText="❌ Speech not supported";
+    return;
+  }
+
+  const recognition=new SR();
+  recognition.lang="en-US";
+
+  recognition.onresult=e=>{
+    const spoken = e.results[0][0].transcript;
+    const target = spTarget.innerText;
+
+    const result = evaluatePronunciation(target,spoken);
+
+    spResult.innerHTML = `
+      <div style="margin-bottom:6px">🗣 <b>${spoken}</b></div>
+      <div>${result.html}</div>
+      <div style="margin-top:8px;font-weight:700">
+        🎯 Pronunciation: 
+        <span style="color:${result.percent>=70?"#2ecc71":"#e74c3c"}">
+          ${result.percent}%
+        </span>
+      </div>
+    `;
+  };
+
+  recognition.onerror=e=>{
+    spResult.innerText="❌ "+e.error;
+  };
+
+  recognition.start();
+};
+</script>
+<script>
+/* ======================================================
+   EXERCISE ENGINE PRO v2.0 (STABLE)
+====================================================== */
+
+const exerciseCache = new Set();
+
+/* ---------- GENERADORES LÓGICOS ---------- */
+function generateSentence(){
+  const subjects = ["I","You","He","She","We","They"];
+  const verbs = [
+    ["eat","eats"],["play","plays"],["study","studies"],
+    ["work","works"],["read","reads"],["write","writes"],
+    ["go","goes"],["like","likes"]
+  ];
+  const objects = [
+    "every day","at school","in the morning",
+    "after work","with my friends","at home"
+  ];
+
+  const s = rnd(subjects);
+  const v = rnd(verbs);
+  const o = rnd(objects);
+
+  const verb = (s==="He"||s==="She") ? v[1] : v[0];
+  return `${s} ${verb} ${o}.`;
+}
+
+/* ---------- EJERCICIO DESDE API REAL ---------- */
+async function fetchExerciseOnline(){
+  try{
+    const r = await fetch("https://api.quotable.io/random");
     const d = await r.json();
-    return d.responseData?.translatedText || "";
+    if(d && d.content){
+      return d.content.replace(/[^\w\s.]/g,"");
+    }
+  }catch{}
+  return null;
 }
 
-// 2. MyMemory
-async function translateMyMemory(text, from, to){
-    const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
-    const d = await r.json();
-    return d.responseData?.translatedText || "";
+/* ---------- EJERCICIO FINAL ---------- */
+async function loadExercise(){
+  exOpts.innerHTML="";
+  let sentence=null;
+
+  /* 1️⃣ Gemini */
+  try{
+    if(aiMode.value==="gemini"){
+      const g = await gemini("Create a simple English grammar sentence.");
+      if(g) sentence = g.trim();
+    }
+  }catch{}
+
+  /* 2️⃣ Internet (API real, sin CORS) */
+  if(!sentence){
+    sentence = await fetchExerciseOnline();
+  }
+
+  /* 3️⃣ Generador ilimitado */
+  while(!sentence || exerciseCache.has(sentence)){
+    sentence = generateSentence();
+  }
+
+  exerciseCache.add(sentence);
+  if(exerciseCache.size>200) exerciseCache.clear();
+
+  /* ---------- Crear hueco ---------- */
+  const words = sentence.replace(".","").split(" ");
+  let index = Math.floor(Math.random()*(words.length-1))+1;
+  const correct = words[index];
+  words[index] = "_____";
+
+  exQ.innerText = words.join(" ");
+
+  /* ---------- Opciones ---------- */
+  const options = new Set([correct]);
+  const pool = ["is","are","was","were","eat","eats","play","plays","study","studies","go","goes"];
+
+  while(options.size<3){
+    options.add(rnd(pool));
+  }
+
+  [...options].sort(()=>Math.random()-0.5).forEach(o=>{
+    const d=document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+    d.onclick=()=>d.classList.add(o===correct?"correct":"wrong");
+    exOpts.appendChild(d);
+  });
+}
+</script>
+<script>
+/* =========================================================
+   CONTROLLED ENGLISH ENGINE v4.0 (DEFINITIVO)
+========================================================= */
+
+/* ---------- GRAMMAR BLUEPRINT ---------- */
+const Grammar = {
+  subjects: [
+    {t:"I", p:1}, {t:"You", p:2}, {t:"He", p:3},
+    {t:"She", p:3}, {t:"We", p:1}, {t:"They", p:2}
+  ],
+  verbs: [
+    {b:"eat", s:"eats"},
+    {b:"study", s:"studies"},
+    {b:"work", s:"works"},
+    {b:"play", s:"plays"},
+    {b:"read", s:"reads"},
+    {b:"like", s:"likes"},
+    {b:"practice", s:"practices"},
+    {b:"go", s:"goes"}
+  ],
+  objects: [
+    "English every day",
+    "at school",
+    "in the morning",
+    "after work",
+    "with my friends",
+    "at home"
+  ]
+};
+
+/* ---------- STRONG SANITIZER ---------- */
+function sanitizeSentence(t){
+  if(!t) return null;
+
+  t = t.replace(/\n/g," ").replace(/\s+/g," ").trim();
+
+  // cortar si hay varias frases
+  t = t.split(/[!?]/)[0];
+  if(t.match(/\./g)?.length>1){
+    t = t.split(".")[0] + ".";
+  }
+
+  // blacklist EXTREMA
+  const badPatterns = [
+    /don't need to/i,
+    /only the ones/i,
+    /if you're feeling/i,
+    /just kidding/i,
+    /you want to keep/i,
+    /almost always/i,
+    /obviously/i,
+    /trust me/i
+  ];
+  for(const p of badPatterns){
+    if(p.test(t)) return null;
+  }
+
+  // caracteres raros
+  if(!/^[A-Za-z0-9 ,.'-]+$/.test(t)) return null;
+
+  return t.endsWith(".") ? t : t+".";
 }
 
-// 3. LibreTranslate
-async function translateLibre(text, from, to){
-    const r = await fetch("https://libretranslate.com/translate",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({q:text,source:from,target:to,format:"text"})
-    });
-    const d = await r.json();
-    return d.translatedText || "";
+/* ---------- STRUCTURE VALIDATION ---------- */
+function validateStructure(t){
+  if(!t) return false;
+  const w = t.replace(".","").split(" ");
+  if(w.length < 4 || w.length > 9) return false;
+
+  if(!Grammar.subjects.some(s=>w[0]===s.t)) return false;
+  if(!Grammar.verbs.some(v=>w.includes(v.b)||w.includes(v.s))) return false;
+
+  return true;
 }
 
-// 4. DeepL Demo
-async function translateDeepLDemo(text, from, to){
-    // Usamos demo pública de DeepL (solo para testing, puede fallar)
-    const r = await fetch(`https://www2.deepl.com/jsonrpc?method=LMT_handle_jobs`,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({jsonrpc:"2.0",method:"LMT_handle_jobs",params:{jobs:[{kind:"default",raw_en_sentence:text}],lang:{source_lang:from.toUpperCase(),target_lang:to.toUpperCase()}},id:1})
-    });
-    const d = await r.json();
-    return d.result?.translations?.[0]?.beams?.[0]?.postprocessed_sentence || "";
+/* ---------- EDUCATIONAL BUILDER ---------- */
+function buildSentence(){
+  const s = rnd(Grammar.subjects);
+  const v = rnd(Grammar.verbs);
+  const o = rnd(Grammar.objects);
+
+  const verb = (s.p===3) ? v.s : v.b;
+  return `${s.t} ${verb} ${o}.`;
 }
 
-// 5. Fallback local
-async function translateLocal(text, from, to){
-    return `[LOCAL TRANSLATION UNAVAILABLE] ${text}`;
+/* ---------- SMART PIPELINE ---------- */
+async function smartSentence(sourceFn){
+  let raw=null;
+  try{ raw = await sourceFn(); }catch{}
+
+  let clean = sanitizeSentence(raw);
+  if(validateStructure(clean)) return clean;
+
+  // 🔒 NUNCA DEVUELVE FRASES RARAS
+  return buildSentence();
 }
 
-/* ==================== PRONUNCIACIÓN FIGURADA AL ESPAÑOL ==================== */
-function figSpanish(text){
-    let t = text.toLowerCase();
+/* =========================================================
+   AUTO-INTEGRACIÓN TOTAL (SIN TOCAR HTML)
+========================================================= */
 
-    // reemplazos fonéticos
-    t = t.replace(/ph/g,"f").replace(/th/g,"z").replace(/ch/g,"ch");
-    t = t.replace(/sh/g,"sh").replace(/ck/g,"k").replace(/gh/g,"g");
-    t = t.replace(/tion\b/g,"shon").replace(/sion\b/g,"shon").replace(/cial\b/g,"shal").replace(/tial\b/g,"shal");
-    t = t.replace(/ing\b/g,"in").replace(/ed\b/g,"d").replace(/ly\b/g,"li").replace(/ous\b/g,"os");
-    t = t.replace(/ee|ea/g,"i").replace(/ie|igh/g,"ai").replace(/ai|ay/g,"ei").replace(/oa/g,"ou").replace(/ow|ou/g,"au").replace(/oo/g,"u");
+/* PHRASES */
+const _lp = loadPhrase;
+loadPhrase = async ()=>{
+  const t = await smartSentence(async()=>{
+    await _lp();
+    return phEn.innerText;
+  });
+  renderPhrase(t);
+};
 
-    t = t.replace(/\b([bcdfghjklmnpqrstvwxyz]*)([aeiou]+)([bcdfghjklmnpqrstvwxyz]*)\b/g,
-        (match,prefix,vowel,suffix)=>`${prefix}${vowel}${suffix}`);
-    
-    t = t.replace(/[^a-záéíóúñ\s]/gi,"");
-    t = t.replace(/\s+/g," ").trim();
-    return t;
+/* SPEAK */
+const _gs = generateSpeak;
+generateSpeak = async ()=>{
+  const t = await smartSentence(async()=>{
+    await _gs();
+    return spTarget.innerText;
+  });
+  renderSpeak(t);
+};
+
+/* EXERCISES */
+const _le = loadExercise;
+loadExercise = async ()=>{
+  const base = await smartSentence(async()=>{
+    await _le();
+    return exQ.innerText.replace("_____","");
+  });
+
+  const w = base.replace(".","").split(" ");
+  let i = Math.max(1,Math.floor(Math.random()*(w.length-1)));
+  const correct = w[i];
+  w[i]="_____";
+
+  exQ.innerText=w.join(" ");
+  exOpts.innerHTML="";
+
+  const pool = Grammar.verbs.map(v=>v.b).concat(Grammar.verbs.map(v=>v.s));
+  const opts = new Set([correct]);
+  while(opts.size<3) opts.add(rnd(pool));
+
+  [...opts].sort(()=>Math.random()-0.5).forEach(o=>{
+    const d=document.createElement("div");
+    d.className="option";
+    d.innerText=o;
+    d.onclick=()=>d.classList.add(o===correct?"correct":"wrong");
+    exOpts.appendChild(d);
+  });
+};
+</script>
+<script>
+/* =========================================================
+   ELITE PHONETIC ENGINE v5.0
+   English → Spanish Figurative Pronunciation
+========================================================= */
+
+function phoneticENtoES(text){
+  if(!text) return "";
+
+  let t = " " + text.toLowerCase() + " ";
+
+  /* ---------- PALABRAS IRREGULARES (CRÍTICO) ---------- */
+  const dictionary = {
+    "the":"de","this":"dis","that":"dat","these":"díis","those":"dóus",
+    "think":"zink","thing":"zin","thought":"zót",
+    "through":"zrú","though":"dóu","there":"der","their":"der","they":"dei",
+    "what":"uát","where":"uér","when":"uén","why":"uái",
+    "would":"uud","could":"kud","should":"shud",
+    "you":"iú","your":"iór","yes":"yés",
+    "one":"uán","two":"tú","three":"zrí",
+    "enough":"ináf","laugh":"láf",
+    "people":"pípol","very":"véri",
+    "work":"uérk","world":"uérld",
+    "practice":"práctis","english":"ínglish"
+  };
+
+  for(const w in dictionary){
+    t = t.replace(new RegExp(`\\b${w}\\b`,"g"),dictionary[w]);
+  }
+
+  /* ---------- CONSONANTES COMPLEJAS ---------- */
+  t = t.replace(/th/g,"z");        // this → zis
+  t = t.replace(/sh/g,"sh");       // she → shi
+  t = t.replace(/ch/g,"ch");       // chair → cher
+  t = t.replace(/ph/g,"f");        // phone → foun
+  t = t.replace(/ck/g,"k");
+  t = t.replace(/gh\b/g,"");
+  t = t.replace(/ng\b/g,"ng");
+
+  /* ---------- VOCALES LARGAS / CORTAS ---------- */
+  t = t.replace(/ee/g,"ii");       // see → sii
+  t = t.replace(/ea/g,"í");        // eat → ít
+  t = t.replace(/oo/g,"u");        // food → fud
+  t = t.replace(/ou/g,"au");       // house → haus
+  t = t.replace(/ow/g,"au");       // now → nau
+  t = t.replace(/igh/g,"ái");      // night → náit
+  t = t.replace(/ai/g,"éi");       // rain → réin
+  t = t.replace(/ay/g,"éi");
+  t = t.replace(/ie/g,"ái");
+  t = t.replace(/oa/g,"óu");
+
+  /* ---------- TERMINACIONES ---------- */
+  t = t.replace(/tion\b/g,"shon"); // nation → néishon
+  t = t.replace(/sion\b/g,"shon");
+  t = t.replace(/ed\b/g,"d");      // worked → uérkd
+  t = t.replace(/ing\b/g,"in");    // working → uérkin
+  t = t.replace(/ly\b/g,"li");     // slowly → slóuli
+  t = t.replace(/er\b/g,"er");     // teacher → tícher
+
+  /* ---------- R / L / H ---------- */
+  t = t.replace(/wr/g,"r");        // write → ráit
+  t = t.replace(/r/g,"r");         // suave
+  t = t.replace(/h/g,"");          // house → aus
+
+  /* ---------- VOCALES SUAVES ---------- */
+  t = t.replace(/\ba\b/g,"a");
+  t = t.replace(/\be\b/g,"e");
+  t = t.replace(/\bi\b/g,"i");
+  t = t.replace(/\bo\b/g,"o");
+  t = t.replace(/\bu\b/g,"a");
+
+  /* ---------- LIMPIEZA ---------- */
+  t = t.replace(/[^a-záéíóúñü\s]/gi,"");
+  t = t.replace(/\s+/g," ").trim();
+
+  return t;
 }
 
-/* ==================== EJEMPLO DE USO ==================== */
-async function testTranslate(){
-    trInput.value = "Hello, how are you?";
-    await doTranslate();
-    console.log("Traducido:", trOutput.innerText);
-    console.log("Figurado:", trFig.innerText);
-}
-
-// testTranslate(); // Descomenta para probar
+/* ---------- AUTO-HOOK (NO TOCAR HTML) ---------- */
+const _figEN = figEN;
+figEN = function(text){
+  return phoneticENtoES(text);
+};
 </script>
 </body>
 </html>
