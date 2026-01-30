@@ -183,6 +183,113 @@ function saveGlobal(){localStorage.setItem("GEMINI_KEY",geminiKey.value);localSt
 // INIT
 (function(){geminiKey.value=localStorage.getItem("GEMINI_KEY")||""; aiMode.value=localStorage.getItem("AI_MODE")||"off"; loadPhrase(); generateSpeak(); loadExercise(); loadStory();})();
 </script>
+<script>
+/* ==================== CONFIG ==================== */
+const trInput = document.getElementById("trInput");
+const trOutput = document.getElementById("trOutput");
+const trFig = document.getElementById("trFig");
+const trDir = {value:"en-es"}; // formato: "en-es"
 
+/* ==================== TRADUCCIÓN SMART CON MÚLTIPLES OPCIONES ==================== */
+async function doTranslate(){
+    const [from,to] = trDir.value.split("-");
+    trOutput.innerText = "Translating...";
+    trOutput.innerText = await translateMultiFallback(trInput.value, from, to);
+    trFig.innerText = to==="es" ? figSpanish(trOutput.innerText) : "";
+}
+
+// Función principal con varios traductores
+async function translateMultiFallback(text, from, to){
+    const translators = [
+        translateApertium,
+        translateMyMemory,
+        translateLibre,
+        translateDeepLDemo,
+        translateLocal
+    ];
+    
+    for(const tr of translators){
+        try{
+            const result = await tr(text, from, to);
+            if(result && result.trim()!=="") return result;
+        }catch(e){console.warn(tr.name+" failed", e);}
+    }
+    
+    return "[Translation unavailable]";
+}
+
+/* ==================== TRADUCTORES ==================== */
+
+// 1. Apertium
+async function translateApertium(text, from, to){
+    const r = await fetch(`https://apertium.org/apy/translate?langpair=${from}|${to}&q=${encodeURIComponent(text)}`);
+    const d = await r.json();
+    return d.responseData?.translatedText || "";
+}
+
+// 2. MyMemory
+async function translateMyMemory(text, from, to){
+    const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
+    const d = await r.json();
+    return d.responseData?.translatedText || "";
+}
+
+// 3. LibreTranslate
+async function translateLibre(text, from, to){
+    const r = await fetch("https://libretranslate.com/translate",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({q:text,source:from,target:to,format:"text"})
+    });
+    const d = await r.json();
+    return d.translatedText || "";
+}
+
+// 4. DeepL Demo
+async function translateDeepLDemo(text, from, to){
+    // Usamos demo pública de DeepL (solo para testing, puede fallar)
+    const r = await fetch(`https://www2.deepl.com/jsonrpc?method=LMT_handle_jobs`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({jsonrpc:"2.0",method:"LMT_handle_jobs",params:{jobs:[{kind:"default",raw_en_sentence:text}],lang:{source_lang:from.toUpperCase(),target_lang:to.toUpperCase()}},id:1})
+    });
+    const d = await r.json();
+    return d.result?.translations?.[0]?.beams?.[0]?.postprocessed_sentence || "";
+}
+
+// 5. Fallback local
+async function translateLocal(text, from, to){
+    return `[LOCAL TRANSLATION UNAVAILABLE] ${text}`;
+}
+
+/* ==================== PRONUNCIACIÓN FIGURADA AL ESPAÑOL ==================== */
+function figSpanish(text){
+    let t = text.toLowerCase();
+
+    // reemplazos fonéticos
+    t = t.replace(/ph/g,"f").replace(/th/g,"z").replace(/ch/g,"ch");
+    t = t.replace(/sh/g,"sh").replace(/ck/g,"k").replace(/gh/g,"g");
+    t = t.replace(/tion\b/g,"shon").replace(/sion\b/g,"shon").replace(/cial\b/g,"shal").replace(/tial\b/g,"shal");
+    t = t.replace(/ing\b/g,"in").replace(/ed\b/g,"d").replace(/ly\b/g,"li").replace(/ous\b/g,"os");
+    t = t.replace(/ee|ea/g,"i").replace(/ie|igh/g,"ai").replace(/ai|ay/g,"ei").replace(/oa/g,"ou").replace(/ow|ou/g,"au").replace(/oo/g,"u");
+
+    t = t.replace(/\b([bcdfghjklmnpqrstvwxyz]*)([aeiou]+)([bcdfghjklmnpqrstvwxyz]*)\b/g,
+        (match,prefix,vowel,suffix)=>`${prefix}${vowel}${suffix}`);
+    
+    t = t.replace(/[^a-záéíóúñ\s]/gi,"");
+    t = t.replace(/\s+/g," ").trim();
+    return t;
+}
+
+/* ==================== EJEMPLO DE USO ==================== */
+async function testTranslate(){
+    trInput.value = "Hello, how are you?";
+    await doTranslate();
+    console.log("Traducido:", trOutput.innerText);
+    console.log("Figurado:", trFig.innerText);
+}
+
+// testTranslate(); // Descomenta para probar
+</script>
 </body>
 </html>
