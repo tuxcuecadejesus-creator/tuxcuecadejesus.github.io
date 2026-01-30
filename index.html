@@ -1058,45 +1058,46 @@ loadExercise = async ()=>{
 </script>
 <script>
 /* =====================================================
-   ELITE FLOATING AUDIO ICON · vFINAL
+   ELITE FLOATING AUDIO ICON · MOBILE SAFE v2.0
 ===================================================== */
 
 (function(){
 
+let btn = null;
 let audioUnlocked = false;
-let btn;
 
 /* =================== CREAR ICONO =================== */
 function createFloatingIcon(){
-  if(document.getElementById("eliteFloatAudio")) return;
+  if(btn) return;
 
   btn = document.createElement("div");
   btn.id = "eliteFloatAudio";
-  btn.innerHTML = "🔊";
+  btn.textContent = "🔊";
 
-  btn.style.cssText = `
-    position:fixed;
-    top:${localStorage.eliteAudioTop || "60%"};
-    left:${localStorage.eliteAudioLeft || "70%"};
-    width:56px;
-    height:56px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#6b7cff,#35e3ff);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:1.6rem;
-    box-shadow:0 12px 30px rgba(0,0,0,.5);
-    z-index:9999;
-    cursor:pointer;
-    user-select:none;
-    touch-action:none;
-  `;
+  btn.style.position = "fixed";
+  btn.style.width = "56px";
+  btn.style.height = "56px";
+  btn.style.borderRadius = "50%";
+  btn.style.background = "linear-gradient(135deg,#6b7cff,#35e3ff)";
+  btn.style.display = "flex";
+  btn.style.alignItems = "center";
+  btn.style.justifyContent = "center";
+  btn.style.fontSize = "1.6rem";
+  btn.style.boxShadow = "0 12px 30px rgba(0,0,0,.5)";
+  btn.style.zIndex = "99999";
+  btn.style.cursor = "pointer";
+  btn.style.userSelect = "none";
+
+  // posición segura móvil
+  btn.style.left = localStorage.eliteAudioLeft || "70vw";
+  btn.style.top  = localStorage.eliteAudioTop  || "60vh";
 
   document.body.appendChild(btn);
   enableDrag(btn);
 
-  btn.addEventListener("click",unlockAudio);
+  btn.addEventListener("click",()=>{
+    unlockAudio();
+  });
 }
 
 /* =================== AUDIO =================== */
@@ -1105,6 +1106,8 @@ function unlockAudio(){
 
   const u = new SpeechSynthesisUtterance("Audio enabled");
   u.lang = "en-US";
+  u.rate = 1;
+
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 
@@ -1114,36 +1117,36 @@ function unlockAudio(){
 
 /* =================== DRAG =================== */
 function enableDrag(el){
-  let startX, startY, dragging=false;
+  let startX,startY,drag=false;
 
   const start = e=>{
-    dragging=true;
+    drag=true;
     const t = e.touches ? e.touches[0] : e;
     startX = t.clientX - el.offsetLeft;
     startY = t.clientY - el.offsetTop;
   };
 
   const move = e=>{
-    if(!dragging) return;
+    if(!drag) return;
     const t = e.touches ? e.touches[0] : e;
 
     let x = t.clientX - startX;
     let y = t.clientY - startY;
 
     const maxX = window.innerWidth - el.offsetWidth - 10;
-    const maxY = window.innerHeight - el.offsetHeight - 110; // evita barra inferior
+    const maxY = window.innerHeight - el.offsetHeight - 120;
 
-    x = Math.max(10, Math.min(x, maxX));
-    y = Math.max(10, Math.min(y, maxY));
+    x = Math.max(10,Math.min(x,maxX));
+    y = Math.max(10,Math.min(y,maxY));
 
     el.style.left = x+"px";
-    el.style.top = y+"px";
+    el.style.top  = y+"px";
   };
 
   const end = ()=>{
-    dragging=false;
+    drag=false;
     localStorage.eliteAudioLeft = el.style.left;
-    localStorage.eliteAudioTop = el.style.top;
+    localStorage.eliteAudioTop  = el.style.top;
   };
 
   el.addEventListener("mousedown",start);
@@ -1154,20 +1157,31 @@ function enableDrag(el){
   document.addEventListener("touchend",end);
 }
 
-/* =================== CLICK PALABRAS =================== */
+/* =================== PALABRAS ROJAS =================== */
 document.addEventListener("click",e=>{
   if(!audioUnlocked) return;
   if(!e.target.classList.contains("elite-word")) return;
 
+  const word = e.target.innerText.trim();
+  if(!word) return;
+
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(e.target.innerText.trim());
+  const u = new SpeechSynthesisUtterance(word);
   u.lang = "en-US";
   u.rate = 0.9;
   speechSynthesis.speak(u);
 });
 
-/* =================== INIT =================== */
-window.addEventListener("load",createFloatingIcon);
+/* =================== ACTIVADOR MÓVIL =================== */
+/* crea el icono SOLO tras la primera interacción */
+function firstTouch(){
+  createFloatingIcon();
+  document.removeEventListener("touchstart",firstTouch);
+  document.removeEventListener("mousedown",firstTouch);
+}
+
+document.addEventListener("touchstart",firstTouch,{once:true});
+document.addEventListener("mousedown",firstTouch,{once:true});
 
 })();
 </script>
