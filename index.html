@@ -3,65 +3,112 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
- <meta name="apple-mobile-web-app-capable" content="yes"/>
- <meta name="mobile-web-app-capable" content="yes"/>
- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
- <meta name="format-detection" content="telephone=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="format-detection" content="telephone=no"/>
   <meta name="color-scheme" content="dark"/>
-  <meta name="theme-color" content="#050812"/>
-  <title>Elite English Pro · Premium Definitive v3</title>
+  <meta name="theme-color" content="#070A14"/>
+  <title>Elite English Pro · PRO v3</title>
 
-  <!-- Premium single-file web app UI (no external dependencies) -->
+  <!-- Optional inline manifest (works in many modern browsers) -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Elite English Pro","short_name":"EliteEnglish","start_url":".","display":"standalone","background_color":"#070A14","theme_color":"#070A14","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 128 128\"%3E%3Cdefs%3E%3ClinearGradient id=\"g\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"%3E%3Cstop stop-color=\"%237b7cff\"/%3E%3Cstop offset=\"1\" stop-color=\"%2335e3ff\"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=\"128\" height=\"128\" rx=\"28\" fill=\"url(%23g)\"/%3E%3Cpath d=\"M36 84V44h30c14 0 22 7 22 18 0 12-9 18-23 18H55v4H36Zm19-22h10c5 0 7-2 7-5s-2-5-7-5H55v10Z\" fill=\"white\" opacity=\".96\"/%3E%3C/svg%3E","sizes":"128x128","type":"image/svg+xml"}]}'/>
+
   <style>
+    /* =========================================================
+       ELITE ENGLISH PRO — Commercial Suite UI (single-file)
+       - No external dependencies
+       - Offline-first fallbacks
+       - Premium motion + glass
+       ========================================================= */
+
     :root{
-      --bg:#050812;
-      --bg2:#0a0f2a;
-      --card:#12183a;
-      --card2:#0b0f2e;
+      /* Core palette */
+      --bg:#070A14;
+      --bg2:#0A1030;
+      --panel:#0E1639;
+      --panel2:#0B112E;
       --glass:#ffffff12;
       --stroke:#ffffff14;
-      --text:#f4f6ff;
-      --muted:#aab3d9;
-      --brand:#7b7cff;
-      --brand2:#35e3ff;
-      --gold:#ffd479;
-      --ok:#2bff88;
-      --bad:#ff5a5a;
-      --shadow:0 40px 120px rgba(0,0,0,.65);
-      --shadow2:0 18px 60px rgba(0,0,0,.45);
-      --radius:28px;
-      --radius2:18px;
-      --radius3:14px;
-      --focus:0 0 0 4px rgba(53,227,255,.20);
+      --stroke2:#ffffff22;
+      --text:#F4F7FF;
+      --muted:#AAB6E8;
+      --muted2:#7E89C6;
+      --brand:#7B7CFF;
+      --brand2:#35E3FF;
+      --gold:#FFD479;
+      --ok:#2BFF88;
+      --bad:#FF5A5A;
+      --warn:#FFB84D;
+
+      /* Elevation */
+      --shadow: 0 40px 120px rgba(0,0,0,.62);
+      --shadow2: 0 20px 60px rgba(0,0,0,.46);
+      --shadow3: 0 10px 34px rgba(0,0,0,.36);
+      --radius: 26px;
+      --radius2: 18px;
+      --radius3: 14px;
+      --focus: 0 0 0 4px rgba(53,227,255,.20);
+
+      /* Typography */
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+
+      /* Layout */
+      --max: 1180px;
+      --navH: 86px;
+
+      /* Motion */
+      --ease: cubic-bezier(.2,.8,.2,1);
+      --dur: 220ms;
     }
 
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     html,body{height:100%}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+      font-family:var(--sans);
       color:var(--text);
       background:
-        radial-gradient(1100px 650px at 50% -280px,#1c2570,var(--bg)),
-        radial-gradient(900px 600px at -20% 40%, rgba(53,227,255,.10), transparent 60%),
-        radial-gradient(900px 600px at 120% 55%, rgba(123,124,255,.10), transparent 60%),
+        radial-gradient(1200px 720px at 50% -320px, #1B2A7A, var(--bg)),
+        radial-gradient(980px 620px at -10% 40%, rgba(53,227,255,.11), transparent 60%),
+        radial-gradient(980px 620px at 110% 55%, rgba(123,124,255,.11), transparent 60%),
         linear-gradient(180deg, var(--bg), var(--bg2));
-      padding-bottom: calc(120px + env(safe-area-inset-bottom));
       overflow-x:hidden;
+      padding-bottom: calc(var(--navH) + env(safe-area-inset-bottom) + 18px);
     }
 
-    /* Top App Bar */
+    /* Subtle animated grain */
+    .grain{
+      pointer-events:none;
+      position:fixed; inset:-40%;
+      opacity:.08;
+      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="260" height="260"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="260" height="260" filter="url(%23n)" opacity=".55"/></svg>');
+      transform:rotate(9deg);
+      animation: grain 9s steps(7) infinite;
+      mix-blend-mode: overlay;
+    }
+    @keyframes grain{
+      0%{transform:translate(-2%, -2%) rotate(9deg)}
+      20%{transform:translate(2%, -1%) rotate(9deg)}
+      40%{transform:translate(-1%, 2%) rotate(9deg)}
+      60%{transform:translate(3%, 1%) rotate(9deg)}
+      80%{transform:translate(-3%, 1%) rotate(9deg)}
+      100%{transform:translate(-2%, -2%) rotate(9deg)}
+    }
+
+    /* =========================================================
+       Top App Bar
+       ========================================================= */
     header{
-      padding: calc(14px + env(safe-area-inset-top)) 18px 14px;
-      background:#050812dd;
-      backdrop-filter: blur(24px);
-      position:sticky;
-      top:0;
-      z-index:60;
+      position:sticky; top:0; z-index:80;
+      background:#070A14d8;
+      backdrop-filter: blur(26px) saturate(150%);
       border-bottom:1px solid var(--stroke);
+      padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
     }
     .appbar{
-      max-width:1060px;
+      max-width:var(--max);
       margin:auto;
       display:flex;
       align-items:center;
@@ -69,1446 +116,2386 @@
       gap:12px;
     }
     .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
+      display:flex;align-items:center;gap:12px;
       user-select:none;
+      min-width: 240px;
     }
     .logo{
-      width:38px;height:38px;
-      border-radius:14px;
-      background:linear-gradient(135deg,var(--brand),var(--brand2));
-      box-shadow:0 16px 40px rgba(0,0,0,.35);
-      position:relative;
-      overflow:hidden;
+      width:40px;height:40px;border-radius:14px;
+      background: linear-gradient(135deg,var(--brand),var(--brand2));
+      box-shadow: 0 18px 46px rgba(0,0,0,.40);
+      position:relative; overflow:hidden;
     }
-    .logo::after{
+    .logo::before{
       content:"";
-      position:absolute;inset:-40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), transparent 55%);
+      position:absolute; inset:-40%;
+      background: radial-gradient(circle at 28% 28%, rgba(255,255,255,.62), transparent 56%);
       transform: rotate(18deg);
     }
     .brand h1{
       margin:0;
-      font-size:.95rem;
+      font-size:.98rem;
       letter-spacing:.14em;
       font-weight:950;
+      line-height:1.1;
     }
-    .brand small{display:block;color:var(--muted);font-weight:800;letter-spacing:.04em;margin-top:2px}
+    .brand small{display:block;color:var(--muted);font-weight:850;letter-spacing:.05em;margin-top:3px}
 
-    .statusbar{
+    .bar-right{
       display:flex;
       align-items:center;
       gap:10px;
-      flex-wrap:wrap;
       justify-content:flex-end;
+      flex-wrap:wrap;
     }
+
     .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      display:inline-flex;align-items:center;gap:8px;
       padding:8px 12px;
       border-radius:999px;
       background:var(--glass);
       border:1px solid var(--stroke);
-      color:#cfe2ff;
+      color:#D3E5FF;
       font-weight:900;
       font-size:.78rem;
       letter-spacing:.02em;
       user-select:none;
+      box-shadow: var(--shadow3);
     }
     .dot{width:8px;height:8px;border-radius:99px;background:var(--ok);box-shadow:0 0 0 4px rgba(43,255,136,.14)}
     .dot.off{background:var(--bad);box-shadow:0 0 0 4px rgba(255,90,90,.14)}
+    .dot.warn{background:var(--warn);box-shadow:0 0 0 4px rgba(255,184,77,.13)}
 
-    .container{max-width:1060px;margin:auto;padding:22px}
-
-    /* Cards */
-    .card{
-      background:linear-gradient(180deg,var(--card),var(--card2));
-      border-radius:var(--radius);
-      padding:24px;
-      margin-bottom:22px;
-      box-shadow:var(--shadow);
+    .avatar{
+      width:38px;height:38px;border-radius:14px;
       border:1px solid var(--stroke);
+      background:
+        radial-gradient(12px 12px at 32% 30%, rgba(255,255,255,.35), transparent 50%),
+        linear-gradient(135deg, rgba(123,124,255,.35), rgba(53,227,255,.18));
+      display:grid;place-items:center;
+      font-weight:950;
+      letter-spacing:.05em;
+      cursor:pointer;
+      transition: transform var(--dur) var(--ease), filter var(--dur) var(--ease);
+    }
+    .avatar:hover{transform:translateY(-1px);filter:brightness(1.08)}
+    .avatar:active{transform:translateY(0)}
+
+    .btn{
+      all:unset;
+      cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:950;
+      letter-spacing:.03em;
+      border:1px solid transparent;
+      transition: transform var(--dur) var(--ease), filter var(--dur) var(--ease), background var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:focus-visible{box-shadow:var(--focus)}
+    .btn-primary{
+      background: linear-gradient(135deg,var(--brand),var(--brand2));
+      box-shadow: 0 14px 44px rgba(0,0,0,.42);
+      color:#fff;
+    }
+    .btn-primary:hover{transform:translateY(-2px);filter:brightness(1.05)}
+    .btn-primary:active{transform:translateY(0)}
+
+    .btn-ghost{
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.12);
+      color: #F6FAFF;
+    }
+    .btn-ghost:hover{background: rgba(255,255,255,.12); transform:translateY(-1px)}
+    .btn-ghost:active{transform:translateY(0)}
+
+    .icon{width:18px;height:18px;display:inline-block}
+
+    /* =========================================================
+       Layout shell
+       ========================================================= */
+    .shell{
+      max-width:var(--max);
+      margin: 18px auto 0;
+      padding: 0 16px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      align-items:start;
+    }
+
+    @media (max-width: 980px){
+  .shell{grid-template-columns: 1fr;}
+}
+      .sidebar{display:none;}
+    }
+
+    /* Sidebar (desktop) */
+    .sidebar{
+      position:sticky;
+      top: calc(74px + env(safe-area-inset-top));
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid var(--stroke);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+    .side-head{
+      padding: 18px 18px 14px;
+      background:
+        radial-gradient(900px 340px at 10% 10%, rgba(53,227,255,.14), transparent 60%),
+        radial-gradient(900px 340px at 90% 20%, rgba(123,124,255,.13), transparent 60%);
+      border-bottom:1px solid var(--stroke);
+    }
+    .side-head .kicker{color:#CFE3FF;font-weight:900;letter-spacing:.12em;font-size:.72rem}
+    .side-head .title{margin:10px 0 0;font-weight:980;font-size:1.1rem}
+    .side-head .sub{margin:8px 0 0;color:var(--muted);font-weight:750;font-size:.92rem;line-height:1.35}
+
+    .side-menu{padding: 10px 10px 14px;display:flex;flex-direction:column;gap:8px}
+    .side-item{
+      all:unset;
+      cursor:pointer;
+      display:flex;align-items:center;gap:12px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border:1px solid transparent;
+      color:#C8D2FF;
+      font-weight:900;
+      letter-spacing:.02em;
+      transition: background var(--dur) var(--ease), transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+      user-select:none;
+    }
+    .side-item:hover{background: rgba(255,255,255,.09); transform: translateY(-1px)}
+    .side-item.active{background: linear-gradient(135deg, rgba(123,124,255,.28), rgba(53,227,255,.22)); border-color: rgba(53,227,255,.30); color: var(--text)}
+    .side-item:focus-visible{box-shadow:var(--focus)}
+    .side-item .si-ico{width:34px;height:34px;border-radius:14px;display:grid;place-items:center;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    /* Main content */
+    .main{min-width:0}
+
+    .card{
+      background: linear-gradient(180deg, rgba(18,24,58,.92), rgba(11,15,46,.92));
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      padding: 22px;
       position:relative;
       overflow:hidden;
       isolation:isolate;
+      margin-bottom: 16px;
     }
     .card::before{
       content:"";
-      position:absolute;
-      inset:-1px;
+      position:absolute; inset:-2px;
       background:
-        radial-gradient(900px 500px at 10% 20%, rgba(53,227,255,.10), transparent 60%),
-        radial-gradient(900px 500px at 90% 30%, rgba(123,124,255,.10), transparent 60%);
+        radial-gradient(900px 520px at 12% 20%, rgba(53,227,255,.12), transparent 60%),
+        radial-gradient(900px 520px at 90% 30%, rgba(123,124,255,.12), transparent 60%);
       z-index:-1;
-      opacity:.9;
+      opacity:.95;
     }
 
+    .grid2{display:grid;grid-template-columns: 1.1fr .9fr; gap: 16px}
+    @media (max-width: 980px){ .grid2{grid-template-columns:1fr;} }
+
     .badge{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.14em;
-      color:#bcd1ff;
-      margin-bottom:12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+      color:#BFD3FF;
+      margin-bottom: 12px;
     }
-    .badge small{color:#9fb1ff;font-weight:850;letter-spacing:.06em;opacity:.95}
+    .badge small{color:#9FB1FF;font-weight:850;letter-spacing:.06em;opacity:.95}
 
-    .title-en{
-      font-weight:950;
-      font-size:1.55rem;
-      line-height:1.25;
+    .h1{
       margin:0;
+      font-weight:980;
+      font-size: 1.75rem;
+      line-height: 1.15;
+      letter-spacing:.01em;
       overflow-wrap:anywhere;
     }
-    .text-es{color:var(--muted);margin-top:10px;line-height:1.5;overflow-wrap:anywhere}
-    .text-fig{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      color:var(--gold);
-      background:#0008;
-      padding:12px 14px;
-      border-radius:var(--radius3);
-      margin-top:12px;
-      border:1px solid #ffffff12;
-      overflow-wrap:anywhere;
-    }
+    .p{color:var(--muted);line-height:1.55;margin:10px 0 0;overflow-wrap:anywhere}
 
-    .controls{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
-
-    .btn-icon{
-      width:48px;height:48px;border-radius:50%;border:none;
-      background:linear-gradient(135deg,var(--brand),var(--brand2));
-      color:#fff;cursor:pointer;
-      transition:transform .15s, filter .15s, box-shadow .15s;
-      display:inline-flex;align-items:center;justify-content:center;
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
-    }
-    .btn-icon:hover{transform:scale(1.08);filter:brightness(1.05);box-shadow:0 16px 42px rgba(0,0,0,.42)}
-    .btn-icon:active{transform:scale(0.98)}
-
-    .btn-main{
-      width:100%;padding:16px;border:none;border-radius:22px;
-      background:linear-gradient(135deg,var(--brand),var(--brand2));
-      font-weight:950;color:#fff;margin-top:16px;cursor:pointer;
-      transition:transform .15s, filter .15s;
-      box-shadow:0 14px 40px rgba(0,0,0,.35);
-      letter-spacing:.03em;
-    }
-    .btn-main:hover{transform:scale(1.02);filter:brightness(1.04)}
-    .btn-main:active{transform:scale(0.99)}
-
-    .btn-ghost{
-      width:100%;padding:14px;border:1px solid #ffffff22;border-radius:18px;
-      background:#ffffff0f;color:#fff;margin-top:10px;cursor:pointer;
-      transition:background .15s, transform .15s;
-      font-weight:900;
-    }
-    .btn-ghost:hover{background:#ffffff16;transform:translateY(-1px)}
-    .btn-ghost:active{transform:translateY(0)}
-
-    .tab{display:none; animation:fade .18s ease-out}
-    .tab.active{display:block}
-    @keyframes fade{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
-    .option{
-      background:#ffffff12;padding:14px;border-radius:14px;margin-top:10px;
-      cursor:pointer;transition:background .15s, transform .10s, border-color .15s;
-      border:1px solid transparent;user-select:none;
-    }
-    .option:hover{background:#ffffff18;transform:translateY(-1px)}
-    .option.correct{background:#2bff8828;border-color:#2bff8870}
-    .option.wrong{background:#ff5a5a24;border-color:#ff5a5a70}
-
-    nav{
-  position:fixed;left:0;right:0;bottom:0;
-  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, #050812f2, #050812fa);
-  backdrop-filter: blur(32px) saturate(140%);
-  z-index:70;border-top:1px solid var(--stroke);
-  display:grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap:10px;
-  align-items:center;
-}
-nav button{
-  all:unset;cursor:pointer;
-  width:100%;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:6px;font-size:.66rem;font-weight:950;color:#9aa3d0;
-  transition:transform .15s, color .15s, background .15s, box-shadow .15s, border-color .15s;
-  user-select:none;
-  padding:12px 10px;border-radius:18px;
-  border:1px solid transparent;
-}
-nav button:hover{background:#ffffff12;transform:translateY(-2px)}
-nav button:active{transform:translateY(0)}
-nav button:focus-visible{box-shadow:var(--focus)}
-nav button .ico{font-size:1.35rem;line-height:1}
-nav button.active{
-  color:var(--text);
-  transform:translateY(-3px);
-  background:linear-gradient(135deg, rgba(123,124,255,.34), rgba(53,227,255,.26));
-  border-color:rgba(53,227,255,.35);
-  box-shadow:0 18px 55px rgba(0,0,0,.48);
-}
-@media (min-width: 560px){
-  nav{display:flex;justify-content:space-around;align-items:center;gap:0;}
-  nav button{width:auto;flex:1 1 0;min-width:78px;padding:12px 12px;}
-}
-@media (max-width: 380px){
-  nav{gap:8px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));}
-  nav button{padding:10px 8px;font-size:.62rem}
-  nav button .ico{font-size:1.25rem}
-}
-
-    input,select,textarea{
-      width:100%;border:none;border-radius:14px;padding:14px;
-      background:#0007;color:#fff;font-size:1rem;outline:none;
+    .hero{
+      padding: 24px;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(900px 420px at 20% 10%, rgba(53,227,255,.18), transparent 60%),
+        radial-gradient(900px 420px at 85% 20%, rgba(123,124,255,.18), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       border:1px solid var(--stroke);
-      transition:box-shadow .12s, border-color .12s;
+      box-shadow: var(--shadow2);
     }
-    input:focus,select:focus,textarea:focus{box-shadow:var(--focus); border-color:rgba(53,227,255,.40)}
-    textarea{min-height:128px;resize:none}
 
-    .row{display:flex;gap:12px;flex-wrap:wrap}
-    .row > *{flex:1 1 260px}
-    .small{font-size:.92rem;color:var(--muted);line-height:1.35}
-    .divider{height:1px;background:#ffffff12;margin:16px 0}
+    .heroTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .hero .kicker{color:#D8EAFF;font-weight:950;letter-spacing:.16em;font-size:.72rem}
+    .hero .title{margin:10px 0 0;font-weight:990;font-size:2.05rem;line-height:1.12}
+    .hero .subtitle{margin:10px 0 0;color:var(--muted);font-weight:800;line-height:1.55;max-width: 62ch}
+
+    .heroActions{display:flex;gap:10px;flex-wrap:wrap;margin-top: 14px}
+
+    /* Stats */
+    .stats{display:grid;grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px}
+    @media (max-width: 680px){ .stats{grid-template-columns: 1fr;} }
+
+    .stat{
+      background: rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .stat .label{color:var(--muted);font-weight:850;font-size:.78rem;letter-spacing:.08em}
+    .stat .value{margin-top:8px;font-weight:980;font-size:1.28rem}
+    .stat .delta{margin-top:6px;font-weight:900;font-size:.84rem;color:#CFE3FF}
+    .delta.ok{color: rgba(43,255,136,.92)}
+    .delta.warn{color: rgba(255,184,77,.92)}
+
+    /* Premium input components */
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+    .row > *{flex: 1 1 260px}
+
+    label.small{display:block;font-size:.86rem;color:var(--muted);font-weight:850;line-height:1.2;margin-bottom:8px}
+    input, select, textarea{
+      width:100%;
+      border:none;
+      border-radius: 16px;
+      padding: 14px 14px;
+      background: rgba(0,0,0,.30);
+      color:#fff;
+      font-size:1rem;
+      outline:none;
+      border:1px solid var(--stroke);
+      transition: box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+    }
+    input:focus, select:focus, textarea:focus{ box-shadow: var(--focus); border-color: rgba(53,227,255,.40); background: rgba(0,0,0,.36) }
+    textarea{min-height: 132px; resize: none}
+
+    .divider{height:1px;background:rgba(255,255,255,.10); margin: 16px 0}
 
     .pill{
-      display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;
-      background:var(--glass);color:#cfe2ff;font-weight:950;font-size:.78rem;
-      margin-top:10px;border:1px solid var(--stroke);
-    }
-
-    .toast{
-      position:fixed;left:50%;bottom:108px;transform:translateX(-50%);
-      background:#0b0f2ee6;border:1px solid #ffffff18;border-radius:16px;
-      padding:12px 14px;min-width:260px;max-width:min(620px, calc(100vw - 30px));
-      box-shadow:0 20px 70px rgba(0,0,0,.45);
-      display:none;z-index:100;backdrop-filter: blur(18px);
-    }
-    .toast.show{display:block;animation:pop .16s ease-out}
-    @keyframes pop{from{transform:translateX(-50%) translateY(10px);opacity:.6}to{transform:translateX(-50%) translateY(0);opacity:1}}
-    .toast .t-title{font-weight:950;letter-spacing:.02em}
-    .toast .t-body{color:var(--muted);margin-top:4px;font-size:.92rem}
-
-    .svg{width:20px;height:20px;display:block}
-
-    /* Translator grid */
-    .translator-grid{display:grid;grid-template-columns:1fr;gap:12px}
-    @media (min-width: 860px){
-      .translator-grid{grid-template-columns:1fr auto 1fr;align-items:stretch}
-    }
-    .swap{
-      display:flex;flex-direction:column;gap:10px;justify-content:center
+      display:inline-flex;align-items:center;gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.08);
+      color: #D3E5FF;
+      font-weight: 950;
+      font-size: .78rem;
     }
     .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      font-size:.78rem;
-      padding:4px 8px;
-      border-radius:10px;
-      background:#0008;
-      border:1px solid #ffffff12;
-      color:#cfe2ff;
+      font-family: var(--mono);
+      font-size: .78rem;
+      padding: 4px 8px;
+      border-radius: 10px;
+      background: rgba(0,0,0,.36);
+      border: 1px solid rgba(255,255,255,.10);
+      color:#CFE3FF;
       display:inline-block;
     }
-  
-/* ===== Premium app polish (final) ===== */
-header{display:none !important;}
-.container{padding-top:12px;}
-:root{--navH: 168px;}
-body{padding-bottom: calc(var(--navH) + 22px + env(safe-area-inset-bottom));}
-@media (min-width: 560px){:root{--navH: 98px;} body{padding-bottom: calc(var(--navH) + 20px + env(safe-area-inset-bottom));}}
 
+    /* Content blocks */
+    .en{
+      margin:0;
+      font-weight:980;
+      font-size: 1.55rem;
+      line-height: 1.25;
+      overflow-wrap:anywhere;
+    }
+    .fig{
+      font-family: var(--mono);
+      color: var(--gold);
+      background: rgba(0,0,0,.34);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius3);
+      padding: 12px 14px;
+      margin-top: 12px;
+      overflow-wrap:anywhere;
+    }
+    .es{color: var(--muted); margin-top: 10px; line-height: 1.55; overflow-wrap:anywhere}
 
-/* ===== Mobile bottom nav compact (v6) ===== */
-@media (max-width: 520px){
-  nav{gap:8px; padding:8px 10px calc(8px + env(safe-area-inset-bottom));}
-  nav button{padding:10px 8px; gap:5px; border-radius:16px; font-size:.60rem;}
-  nav button .ico{font-size:1.18rem;}
-}
-@media (max-width: 380px){
-  nav{gap:7px; padding:7px 8px calc(7px + env(safe-area-inset-bottom));}
-  nav button{padding:9px 7px; font-size:.58rem;}
-  nav button .ico{font-size:1.12rem;}
-}
+    /* Controls */
+    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top: 14px}
+    .btn-icon{
+      width:48px;height:48px;border-radius: 50%;
+      border:none;
+      cursor:pointer;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      color:#fff;
+      display:inline-flex;align-items:center;justify-content:center;
+      box-shadow: 0 14px 44px rgba(0,0,0,.42);
+      transition: transform var(--dur) var(--ease), filter var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+    }
+    .btn-icon:hover{transform: scale(1.08); filter: brightness(1.05)}
+    .btn-icon:active{transform: scale(0.99)}
+    .btn-main{
+      width:100%;
+      padding: 16px;
+      border:none;
+      border-radius: 22px;
+      cursor:pointer;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      color:#fff;
+      font-weight: 980;
+      letter-spacing: .03em;
+      box-shadow: 0 16px 54px rgba(0,0,0,.45);
+      transition: transform var(--dur) var(--ease), filter var(--dur) var(--ease);
+      margin-top: 14px;
+    }
+    .btn-main:hover{transform: translateY(-1px); filter: brightness(1.05)}
+    .btn-main:active{transform: translateY(0)}
 
-/* ===== Premium forms & layout fixes ===== */
-input, select, textarea{max-width:100%;font-size:16px;}
-textarea{min-height:170px;line-height:1.45;}
-#tab-translator textarea{background: linear-gradient(180deg, rgba(0,0,0,.50), rgba(0,0,0,.28));border-color: rgba(255,255,255,.16);}
-#tab-translator textarea:focus{border-color: rgba(53,227,255,.55)}
-#tab-translator .translator-grid{gap:16px}
-#tab-translator .controls{justify-content:flex-start}
-#tab-translator .swap{align-items:center}
-#tab-translator .swap .pill{width:100%;justify-content:center}
+    .btn-soft{
+      width:100%;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color:#fff;
+      font-weight: 950;
+      cursor:pointer;
+      transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
+      margin-top: 10px;
+    }
+    .btn-soft:hover{background: rgba(255,255,255,.12); transform: translateY(-1px)}
+    .btn-soft:active{transform: translateY(0)}
 
-#tab-speak .row{gap:12px}
-#tab-speak input{width:100%}
-#spResult{background:#ffffff0a;border:1px solid #ffffff12;border-radius:16px;padding:12px 14px;min-height:52px}
+    /* Skeleton */
+    .skeleton{
+      border-radius: 16px;
+      background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.12), rgba(255,255,255,.06));
+      background-size: 220% 100%;
+      animation: sk 1.1s var(--ease) infinite;
+      height: 14px;
+    }
+    @keyframes sk{ 0%{background-position:0% 0} 100%{background-position:220% 0} }
 
-#tab-global .row{align-items:flex-end}
-#tab-global input, #tab-global select{width:100%}
+    /* Toast + modal */
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: calc(var(--navH) + 14px);
+      transform: translateX(-50%);
+      background: rgba(11,15,46,.92);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      padding: 12px 14px;
+      min-width: 280px;
+      max-width: min(720px, calc(100vw - 30px));
+      box-shadow: 0 26px 84px rgba(0,0,0,.50);
+      display:none;
+      z-index: 200;
+      backdrop-filter: blur(18px) saturate(140%);
+    }
+    .toast.show{display:block;animation: pop .16s var(--ease)}
+    @keyframes pop{from{transform:translateX(-50%) translateY(10px);opacity:.6}to{transform:translateX(-50%) translateY(0);opacity:1}}
+    .toast .t-title{font-weight:980;letter-spacing:.02em}
+    .toast .t-body{color:var(--muted);margin-top:4px;font-size:.92rem;line-height:1.35}
 
-@media (max-width: 520px){
-  .row{flex-direction:column;}
-  .row > *{flex:1 1 auto;}
-  #tab-translator .swap{display:none;}
-  textarea{min-height:190px;}
-}
+    .modal-backdrop{
+      position:fixed; inset:0; z-index: 210;
+      background: rgba(0,0,0,.58);
+      display:none;
+      backdrop-filter: blur(10px);
+    }
+    .modal-backdrop.show{display:block;animation: fadeIn .18s var(--ease)}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-</style>
+    .modal{
+      position: fixed;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(720px, calc(100vw - 26px));
+      background: linear-gradient(180deg, rgba(18,24,58,.96), rgba(11,15,46,.96));
+      border:1px solid rgba(255,255,255,.16);
+      border-radius: 26px;
+      box-shadow: 0 40px 140px rgba(0,0,0,.70);
+      overflow:hidden;
+    }
+    .modal-head{
+      padding: 16px 18px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(900px 300px at 16% 10%, rgba(53,227,255,.16), transparent 60%),
+        radial-gradient(900px 300px at 90% 20%, rgba(123,124,255,.14), transparent 60%);
+    }
+    .modal-head h3{margin:0;font-weight:980;letter-spacing:.02em}
+    .modal-body{padding: 18px}
+
+    /* Bottom nav (mobile) */
+    nav{
+      position:fixed; left:0; right:0; bottom:0; z-index: 160;
+      height: var(--navH);
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: linear-gradient(180deg, rgba(7,10,20,.86), rgba(7,10,20,.96));
+      border-top: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(30px) saturate(150%);
+      display:flex;align-items:center;gap:10px;
+      overflow-x:auto;overflow-y:hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      isolation:isolate;
+    }
+    nav::-webkit-scrollbar{height:0}
+    nav{scrollbar-width:none}
+    nav::before, nav::after{content:""; position:absolute; top:0; bottom:0; width:22px; pointer-events:none; z-index:2;}
+    nav::before{left:0;background:linear-gradient(90deg, rgba(7,10,20,.98), transparent)}
+    nav::after{right:0;background:linear-gradient(270deg, rgba(7,10,20,.98), transparent)}
+
+    .navbtn{
+      all:unset;
+      cursor:pointer;
+      flex: 0 0 auto;
+      min-width: 86px;
+      padding: 12px 12px;
+      border-radius: 18px;
+      border:1px solid transparent;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+      color:#9AA6D6;
+      font-size:.66rem;
+      font-weight: 980;
+      letter-spacing:.02em;
+      transition: transform var(--dur) var(--ease), color var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+      scroll-snap-align: center;
+      user-select:none;
+    }
+    .navbtn:hover{background: rgba(255,255,255,.10); transform: translateY(-2px)}
+    .navbtn:active{transform: translateY(0)}
+    .navbtn.active{
+      color: var(--text);
+      transform: translateY(-4px);
+      background: linear-gradient(135deg, rgba(123,124,255,.30), rgba(53,227,255,.22));
+      border-color: rgba(53,227,255,.34);
+      box-shadow: 0 18px 58px rgba(0,0,0,.50);
+    }
+    .navbtn:focus-visible{box-shadow: var(--focus)}
+    .navbtn .ico{font-size: 1.35rem; line-height:1}
+
+    @media (min-width: 980px){
+      nav{display:none}
+    }
+
+    /* Tabs */
+    .tab{display:none; animation: fade .18s var(--ease)}
+    .tab.active{display:block}
+    @keyframes fade{from{opacity:.4; transform: translateY(8px)} to {opacity:1; transform: translateY(0)}}
+
+    /* Progress chart */
+    .chartWrap{margin-top: 10px; border-radius: 18px; border:1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.24); padding: 12px}
+    canvas{width:100%;height:200px;display:block}
+
+    /* Options (exercise) */
+    .option{
+      background: rgba(255,255,255,.08);
+      padding: 14px;
+      border-radius: 14px;
+      margin-top: 10px;
+      cursor:pointer;
+      border:1px solid transparent;
+      user-select:none;
+      transition: background var(--dur) var(--ease), transform 140ms var(--ease), border-color var(--dur) var(--ease);
+    }
+    .option:hover{background: rgba(255,255,255,.12); transform: translateY(-1px)}
+    .option.correct{background: rgba(43,255,136,.15); border-color: rgba(43,255,136,.45)}
+    .option.wrong{background: rgba(255,90,90,.14); border-color: rgba(255,90,90,.45)}
+
+    /* Utility */
+    .muted{color:var(--muted)}
+    .small{font-size:.92rem;color:var(--muted);line-height:1.4}
+    .right{display:flex;justify-content:flex-end}
+  </style>
+
+  <style id="pro-polish-css">
+    /* ===== PRO Polish (non-intrusive) ===== */
+    :root{
+      --radius-xl: 16px;
+      --radius-lg: 12px;
+      --radius-md: 10px;
+      --shadow-soft: 0 10px 40px rgba(0,0,0,.28);
+      --shadow-hard: 0 22px 60px rgba(0,0,0,.36);
+      --brand: #4ea1ff;
+      --ok: #2ecc71;
+      --warn: #ffb020;
+      --danger: #e74c3c;
+    }
+    html{-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+    .card{ border-radius: var(--radius-xl)!important; box-shadow: var(--shadow-soft); }
+    .badge{ border-radius: 999px; }
+    .btn-main{ border-radius: var(--radius-md); transition: transform .08s ease, box-shadow .2s ease; }
+    .btn-main:hover{ transform: translateY(-1px); box-shadow: 0 8px 24px rgba(78,161,255,.35); }
+    .btn-soft{ border-radius: var(--radius-md); }
+    .pill{ border-radius: 999px; }
+    .nav{ backdrop-filter: saturate(1.2) blur(8px); }
+    .navbtn{ transition: background-color .2s ease, color .2s ease, transform .06s ease; }
+    .navbtn:active{ transform: scale(.98); }
+    .tab{ animation: pro-fade .18s ease; }
+    @keyframes pro-fade{ from{opacity:.92; transform: translateY(2px);} to{opacity:1; transform: none;} }
+    /* Focus visible for keyboard users */
+    :focus-visible{ outline: 2px solid var(--brand); outline-offset:3px; border-radius:8px; }
+    /* Better lists */
+    .small, .p{ line-height: 1.65; }
+    /* Dark scheme */
+    @media (prefers-color-scheme: dark){
+      .card{ box-shadow: var(--shadow-hard); }
+    }
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+    }
+    /* Floating net status chip */
+    #pro-net{ position: fixed; right: 14px; top: 14px; z-index: 99; font-size:12px; padding:4px 10px; border-radius:999px; background:rgba(0,0,0,.55); color:#fff; box-shadow:0 6px 18px rgba(0,0,0,.28); }
+    #pro-net.ok{ background: linear-gradient(90deg, #2f9,#28c); }
+    #pro-net.bad{ background: rgba(231,76,60,.9); }
+  </style>
+
 </head>
 
 <body>
-<header>
-  <div class="appbar">
-    <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
-      <div>
-        <h1>ELITE ENGLISH PRO</h1>
-        <small>Premium Web App · Offline-first</small>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header>
+    <div class="appbar">
+      <div class="brand" role="banner" aria-label="Elite English Pro">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>ELITE ENGLISH PRO</h1>
+</div>
+      </div>
+
+      <div class="bar-right">
+        <div class="chip" id="chipNet"><span class="dot" id="dotNet"></span><span id="netTxt">Online</span></div>
+        <div class="chip" id="chipAI"><span class="dot off" id="dotAI"></span><span id="aiTxt">AI: OFF</span></div>
+        <button class="btn btn-ghost" id="btnQuick" title="Acciones rápidas">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l2.2 6.8H21l-5.6 4.1 2.2 6.8L12 15.6 6.4 19.7l2.2-6.8L3 8.8h6.8L12 2z" fill="white" opacity=".92"/></svg>
+          Quick
+        </button>
+        <button class="avatar" id="btnProfile" aria-label="Perfil">EE</button>
       </div>
     </div>
-    <div class="statusbar">
-      <div class="chip" id="chipNet"><span class="dot" id="dotNet"></span><span id="netTxt">Online</span></div>
-      <div class="chip" id="chipAI"><span class="dot off" id="dotAI"></span><span id="aiTxt">AI: OFF</span></div>
+  </header>
+
+  <main class="shell" role="main">
+  <section class="main">
+
+      <!-- HOME / DASHBOARD -->
+      <section id="tab-home" class="tab active" aria-label="Inicio">
+        <div class="hero">
+          <div class="heroTop">
+            <div>
+              <div class="kicker">DASHBOARD</div>
+              <div class="title">Bienvenido a tu Suite Premium.</div>
+              <p class="subtitle">Diseñada para que practiques inglés todos los días con una experiencia tipo producto comercial: rápida, elegante, consistente y sin depender de internet.</p>
+            </div>
+            <div class="right" style="gap:10px; align-items:flex-start;">
+              <button class="btn btn-primary" id="btnStart">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 8v8l7-4-7-4Z" fill="white"/></svg>
+                Start Session
+              </button>
+              <button class="btn btn-ghost" id="btnTour">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 15h-2v-2h2Zm0-4h-2V7h2Z" fill="white" opacity=".9"/></svg>
+                Tour
+              </button>
+            </div>
+          </div>
+
+          <div class="stats" aria-label="Resumen">
+            <div class="stat">
+              <div class="label">STREAK</div>
+              <div class="value" id="streakVal">0 días</div>
+              <div class="delta ok" id="streakDelta">+0 hoy</div>
+            </div>
+            <div class="stat">
+              <div class="label">WPM (SPEAK)</div>
+              <div class="value" id="wpmVal">—</div>
+              <div class="delta" id="wpmDelta">En modo manual siempre funciona</div>
+            </div>
+            <div class="stat">
+              <div class="label">ACCURACY</div>
+              <div class="value" id="accVal">—</div>
+              <div class="delta warn" id="accDelta">Objetivo: 70%+</div>
+            </div>
+          </div>
+
+          <div class="heroActions">
+            <button class="btn btn-ghost" data-goto="tab-learn">⚡ Frase del día</button>
+            <button class="btn btn-ghost" data-goto="tab-speak">🎙️ Practicar pronunciación</button>
+            <button class="btn btn-ghost" data-goto="tab-exercises">🏋️ Ejercicio rápido</button>
+            <button class="btn btn-ghost" data-goto="tab-translator">🌐 Traducir texto</button>
+          </div>
+
+          <p class="small" style="margin-top:14px;">
+            Atajos: <span class="kbd">P</span> nueva frase · <span class="kbd">S</span> speak · <span class="kbd">E</span> ejercicio · <span class="kbd">T</span> traductor · <span class="kbd">/</span> quick actions
+          </p>
+        </div>
+
+        <div class="grid2" style="margin-top:16px;">
+          <div class="card">
+            <div class="badge"><span>SESSION · PLAN</span><small>90 segundos · enfoque A1–A2</small></div>
+            <h2 class="h1" style="font-size:1.35rem;">Rutina recomendada (ultra efectiva)</h2>
+            <p class="p">1) Lee una frase corta · 2) Escúchala · 3) Repítela · 4) Completa un ejercicio · 5) Traduce una idea tuya. Todo en menos de 2 minutos.</p>
+            <div class="divider"></div>
+            <div class="row">
+              <div>
+                <label class="small">Tu objetivo diario</label>
+                <select id="goal">
+                  <option value="2">2 min (rápido)</option>
+                  <option value="5" selected>5 min (ideal)</option>
+                  <option value="10">10 min (pro)</option>
+                </select>
+              </div>
+              <div>
+                <label class="small">Tema</label>
+                <select id="topic">
+                  <option value="general" selected>General</option>
+                  <option value="work">Work</option>
+                  <option value="travel">Travel</option>
+                  <option value="daily">Daily life</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn-main" id="btnBuildPlan">BUILD TODAY'S PLAN</button>
+            <div class="pill" id="planPill" style="display:none"></div>
+          </div>
+
+          <div class="card">
+            <div class="badge"><span>ANNOUNCEMENTS</span><small>v1 · Single‑file</small></div>
+            <h2 class="h1" style="font-size:1.35rem;">Estado del sistema</h2>
+            <p class="p" id="sysMsg">Cargando…</p>
+            <div class="divider"></div>
+            <div class="row">
+              <div>
+                <label class="small">Modo rápido (mejor rendimiento)</label>
+                <select id="perfMode">
+                  <option value="balanced" selected>Balanced</option>
+                  <option value="fast">Fast</option>
+                  <option value="cinematic">Cinematic</option>
+                </select>
+              </div>
+              <div>
+                <label class="small">Sonido</label>
+                <select id="audioMode">
+                  <option value="on" selected>On</option>
+                  <option value="off">Off</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn-soft" id="btnHealth">RUN HEALTH CHECK</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEARN / PHRASES -->
+      <section id="tab-learn" class="tab" aria-label="Frases">
+        <div class="card">
+          <div class="badge"><span>LEARN · PHRASES</span><small id="phMeta">Unlimited · Smart fallback</small></div>
+          <p id="phEn" class="en"></p>
+          <div id="phFig" class="fig"></div>
+          <div id="phEs" class="es"></div>
+
+          <div class="controls">
+            <button class="btn-icon" id="phPlay" title="Play EN" aria-label="Play EN">
+              <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M9 7v10l9-5-9-5Z" fill="white"/></svg>
+            </button>
+            <button class="btn-icon" id="phSlow" title="Slow EN" aria-label="Slow EN">
+              <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M12 21a9 9 0 1 0-9-9" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <button class="btn-icon" id="phDuo" title="EN then ES" aria-label="EN then ES">
+              <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 5h18v14H3V5Z" stroke="white" stroke-width="2"/><path d="M7 9h4M7 13h6" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 9h3M14 13h3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <button class="btn btn-ghost" id="phSave">⭐ Save</button>
+          </div>
+
+          <button class="btn-main" id="phNew">NEW PHRASE</button>
+          <div class="pill" id="phStatus" style="display:none"></div>
+          <p class="small">Tip: usa <span class="kbd">P</span> para nueva frase. Guarda tus favoritas para repasarlas en Progress.</p>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="badge"><span>FAVORITES</span><small>LocalStorage</small></div>
+            <p class="p">Tus frases favoritas aparecen aquí para repaso rápido.</p>
+            <div class="divider"></div>
+            <div id="favList" class="small"></div>
+            <button class="btn-soft" id="favClear">Clear favorites</button>
+          </div>
+
+          <div class="card">
+            <div class="badge"><span>MICRO‑LESSON</span><small>1 regla · 1 ejemplo</small></div>
+            <h2 class="h1" style="font-size:1.35rem;">Present Simple (A1)</h2>
+            <p class="p">He/She/It usa <b>-s</b>: “She works”, “He studies”. Otros sujetos usan la forma base: “I work”, “They study”.</p>
+            <div class="fig" id="grammarBox">She works after work. / They work after work.</div>
+            <button class="btn-soft" id="btnNewTip">New tip</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STORIES -->
+      <section id="tab-stories" class="tab" aria-label="Historias">
+        <div class="card">
+          <div class="badge"><span>STORIES</span><small id="stMeta">Wikipedia random summary</small></div>
+          <p id="stTitle" class="en" style="font-size:1.35rem"></p>
+          <div id="stEn" class="es" style="margin-top:10px;color:#E9EDFF"></div>
+          <div id="stFig" class="fig"></div>
+          <div id="stEs" class="es"></div>
+
+          <div class="controls">
+            <button class="btn-icon" id="stPlay" title="Play EN" aria-label="Play EN">
+              <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M9 7v10l9-5-9-5Z" fill="white"/></svg>
+            </button>
+            <button class="btn-icon" id="stSlow" title="Slow EN" aria-label="Slow EN">
+              <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M12 21a9 9 0 1 0-9-9" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <button class="btn-icon" id="stDuo" title="EN then ES" aria-label="EN then ES">
+              <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 5h18v14H3V5Z" stroke="white" stroke-width="2"/><path d="M7 9h4M7 13h6" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 9h3M14 13h3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <button class="btn-main" id="stNew">NEW STORY</button>
+          <div class="pill" id="stStatus" style="display:none"></div>
+          <p class="small">Si Wikipedia falla (sin internet), se usa un generador local ilimitado.</p>
+        </div>
+      </section>
+
+      <!-- SPEAK -->
+      <section id="tab-speak" class="tab" aria-label="Speaking">
+        <div class="card">
+          <div class="badge"><span>SPEAK</span><small id="spMeta">Unlimited · Pronunciation engine</small></div>
+          <p id="spTarget" class="en"></p>
+          <div id="spFig" class="fig"></div>
+          <div id="spEs" class="es"></div>
+
+          <div class="controls">
+            <button class="btn-icon" id="spPlay" title="Play EN" aria-label="Play EN">
+              <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M9 7v10l9-5-9-5Z" fill="white"/></svg>
+            </button>
+            <button class="btn-icon" id="spMic" title="Mic" aria-label="Mic">
+              <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Z" stroke="white" stroke-width="2"/><path d="M19 11a7 7 0 0 1-14 0" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M12 18v3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <button class="btn btn-ghost" id="spSave">⭐ Save score</button>
+          </div>
+
+          <div class="divider"></div>
+          <div class="row">
+            <div>
+              <label class="small">✅ Escribe tu propia frase para practicar (opcional):</label>
+              <input id="spCustom" type="text" placeholder="Type your own English sentence..."/>
+            </div>
+            <div>
+              <label class="small"> </label>
+              <button class="btn-soft" id="spUseCustom">Use my phrase</button>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <div>
+              <label class="small">Si no hay micrófono, escribe lo que dijiste:</label>
+              <input id="spManual" type="text" placeholder="I always practice English after work."/>
+            </div>
+            <div>
+              <label class="small"> </label>
+              <button class="btn-soft" id="spEvalManual">Evaluate typed speech</button>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div id="spResult" class="es"></div>
+
+          <button class="btn-main" id="spNew">NEW PHRASE</button>
+          <div class="pill" id="spStatus" style="display:none"></div>
+          <p class="small">Tip: el micrófono suele requerir HTTPS/localhost. En modo manual siempre funciona.</p>
+        </div>
+      </section>
+
+      <!-- EXERCISES -->
+      <section id="tab-exercises" class="tab" aria-label="Ejercicios">
+        <div class="card">
+          <div class="badge"><span>EXERCISES</span><small id="exMeta">Unlimited · Always new</small></div>
+          <p id="exQ" class="en"></p>
+          <div id="exOpts"></div>
+          <button class="btn-main" id="exNew">NEW EXERCISE</button>
+          <div class="pill" id="exStatus" style="display:none"></div>
+          <p class="small">Siempre genera ejercicios nuevos. Si no hay internet, usa generador local ilimitado.</p>
+        </div>
+      </section>
+
+      <!-- TRANSLATOR -->
+      <section id="tab-translator" class="tab" aria-label="Traductor">
+        <div class="card">
+          <div class="badge"><span>TRANSLATOR</span><small id="trMeta">ES ⇄ EN · Online + Offline</small></div>
+
+          <div class="row" style="margin-bottom:10px">
+            <div>
+              <label class="small">Modo</label>
+              <select id="trMode">
+                <option value="auto">AUTO (detect)</option>
+                <option value="en-es">EN → ES</option>
+                <option value="es-en">ES → EN</option>
+              </select>
+            </div>
+            <div>
+              <label class="small">Acciones rápidas</label>
+              <button class="btn-soft" id="trSwap">Swap</button>
+            </div>
+          </div>
+
+          <div class="grid2" style="grid-template-columns: 1fr 1fr;">
+            <div>
+              <label class="small">Texto</label>
+              <textarea id="trIn" placeholder="Escribe aquí (English o Español)..."></textarea>
+              <div class="controls">
+                <button class="btn-icon" id="trSpeakIn" title="TTS input" aria-label="TTS input">🔊</button>
+                <button class="btn-icon" id="trCopyIn" title="Copy input" aria-label="Copy input">📋</button>
+                <button class="btn-icon" id="trClear" title="Clear" aria-label="Clear">✖</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="small">Resultado</label>
+              <textarea id="trOut" placeholder="Translation result..." readonly></textarea>
+              <div class="controls">
+                <button class="btn-icon" id="trSpeakOut" title="TTS output" aria-label="TTS output">🔊</button>
+                <button class="btn-icon" id="trCopyOut" title="Copy output" aria-label="Copy output">📋</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-main" id="trGo">TRANSLATE</button>
+          <div class="pill" id="trStatus" style="display:none"></div>
+
+          <p class="small">Atajos: Traducir <span class="kbd">Ctrl</span>+<span class="kbd">Enter</span> · Swap <span class="kbd">Alt</span>+<span class="kbd">S</span>. MyMemory online; fallback offline aproximado.</p>
+        </div>
+      </section>
+
+      <!-- PROGRESS -->
+      <section id="tab-progress" class="tab" aria-label="Progreso">
+        <div class="card">
+          <div class="badge"><span>PROGRESS</span><small>Streak · Favorites · Speaking</small></div>
+          <h2 class="h1">Tu progreso (local)</h2>
+          <p class="p">Todo se guarda en tu navegador. Puedes reiniciar cuando quieras. Aquí se reflejan tus favoritos y tus puntajes de speaking.</p>
+
+          <div class="divider"></div>
+
+          <div class="grid2">
+            <div>
+              <div class="pill">📈 Weekly Activity</div>
+              <div class="chartWrap"><canvas id="chart" width="900" height="260"></canvas></div>
+              <p class="small">Este gráfico es local y se actualiza cuando completas acciones (frase nueva, ejercicio, speaking).</p>
+            </div>
+
+            <div>
+              <div class="pill">🏆 Achievements</div>
+              <div class="divider"></div>
+              <div id="achievements" class="small"></div>
+
+              <div class="divider"></div>
+              <div class="pill">⭐ Favorites</div>
+              <div class="divider"></div>
+              <div id="favList2" class="small"></div>
+
+              <button class="btn-soft" id="resetAll">Reset all data</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="tab-settings" class="tab" aria-label="Configuración">
+        <div class="card">
+          <div class="badge"><span>SETTINGS</span><small>Commercial engine</small></div>
+
+          <div class="row">
+            <div>
+              <label class="small">Gemini API Key (se guarda solo en tu navegador)</label>
+              <input id="geminiKey" type="password" placeholder="Paste your Gemini API Key"/>
+            </div>
+            <div>
+              <label class="small">AI Mode</label>
+              <select id="aiMode">
+                <option value="off">OFF (Robust fallback)</option>
+                <option value="gemini">GEMINI (Optional)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <div>
+              <label class="small">Idioma de TTS (preferencia)</label>
+              <select id="ttsPref">
+                <option value="en-US" selected>English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="es-ES">Español (ES)</option>
+                <option value="es-MX">Español (MX)</option>
+              </select>
+            </div>
+            <div>
+              <label class="small">Velocidad de TTS</label>
+              <select id="ttsRate">
+                <option value="0.65">Lenta</option>
+                <option value="0.9">Media</option>
+                <option value="1" selected>Normal</option>
+                <option value="1.1">Rápida</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn-main" id="saveSettings">SAVE SETTINGS</button>
+          <button class="btn-soft" id="testGemini">Test Gemini</button>
+
+          <div class="divider"></div>
+          <div id="settingsStatus" class="es"></div>
+
+          <p class="small">Si Gemini no responde, el sistema seguirá generando contenido ilimitado (internet + generador local).</p>
+        </div>
+      </section>
+
+    </section>
+  </main>
+
+  <!-- Mobile bottom nav -->
+  <nav aria-label="Navegación">
+    <button class="navbtn active" data-tab="tab-home"><div class="ico">✨</div><span>HOME</span></button>
+    <button class="navbtn" data-tab="tab-learn"><div class="ico">⚡</div><span>LEARN</span></button>
+    <button class="navbtn" data-tab="tab-stories"><div class="ico">📖</div><span>STORIES</span></button>
+    <button class="navbtn" data-tab="tab-speak"><div class="ico">🎙️</div><span>SPEAK</span></button>
+    <button class="navbtn" data-tab="tab-exercises"><div class="ico">🏋️</div><span>EXERCISE</span></button>
+    <button class="navbtn" data-tab="tab-translator"><div class="ico">🌐</div><span>TRANSLATE</span></button>
+    <button class="navbtn" data-tab="tab-progress"><div class="ico">📈</div><span>PROGRESS</span></button>
+    <button class="navbtn" data-tab="tab-settings"><div class="ico">⚙️</div><span>SETTINGS</span></button>
+  </nav>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+    <div class="t-title" id="toastTitle">Info</div>
+    <div class="t-body" id="toastBody"></div>
+  </div>
+
+  <!-- Quick actions modal -->
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Quick actions">
+      <div class="modal-head">
+        <h3>Quick Actions</h3>
+        <button class="btn btn-ghost" id="closeModal">Close</button>
+      </div>
+      <div class="modal-body">
+        <p class="small">Accesos premium: ve directo a lo que necesitas, como app comercial.</p>
+        <div class="divider"></div>
+        <div class="row">
+          <button class="btn btn-primary" data-qa="phrase">⚡ New phrase</button>
+          <button class="btn btn-primary" data-qa="exercise">🏋️ New exercise</button>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <button class="btn btn-ghost" data-qa="speak">🎙️ New speak</button>
+          <button class="btn btn-ghost" data-qa="translate">🌐 Open translator</button>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+          <div>
+            <label class="small">Nota rápida</label>
+            <input id="quickNote" placeholder="Escribe una meta o palabra..."/>
+          </div>
+          <div>
+            <label class="small"> </label>
+            <button class="btn-soft" id="saveNote">Save note</button>
+          </div>
+        </div>
+        <p class="small" id="noteOut" style="margin-top:10px"></p>
+      </div>
     </div>
   </div>
-</header>
 
-<div class="container">
-
-  <!-- PHRASES -->
-  <section id="tab-phrases" class="tab active">
-    <div class="card">
-      <div class="badge"><span>PHRASES</span><small id="ph-meta">Unlimited · Smart fallback</small></div>
-      <p id="phEn" class="title-en"></p>
-      <div id="phFig" class="text-fig"></div>
-      <div id="phEs" class="text-es"></div>
-      <div class="controls">
-        <button class="btn-icon" id="phPlay" title="Play EN">
-          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M9 7v10l9-5-9-5Z" fill="white"/></svg>
-        </button>
-        <button class="btn-icon" id="phSlow" title="Slow EN">
-          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M12 21a9 9 0 1 0-9-9" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <button class="btn-icon" id="phDuo" title="EN then ES">
-          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M3 5h18v14H3V5Z" stroke="white" stroke-width="2"/><path d="M7 9h4M7 13h6" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 9h3M14 13h3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-      <button class="btn-main" id="phNew">NEW PHRASE</button>
-      <div class="pill" id="phStatus" style="display:none"></div>
-      <p class="small">Tip: atajos — <span class="kbd">P</span> nueva frase · <span class="kbd">T</span> traductor</p>
-    </div>
-  </section>
-
-  <!-- STORIES -->
-  <section id="tab-stories" class="tab">
-    <div class="card">
-      <div class="badge"><span>STORIES</span><small id="st-meta">Wikipedia random summary</small></div>
-      <p id="stTitle" class="title-en"></p>
-      <div id="stEn" class="text-es" style="margin-top:10px;color:#e9edff"></div>
-      <div id="stFig" class="text-fig"></div>
-      <div id="stEs" class="text-es"></div>
-      <div class="controls">
-        <button class="btn-icon" id="stPlay" title="Play EN">
-          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M9 7v10l9-5-9-5Z" fill="white"/></svg>
-        </button>
-        <button class="btn-icon" id="stSlow" title="Slow EN">
-          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M12 21a9 9 0 1 0-9-9" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <button class="btn-icon" id="stDuo" title="EN then ES">
-          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M3 5h18v14H3V5Z" stroke="white" stroke-width="2"/><path d="M7 9h4M7 13h6" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 9h3M14 13h3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-      <button class="btn-main" id="stNew">NEW STORY</button>
-      <div class="pill" id="stStatus" style="display:none"></div>
-      <p class="small">Si Wikipedia falla (sin internet), se usa un generador local ilimitado.</p>
-    </div>
-  </section>
-
-  <!-- SPEAK -->
-  <section id="tab-speak" class="tab">
-    <div class="card">
-      <div class="badge"><span>SPEAK</span><small id="sp-meta">Unlimited · Custom phrase enabled</small></div>
-
-      <p id="spTarget" class="title-en"></p>
-      <div id="spFig" class="text-fig"></div>
-      <div id="spEs" class="text-es"></div>
-
-      <div class="controls">
-        <button class="btn-icon" id="spPlay" title="Play EN">
-          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M9 7v10l9-5-9-5Z" fill="white"/></svg>
-        </button>
-        <button class="btn-icon" id="spMic" title="Mic">
-          <svg class="svg" viewBox="0 0 24 24" fill="none"><path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Z" stroke="white" stroke-width="2"/><path d="M19 11a7 7 0 0 1-14 0" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M12 18v3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="row">
-        <div>
-          <label class="small">✅ Escribe tu propia frase para practicar (opcional):</label>
-          <input id="spCustom" type="text" placeholder="Type your own English sentence..."/>
-        </div>
-        <div>
-          <label class="small">&nbsp;</label>
-          <button class="btn-ghost" id="spUseCustom">Use my phrase</button>
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:10px">
-        <div>
-          <label class="small">Si no hay micrófono, escribe lo que dijiste:</label>
-          <input id="spManual" type="text" placeholder="I always practice English after work."/>
-        </div>
-        <div>
-          <label class="small">&nbsp;</label>
-          <button class="btn-ghost" id="spEvalManual">Evaluate typed speech</button>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-      <div id="spResult" class="text-es"></div>
-
-      <button class="btn-main" id="spNew">NEW PHRASE</button>
-      <div class="pill" id="spStatus" style="display:none"></div>
-      <p class="small">Tip: el micrófono suele requerir HTTPS/localhost. En modo manual siempre funciona.</p>
-    </div>
-  </section>
-
-  <!-- EXERCISES -->
-  <section id="tab-exercises" class="tab">
-    <div class="card">
-      <div class="badge"><span>EXERCISES</span><small id="ex-meta">Unlimited · Always new</small></div>
-      <p id="exQ" class="title-en"></p>
-      <div id="exOpts"></div>
-      <button class="btn-main" id="exNew">NEW EXERCISE</button>
-      <div class="pill" id="exStatus" style="display:none"></div>
-      <p class="small">Siempre genera ejercicios nuevos. Si no hay internet, usa generador local ilimitado.</p>
-    </div>
-  </section>
-
-  <!-- TRANSLATOR -->
-  <section id="tab-translator" class="tab">
-    <div class="card">
-      <div class="badge"><span>TRANSLATOR</span><small id="tr-meta">ES ⇄ EN · Online + Offline</small></div>
-
-      <div class="row" style="margin-bottom:10px">
-        <div>
-          <label class="small">Modo</label>
-          <select id="trMode">
-            <option value="auto">AUTO (detect)</option>
-            <option value="en-es">EN → ES</option>
-            <option value="es-en">ES → EN</option>
-          </select>
-        </div>
-        <div>
-          <label class="small">Acciones rápidas</label>
-          <button class="btn-ghost" id="trSwap">Swap</button>
-        </div>
-      </div>
-
-      <div class="translator-grid">
-        <div>
-          <label class="small">Texto</label>
-          <textarea id="trIn" placeholder="Escribe aquí (English o Español)..."></textarea>
-          <div class="controls">
-            <button class="btn-icon" id="trSpeakIn" title="TTS input">🔊</button>
-            <button class="btn-icon" id="trCopyIn" title="Copy input">📋</button>
-            <button class="btn-icon" id="trClear" title="Clear">✖</button>
-          </div>
-        </div>
-
-        <div class="swap" aria-hidden="true">
-          <div class="pill">Atajos</div>
-          <div class="small">Traducir: <span class="kbd">Ctrl</span>+<span class="kbd">Enter</span></div>
-          <div class="small">Swap: <span class="kbd">Alt</span>+<span class="kbd">S</span></div>
-        </div>
-
-        <div>
-          <label class="small">Resultado</label>
-          <textarea id="trOut" placeholder="Translation result..." readonly></textarea>
-          <div class="controls">
-            <button class="btn-icon" id="trSpeakOut" title="TTS output">🔊</button>
-            <button class="btn-icon" id="trCopyOut" title="Copy output">📋</button>
-          </div>
-        </div>
-      </div>
-
-      <button class="btn-main" id="trGo">TRANSLATE</button>
-      <div class="pill" id="trStatus" style="display:none"></div>
-      <p class="small">El traductor usa MyMemory cuando hay internet. Si falla, usa traducción offline aproximada. (Nunca se rompe.)</p>
-    </div>
-  </section>
-
-  <!-- GLOBAL -->
-  <section id="tab-global" class="tab">
-    <div class="card">
-      <div class="badge"><span>GLOBAL · SETTINGS</span><small>Premium stable engine</small></div>
-      <div class="row">
-        <div>
-          <label class="small">Gemini API Key (se guarda solo en tu navegador)</label>
-          <input id="geminiKey" type="password" placeholder="Paste your Gemini API Key"/>
-        </div>
-        <div>
-          <label class="small">AI Mode</label>
-          <select id="aiMode">
-            <option value="off">OFF (Robust fallback)</option>
-            <option value="gemini">GEMINI (Optional)</option>
-          </select>
-        </div>
-      </div>
-      <button class="btn-main" id="saveGlobal">SAVE SETTINGS</button>
-      <button class="btn-ghost" id="testGemini">Test Gemini</button>
-      <div class="divider"></div>
-      <div id="globalStatus" class="text-es"></div>
-      <p class="small">Si Gemini no responde, el sistema seguirá generando contenido ilimitado (internet + generador local).</p>
-    </div>
-  </section>
-
-</div>
-
-<nav id="bottomNav">
-  <button class="active" data-tab="tab-phrases"><div class="ico">⚡</div><span>PHRASES</span></button>
-  <button data-tab="tab-stories"><div class="ico">📖</div><span>STORIES</span></button>
-  <button data-tab="tab-speak"><div class="ico">🎙️</div><span>SPEAK</span></button>
-  <button data-tab="tab-exercises"><div class="ico">🏋️</div><span>EXERCISES</span></button>
-  <button data-tab="tab-translator"><div class="ico">🌐</div><span>TRANSLATE</span></button>
-  <button data-tab="tab-global"><div class="ico">⚙️</div><span>GLOBAL</span></button>
-</nav>
-
-<div class="toast" id="toast"><div class="t-title" id="toastTitle">Info</div><div class="t-body" id="toastBody"></div></div>
-
-<script>
-"use strict";
-
-/* ===================== CORE HELPERS ===================== */
-const $ = (id) => document.getElementById(id);
-const rnd = (arr) => arr[Math.floor(Math.random()*arr.length)];
-const sleep = (ms) => new Promise(r=>setTimeout(r,ms));
-
-const UI = Object.freeze({
-  tabs: () => Array.from(document.querySelectorAll(".tab")),
-  navBtns: () => Array.from(document.querySelectorAll("nav button")),
-
-  phEn: $("phEn"), phFig: $("phFig"), phEs: $("phEs"), phStatus: $("phStatus"), phMeta: $("ph-meta"),
-  stTitle: $("stTitle"), stEn: $("stEn"), stFig: $("stFig"), stEs: $("stEs"), stStatus: $("stStatus"), stMeta: $("st-meta"),
-  spTarget: $("spTarget"), spFig: $("spFig"), spEs: $("spEs"), spResult: $("spResult"), spStatus: $("spStatus"), spMeta: $("sp-meta"),
-  spManual: $("spManual"), spCustom: $("spCustom"),
-  exQ: $("exQ"), exOpts: $("exOpts"), exStatus: $("exStatus"), exMeta: $("ex-meta"),
-
-  // Translator
-  trMode: $("trMode"), trIn: $("trIn"), trOut: $("trOut"), trStatus: $("trStatus"), trMeta: $("tr-meta"),
-
-  geminiKey: $("geminiKey"), aiMode: $("aiMode"), globalStatus: $("globalStatus"),
-
-  chipNet: $("chipNet"), dotNet: $("dotNet"), netTxt: $("netTxt"),
-  chipAI: $("chipAI"), dotAI: $("dotAI"), aiTxt: $("aiTxt"),
-
-  toast: $("toast"), toastTitle: $("toastTitle"), toastBody: $("toastBody")
-});
-
-const STORE = Object.freeze({
-  GEMINI_KEY: "EEP_GEMINI_KEY",
-  AI_MODE: "EEP_AI_MODE"
-});
-
-function safeGet(key, fallback=""){
-  try{ return localStorage.getItem(key) ?? fallback; }catch{ return fallback; }
-}
-function safeSet(key, value){
-  try{ localStorage.setItem(key, value); }catch{}
-}
-
-let toastTimer = null;
-function toast(title, body, ms=2300){
-  UI.toastTitle.textContent = title;
-  UI.toastBody.textContent = body;
-  UI.toast.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>UI.toast.classList.remove("show"), ms);
-}
-function pill(el, text, ms=1200){
-  el.textContent = text;
-  el.style.display = "inline-flex";
-  if(ms>0) setTimeout(()=> el.style.display = "none", ms);
-}
-
-/* ===================== STATUS CHIPS ===================== */
-function updateNetChip(){
-  const online = navigator.onLine;
-  UI.netTxt.textContent = online ? "Online" : "Offline";
-  UI.dotNet.classList.toggle("off", !online);
-}
-function updateAIChip(){
-  const mode = UI.aiMode.value;
-  const on = (mode === "gemini");
-  UI.aiTxt.textContent = on ? "AI: GEMINI" : "AI: OFF";
-  UI.dotAI.classList.toggle("off", !on);
-}
-window.addEventListener("online", updateNetChip);
-window.addEventListener("offline", updateNetChip);
-
-/* ===================== TABS ===================== */
-function setTab(tabId){
-  UI.tabs().forEach(t=>t.classList.remove("active"));
-  $(tabId)?.classList.add("active");
-  UI.navBtns().forEach(b=>b.classList.remove("active"));
-  const activeBtn = document.querySelector(`nav button[data-tab="${tabId}"]`);
-  activeBtn?.classList.add("active");
-}
-UI.navBtns().forEach(btn=> btn.addEventListener("click", ()=>setTab(btn.dataset.tab)));
-
-/* ===================== AUDIO TTS ===================== */
-function tts(text, lang="en", rate=1){
-  if(!text) return;
-  try{
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = (lang==="en") ? "en-US" : "es-ES";
-    u.rate = rate;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(u);
-  }catch{
-    toast("Audio", "Tu navegador no soporta TTS.");
-  }
-}
-async function duo(en, es){
-  if(en) tts(en, "en", 1);
-  await sleep(1100);
-  if(es) tts(es, "es", 1);
-}
-
-/* ===================== FETCH WITH TIMEOUT ===================== */
-async function fetchJson(url,{timeoutMs=7000,method="GET",headers={},body=null}={}){
-  const controller = new AbortController();
-  const t = setTimeout(()=>controller.abort(), timeoutMs);
-  try{
-    const res = await fetch(url, {method, headers, body, signal: controller.signal});
-    if(!res.ok) throw new Error("HTTP " + res.status);
-    return await res.json();
-  } finally {
-    clearTimeout(t);
-  }
-}
-
-/* ===================== PHONETIC ENGINE ===================== */
-function phoneticENtoES(text){
-  if(!text) return "";
-  let t = (" " + text.toLowerCase() + " ");
-  const dict = {
-    "the":"de","this":"dis","that":"dat","these":"díis","those":"dóus",
-    "think":"zink","thing":"zin","thought":"zót",
-    "through":"zrú","though":"dóu","there":"der","their":"der","they":"dei",
-    "what":"uát","where":"uér","when":"uén","why":"uái",
-    "would":"uud","could":"kud","should":"shud",
-    "you":"iú","your":"iór","yes":"yés",
-    "one":"uán","two":"tú","three":"zrí",
-    "enough":"ináf","laugh":"láf",
-    "people":"pípol","very":"véri",
-    "work":"uérk","world":"uérld",
-    "practice":"práctis","english":"ínglish"
-  };
-  for(const w in dict){
-    t = t.replace(new RegExp(`\\b${w}\\b`, "g"), dict[w]);
-  }
-
-  t = t.replace(/th/g,"z")
-       .replace(/sh/g,"sh")
-       .replace(/ch/g,"ch")
-       .replace(/ph/g,"f")
-       .replace(/ck/g,"k")
-       .replace(/gh\\b/g,"")
-       .replace(/ng\\b/g,"ng")
-       .replace(/ee/g,"ii")
-       .replace(/ea/g,"í")
-       .replace(/oo/g,"u")
-       .replace(/ou/g,"au")
-       .replace(/ow/g,"au")
-       .replace(/igh/g,"ái")
-       .replace(/ai/g,"éi")
-       .replace(/ay/g,"éi")
-       .replace(/ie/g,"ái")
-       .replace(/oa/g,"óu")
-       .replace(/tion\\b/g,"shon")
-       .replace(/sion\\b/g,"shon")
-       .replace(/ed\\b/g,"d")
-       .replace(/ing\\b/g,"in")
-       .replace(/ly\\b/g,"li")
-       .replace(/er\\b/g,"er")
-       .replace(/wr/g,"r")
-       .replace(/h/g,"");
-
-  return t.replace(/[^a-záéíóúñü\s]/gi,"").replace(/\s+/g," ").trim();
-}
-
-/* ===================== TRANSLATION (ONLINE + OFFLINE, BIDIRECTIONAL) ===================== */
-function clean(t){
-  return (t ?? "").replace(/[*§•]/g, "").replace(/\s+/g, " ").trim();
-}
-function educationalFallbackES(){
-  return rnd([
-    "Esta es una frase para practicar inglés.",
-    "Esta oración sirve como ejemplo de aprendizaje.",
-    "Practica esta frase en inglés.",
-    "Esta es una frase sencilla para estudiar inglés."
-  ]);
-}
-function educationalFallbackEN(){
-  return rnd([
-    "This is a sentence to practice English.",
-    "This sentence is an example for learning.",
-    "Practice this sentence in English.",
-    "This is a simple sentence for study."
-  ]);
-}
-
-const MINI_DICT_EN_ES = Object.freeze({
-  "i":"yo","you":"tú","he":"él","she":"ella","we":"nosotros","they":"ellos",
-  "always":"siempre","usually":"usualmente","often":"a menudo","sometimes":"a veces","never":"nunca",
-  "practice":"practico","practices":"practica","study":"estudio","studies":"estudia",
-  "work":"trabajo","works":"trabaja","go":"voy","goes":"va","eat":"como","eats":"come",
-  "play":"juego","plays":"juega","read":"leo","reads":"lee","write":"escribo","writes":"escribe",
-  "listen":"escucho","listens":"escucha","learn":"aprendo","learns":"aprende","speak":"hablo","speaks":"habla",
-  "english":"inglés","after":"después","before":"antes","school":"escuela","home":"casa",
-  "morning":"mañana","day":"día","every":"cada","with":"con","my":"mi","friends":"amigos",
-  "at":"en","in":"en","to":"a","a":"un","the":"el","and":"y","is":"es","are":"son",
-  "today":"hoy","yesterday":"ayer","weekend":"fin de semana"
-});
-
-// Build reverse dictionary (best effort). In collisions, keep first.
-const MINI_DICT_ES_EN = (()=>{
-  const rev = {};
-  for(const [en, es] of Object.entries(MINI_DICT_EN_ES)){
-    const key = String(es).toLowerCase();
-    if(!rev[key]) rev[key] = en;
-  }
-  // add common spanish function words
-  Object.assign(rev, {
-    "hola":"hello",
-    "buenos":"good",
-    "buenas":"good",
-    "gracias":"thanks",
-    "por":"for",
-    "favor":"please",
-    "yo":"i",
-    "tú":"you",
-    "tu":"your",
-    "él":"he",
-    "el":"the",
-    "ella":"she",
-    "nosotros":"we",
-    "ellos":"they",
-    "en":"in",
-    "con":"with",
-    "cada":"every",
-    "siempre":"always",
-    "nunca":"never",
-    "hoy":"today",
-    "ayer":"yesterday"
-  });
-  return Object.freeze(rev);
-})();
-
-function offlineTranslateWordByWord(text, dir){
-  // dir: 'en-es' or 'es-en'
-  const t = clean(text);
-  if(!t) return (dir === 'en-es') ? educationalFallbackES() : educationalFallbackEN();
-
-  if(dir === 'en-es'){
-    const words = t.toLowerCase().replace(/[^a-z\s']/g, "").split(/\s+/).filter(Boolean);
-    if(!words.length) return educationalFallbackES();
-    const out = words.map(w => MINI_DICT_EN_ES[w] ?? w);
-    return "Traducción aproximada: " + out.join(" ") + ".";
-  }else{
-    // remove accents partially by keeping letters + accents; map by lowercase.
-    const words = t.toLowerCase().replace(/[^a-záéíóúñü\s]/g, "").split(/\s+/).filter(Boolean);
-    if(!words.length) return educationalFallbackEN();
-    const out = words.map(w => MINI_DICT_ES_EN[w] ?? w);
-    return "Approx. translation: " + out.join(" ") + ".";
-  }
-}
-
-async function translateMyMemory(text, dir){
-  // dir: 'en-es' or 'es-en'
-  const t = clean(text);
-  if(!t) return "";
-  const pair = dir === 'en-es' ? 'en|es' : 'es|en';
-  const url = "https://api.mymemory.translated.net/get?q=" + encodeURIComponent(t) + "&langpair=" + pair;
-  const data = await fetchJson(url, {timeoutMs: 7500});
-  return clean(data?.responseData?.translatedText ?? "");
-}
-
-function detectLang(text){
-  // Simple heuristic: Spanish if contains accented letters or many common Spanish words.
-  const t = (text||"").toLowerCase();
-  if(/[áéíóúñü]/.test(t)) return 'es';
-  const esHits = [" el "," la "," de "," que "," y "," en "," por ","para ","hola","gracias","buenos"].reduce((a,w)=> a + (t.includes(w)?1:0), 0);
-  const enHits = [" the "," and "," to "," of "," in "," for ","with ","hello","thanks"].reduce((a,w)=> a + (t.includes(w)?1:0), 0);
-  return (esHits >= enHits) ? 'es' : 'en';
-}
-
-async function translate(text, mode){
-  // mode: auto, en-es, es-en
-  const t = clean(text);
-  if(!t) return {out:"", used:"-"};
-
-  let dir = mode;
-  if(mode === 'auto'){
-    dir = (detectLang(t) === 'es') ? 'es-en' : 'en-es';
-  }
-
-  // Online first (if possible)
-  if(navigator.onLine){
-    try{
-      const out = await translateMyMemory(t, dir);
-      if(out && out.length >= 2) return {out, used:"MyMemory"};
-    }catch{}
-  }
-
-  // Offline fallback
-  const off = offlineTranslateWordByWord(t, dir);
-  return {out: off, used:"Offline"};
-}
-
-/* ===================== GEMINI (OPTIONAL) ===================== */
-async function gemini(prompt){
-  if(UI.aiMode.value !== "gemini") throw new Error("AI mode OFF");
-  const key = UI.geminiKey.value.trim();
-  if(!key) throw new Error("Missing Gemini key");
-
-  const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + encodeURIComponent(key);
-  const body = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] });
-
-  const data = await fetchJson(endpoint, {
-    method: "POST",
-    timeoutMs: 9000,
-    headers: {"Content-Type":"application/json"},
-    body
-  });
-
-  const out = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if(!out) throw new Error("Gemini empty");
-  return String(out).trim();
-}
-
-/* ===================== UNLIMITED GENERATORS ===================== */
-const GEN = Object.freeze({
-  subjects: ["I","You","He","She","We","They"],
-  adverbs: ["always","usually","often","sometimes","never"],
-  verbs: [
-    {b:"practice", s:"practices"},
-    {b:"study", s:"studies"},
-    {b:"work", s:"works"},
-    {b:"read", s:"reads"},
-    {b:"write", s:"writes"},
-    {b:"listen", s:"listens"},
-    {b:"learn", s:"learns"},
-    {b:"speak", s:"speaks"},
-    {b:"go", s:"goes"},
-    {b:"cook", s:"cooks"},
-    {b:"walk", s:"walks"}
-  ],
-  objects: [
-    "English every day",
-    "at school",
-    "in the morning",
-    "after work",
-    "with my friends",
-    "at home",
-    "on the weekend",
-    "before dinner",
-    "at the park",
-    "in my free time"
-  ],
-  extras: [
-    "to improve my skills",
-    "to feel more confident",
-    "because it helps me",
-    "to communicate better",
-    "for my future",
-    "to learn new words"
-  ],
-  storyStarts: ["Today,","Yesterday,","In the morning,","After work,","On the weekend,"],
-  storyPeople: ["Tom","Ana","Luis","Sara","David","Maria"],
-  storyPlaces: ["at home","at school","in the park","at work","in the city"],
-  storyActions: ["practices English","studies new words","listens to a short story","speaks with a friend","reads a simple text"]
-});
-
-function buildSentence(){
-  const s = rnd(GEN.subjects);
-  const adv = rnd(GEN.adverbs);
-  const v = rnd(GEN.verbs);
-  const obj = rnd(GEN.objects);
-  const extra = Math.random() < 0.55 ? (" " + rnd(GEN.extras)) : "";
-  const verb = (s === "He" || s === "She") ? v.s : v.b;
-  return `${s} ${adv} ${verb} ${obj}${extra}.`.replace(/\s+/g, " ").trim();
-}
-
-function buildSpeakSentence(){
-  const s = rnd(["I","You","He","She","We","They"]);
-  const v = rnd([{b:"practice",s:"practices"},{b:"study",s:"studies"},{b:"work",s:"works"},{b:"speak",s:"speaks"},{b:"read",s:"reads"}]);
-  const obj = rnd(["English every day","at home","after work","in the morning","with friends"]);
-  const verb = (s === "He" || s === "She") ? v.s : v.b;
-  return `${s} ${verb} ${obj}.`;
-}
-
-function buildLocalStory(){
-  const start = rnd(GEN.storyStarts);
-  const name = rnd(GEN.storyPeople);
-  const place = rnd(GEN.storyPlaces);
-  const action1 = rnd(GEN.storyActions);
-  const action2 = rnd(GEN.storyActions);
-  const end = rnd(["He feels more confident.","She feels more confident.","They learn something new.","It becomes a good habit.","It helps a lot."]);
-  const s1 = `${start} ${name} is ${place}.`;
-  const s2 = `${name} ${action1}.`;
-  const s3 = (action2 !== action1) ? `${name} also ${action2}.` : `${name} repeats the practice.`;
-  return `${s1} ${s2} ${s3} ${end}`.replace(/\s+/g, " ").trim();
-}
-
-/* ===================== ONLINE SOURCES ===================== */
-async function getOnlinePhrase(){
-  const sources = [
-    async()=> (await fetchJson("https://api.quotable.io/random", {timeoutMs: 6500}))?.content,
-    async()=> (await fetchJson("https://api.adviceslip.com/advice", {timeoutMs: 6500}))?.slip?.advice,
-    async()=> {
-      const d = await fetchJson("https://baconipsum.com/api/?type=meat-and-filler&sentences=1", {timeoutMs: 6500});
-      return Array.isArray(d) ? d[0] : null;
-    }
-  ];
-  for(const s of sources){
-    try{
-      const t = clean(await s());
-      if(t && t.length >= 6 && t.length <= 160) return t;
-    }catch{}
-  }
-  return null;
-}
-
-async function getWikipediaStory(){
-  const url = "https://en.wikipedia.org/api/rest_v1/page/random/summary";
-  const d = await fetchJson(url, {timeoutMs: 8000});
-  const title = clean(d?.title ?? "Wikipedia");
-  const extract = clean(d?.extract ?? "");
-  if(!extract || extract.length < 60) throw new Error("Wikipedia short");
-  return { title, extract };
-}
-
-/* ===================== CACHES (AVOID REPEATS) ===================== */
-const mem = {
-  phrases: new Set(),
-  speak: new Set(),
-  exercises: new Set(),
-  stories: new Set()
-};
-function cacheAdd(set, value, max=340){
-  if(!value) return;
-  set.add(value);
-  if(set.size > max) set.clear();
-}
-function isRepeat(set, value){ return set.has(value); }
-
-/* ===================== RENDER ===================== */
-async function renderPhrase(en, meta){
-  const text = clean(en).replace(/\s+/g, " ").trim();
-  const safe = text.endsWith(".") ? text : (text + ".");
-  UI.phEn.textContent = safe;
-  UI.phFig.textContent = phoneticENtoES(safe);
-  UI.phEs.textContent = (await translate(safe, 'en-es')).out;
-  UI.phMeta.textContent = meta;
-  pill(UI.phStatus, "✅ Ready", 1100);
-}
-
-async function renderStory(title, en, meta){
-  const safeTitle = clean(title) || "Wikipedia";
-  const text = clean(en).replace(/\s+/g, " ").trim();
-  UI.stTitle.textContent = safeTitle;
-  UI.stEn.textContent = text;
-  UI.stFig.textContent = phoneticENtoES(text);
-  UI.stEs.textContent = (await translate(text, 'en-es')).out;
-  UI.stMeta.textContent = meta;
-  pill(UI.stStatus, "✅ Ready", 1100);
-}
-
-async function renderSpeak(en, meta){
-  const text = clean(en).replace(/\s+/g, " ").trim();
-  const safe = text.endsWith(".") ? text : (text + ".");
-  UI.spTarget.textContent = safe;
-  UI.spFig.textContent = phoneticENtoES(safe);
-  UI.spEs.textContent = (await translate(safe, 'en-es')).out;
-  UI.spMeta.textContent = meta;
-  UI.spResult.textContent = "";
-  UI.spManual.value = "";
-  pill(UI.spStatus, "✅ Ready", 1100);
-}
-
-function renderExercise(question, options, correct, meta){
-  UI.exQ.textContent = question;
-  UI.exOpts.innerHTML = "";
-  options.forEach(o=>{
-    const d = document.createElement("div");
-    d.className = "option";
-    d.textContent = o;
-    d.addEventListener("click", ()=> d.classList.add(o === correct ? "correct" : "wrong"));
-    UI.exOpts.appendChild(d);
-  });
-  UI.exMeta.textContent = meta;
-  pill(UI.exStatus, "✅ Ready", 1100);
-}
-
-/* ===================== PIPELINES ===================== */
-async function loadPhrase(){
-  pill(UI.phStatus, "⏳ Loading...", 900);
-
-  if(UI.aiMode.value === "gemini"){
-    try{
-      const g = await gemini(
-        "Generate ONE short English sentence for language learning.\n"+
-        "Rules: CEFR A1–A2, no jokes, no irony, no advice, max 10 words, end with a period."
-      );
-      const text = clean(g);
-      if(text && !isRepeat(mem.phrases, text)){
-        cacheAdd(mem.phrases, text);
-        return renderPhrase(text, "Gemini");
+  <script>
+    "use strict";
+
+    /* =========================================================
+       Helpers
+       ========================================================= */
+    const $ = (id)=>document.getElementById(id);
+    const $$ = (sel)=>Array.from(document.querySelectorAll(sel));
+    const rnd = (arr)=>arr[Math.floor(Math.random()*arr.length)];
+    const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
+    const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
+
+    /* =========================================================
+       UI map
+       ========================================================= */
+    const UI = Object.freeze({
+      tabs: ()=> $$('.tab'),
+      navBtns: ()=> $$('.navbtn'),
+      sideBtns: ()=> $$('.side-item'),
+
+      // Chips
+      dotNet: $('dotNet'), netTxt: $('netTxt'),
+      dotAI: $('dotAI'), aiTxt: $('aiTxt'),
+
+      // Home
+      sysMsg: $('sysMsg'),
+      goal: $('goal'), topic: $('topic'),
+      planPill: $('planPill'),
+      streakVal: $('streakVal'), streakDelta: $('streakDelta'),
+      wpmVal: $('wpmVal'), wpmDelta: $('wpmDelta'),
+      accVal: $('accVal'), accDelta: $('accDelta'),
+
+      // Learn / phrases
+      phEn: $('phEn'), phFig: $('phFig'), phEs: $('phEs'), phMeta: $('phMeta'), phStatus: $('phStatus'),
+      favList: $('favList'), favList2: $('favList2'),
+      grammarBox: $('grammarBox'),
+
+      // Stories
+      stTitle: $('stTitle'), stEn: $('stEn'), stFig: $('stFig'), stEs: $('stEs'), stMeta: $('stMeta'), stStatus: $('stStatus'),
+
+      // Speak
+      spTarget: $('spTarget'), spFig: $('spFig'), spEs: $('spEs'), spMeta: $('spMeta'), spStatus: $('spStatus'), spResult: $('spResult'),
+      spManual: $('spManual'), spCustom: $('spCustom'),
+
+      // Exercises
+      exQ: $('exQ'), exOpts: $('exOpts'), exMeta: $('exMeta'), exStatus: $('exStatus'),
+
+      // Translator
+      trMode: $('trMode'), trIn: $('trIn'), trOut: $('trOut'), trMeta: $('trMeta'), trStatus: $('trStatus'),
+
+      // Progress
+      chart: $('chart'),
+      achievements: $('achievements'),
+
+      // Settings
+      geminiKey: $('geminiKey'), aiMode: $('aiMode'),
+      ttsPref: $('ttsPref'), ttsRate: $('ttsRate'),
+      settingsStatus: $('settingsStatus'),
+
+      // Modal / toast
+      toast: $('toast'), toastTitle: $('toastTitle'), toastBody: $('toastBody'),
+      modalBackdrop: $('modalBackdrop'), quickNote: $('quickNote'), noteOut: $('noteOut')
+    });
+
+    /* =========================================================
+       Storage keys
+       ========================================================= */
+    const STORE = Object.freeze({
+      GEMINI_KEY: 'EEP_GEMINI_KEY',
+      AI_MODE: 'EEP_AI_MODE',
+      TTS_PREF: 'EEP_TTS_PREF',
+      TTS_RATE: 'EEP_TTS_RATE',
+      PERF: 'EEP_PERF',
+      AUDIO: 'EEP_AUDIO',
+      FAVS: 'EEP_FAVS',
+      STATS: 'EEP_STATS',
+      NOTE: 'EEP_NOTE'
+    });
+
+    const safeGet = (k, fallback='')=>{ try{ return localStorage.getItem(k) ?? fallback; }catch{return fallback;} };
+    const safeSet = (k,v)=>{ try{ localStorage.setItem(k, String(v)); }catch{} };
+    const safeJson = {
+      get(k, fb){
+        try{ const raw = localStorage.getItem(k); return raw? JSON.parse(raw): fb; }catch{ return fb; }
+      },
+      set(k, obj){
+        try{ localStorage.setItem(k, JSON.stringify(obj)); }catch{}
       }
-    }catch{}
-  }
+    };
 
-  try{
-    const online = await getOnlinePhrase();
-    if(online && !isRepeat(mem.phrases, online)){
-      cacheAdd(mem.phrases, online);
-      return renderPhrase(online, "Internet");
+    /* =========================================================
+       Toast
+       ========================================================= */
+    let toastTimer = null;
+    function toast(title, body, ms=2300){
+      UI.toastTitle.textContent = title;
+      UI.toastBody.textContent = body;
+      UI.toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>UI.toast.classList.remove('show'), ms);
     }
-  }catch{}
-
-  for(let i=0;i<6;i++){
-    const local = buildSentence();
-    if(local && !isRepeat(mem.phrases, local)){
-      cacheAdd(mem.phrases, local);
-      return renderPhrase(local, "Local generator");
+    function pill(el, text, ms=1200){
+      el.textContent = text;
+      el.style.display = 'inline-flex';
+      if(ms>0) setTimeout(()=> el.style.display='none', ms);
     }
-  }
 
-  return renderPhrase(buildSentence(), "Local generator");
-}
+    /* =========================================================
+       Tabs / navigation
+       ========================================================= */
+    function setTab(tabId){
+      UI.tabs().forEach(t=>t.classList.remove('active'));
+      $(tabId)?.classList.add('active');
 
-async function loadStory(){
-  pill(UI.stStatus, "⏳ Loading...", 900);
+      UI.navBtns().forEach(b=>b.classList.remove('active'));
+      UI.sideBtns().forEach(b=>b.classList.remove('active'));
 
-  try{
-    const w = await getWikipediaStory();
-    const key = w.title + "::" + w.extract.slice(0, 80);
-    if(!isRepeat(mem.stories, key)){
-      cacheAdd(mem.stories, key);
-      return renderStory(w.title, w.extract, "Wikipedia");
-    }
-  }catch{}
+      const nb = document.querySelector(`.navbtn[data-tab="${tabId}"]`);
+      const sb = document.querySelector(`.side-item[data-tab="${tabId}"]`);
+      nb?.classList.add('active');
+      sb?.classList.add('active');
+      nb?.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
 
-  try{
-    const d = await fetchJson("https://baconipsum.com/api/?type=meat-and-filler&paras=1", {timeoutMs: 6500});
-    const text = clean(Array.isArray(d) ? d[0] : "");
-    if(text && text.length > 60){
-      const key = "bacon::" + text.slice(0, 80);
-      if(!isRepeat(mem.stories, key)){
-        cacheAdd(mem.stories, key);
-        return renderStory("Reading practice", text, "Internet fallback");
+      // refresh progress visuals
+      if(tabId === 'tab-progress'){
+        renderProgress();
       }
     }
-  }catch{}
+    UI.navBtns().forEach(btn=> btn.addEventListener('click', ()=> setTab(btn.dataset.tab)));
+    UI.sideBtns().forEach(btn=> btn.addEventListener('click', ()=> setTab(btn.dataset.tab)));
+    $$('[data-goto]').forEach(b=> b.addEventListener('click', ()=> setTab(b.dataset.goto)));
 
-  for(let i=0;i<6;i++){
-    const s = buildLocalStory();
-    const key = "local::" + s.slice(0, 80);
-    if(!isRepeat(mem.stories, key)){
-      cacheAdd(mem.stories, key);
-      return renderStory("Mini story", s, "Local generator");
+    /* =========================================================
+       Network + AI chips
+       ========================================================= */
+    function updateNetChip(){
+      const online = navigator.onLine;
+      UI.netTxt.textContent = online ? 'Online' : 'Offline';
+      UI.dotNet.classList.toggle('off', !online);
     }
-  }
-  return renderStory("Mini story", buildLocalStory(), "Local generator");
-}
+    function updateAIChip(){
+      const mode = UI.aiMode.value;
+      const on = (mode === 'gemini');
+      UI.aiTxt.textContent = on ? 'AI: GEMINI' : 'AI: OFF';
+      UI.dotAI.classList.toggle('off', !on);
+    }
+    window.addEventListener('online', updateNetChip);
+    window.addEventListener('offline', updateNetChip);
 
-async function generateSpeak(){
-  pill(UI.spStatus, "⏳ Loading...", 900);
-
-  if(UI.aiMode.value === "gemini"){
-    try{
-      const g = await gemini(
-        "Give ONE simple English sentence for pronunciation practice.\n"+
-        "Rules: CEFR A1, no idioms, no commas, max 8 words, end with a period."
-      );
-      const text = clean(g);
-      if(text && !isRepeat(mem.speak, text)){
-        cacheAdd(mem.speak, text);
-        return renderSpeak(text, "Gemini");
+    /* =========================================================
+       Audio / TTS
+       ========================================================= */
+    function tts(text, lang='en', rate=1){
+      const audioMode = safeGet(STORE.AUDIO,'on');
+      if(audioMode==='off'){ return toast('Audio','Audio desactivado en Settings.',1400); }
+      if(!text) return;
+      try{
+        const u = new SpeechSynthesisUtterance(text);
+        // Use preference if available
+        const pref = UI.ttsPref.value || 'en-US';
+        const prefLang = pref.startsWith('es') ? 'es' : 'en';
+        const pick = (lang==='auto') ? pref : (lang==='en' ? (prefLang==='en'? pref : 'en-US') : (prefLang==='es'? pref : 'es-ES'));
+        u.lang = pick;
+        u.rate = Number(UI.ttsRate.value || rate || 1);
+        speechSynthesis.cancel();
+        speechSynthesis.speak(u);
+      }catch{
+        toast('Audio','Tu navegador no soporta TTS.', 1800);
       }
-    }catch{}
-  }
+    }
+    async function duo(en, es){
+      if(en) tts(en, 'en', 1);
+      await sleep(1100);
+      if(es) tts(es, 'es', 1);
+    }
 
-  try{
-    const online = await getOnlinePhrase();
-    if(online){
-      const short = online.split(/[.!?]/)[0].trim();
-      const s = (short.length > 90) ? short.slice(0, 90) : short;
-      if(s && !isRepeat(mem.speak, s)){
-        cacheAdd(mem.speak, s);
-        return renderSpeak(s, "Internet");
+    /* =========================================================
+       Fetch with timeout
+       ========================================================= */
+    async function fetchJson(url, {timeoutMs=7000, method='GET', headers={}, body=null}={}){
+      const controller = new AbortController();
+      const t = setTimeout(()=> controller.abort(), timeoutMs);
+      try{
+        const res = await fetch(url, {method, headers, body, signal: controller.signal});
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        return await res.json();
+      } finally {
+        clearTimeout(t);
       }
     }
-  }catch{}
 
-  for(let i=0;i<6;i++){
-    const local = buildSpeakSentence();
-    if(local && !isRepeat(mem.speak, local)){
-      cacheAdd(mem.speak, local);
-      return renderSpeak(local, "Local generator");
+    /* =========================================================
+       Phonetic engine (EN -> ES-friendly)
+       ========================================================= */
+    function phoneticENtoES(text){
+      if(!text) return '';
+      let t = (' ' + text.toLowerCase() + ' ');
+      const dict = {
+        'the':'de','this':'dis','that':'dat','these':'diis','those':'dous',
+        'think':'zink','thing':'zin','thought':'zot',
+        'through':'zru','though':'dou','there':'der','their':'der','they':'dei',
+        'what':'uat','where':'uer','when':'uen','why':'uai',
+        'would':'uud','could':'kud','should':'shud',
+        'you':'iu','your':'ior','yes':'yes',
+        'one':'uan','two':'tu','three':'zri',
+        'enough':'inaf','laugh':'laf',
+        'people':'pipol','very':'veri',
+        'work':'uerk','world':'uerld',
+        'practice':'praktis','english':'inglish'
+      };
+      for(const w in dict){
+        t = t.replace(new RegExp(`\\b${w}\\b`, 'g'), dict[w]);
+      }
+      t = t
+        .replace(/th/g,'z')
+        .replace(/ph/g,'f')
+        .replace(/ck/g,'k')
+        .replace(/gh\\b/g,'')
+        .replace(/ee/g,'ii')
+        .replace(/oo/g,'u')
+        .replace(/ou/g,'au')
+        .replace(/ow/g,'au')
+        .replace(/igh/g,'ai')
+        .replace(/ai/g,'ei')
+        .replace(/ay/g,'ei')
+        .replace(/tion\\b/g,'shon')
+        .replace(/sion\\b/g,'shon')
+        .replace(/ed\\b/g,'d')
+        .replace(/ing\\b/g,'in')
+        .replace(/ly\\b/g,'li')
+        .replace(/wr/g,'r')
+        .replace(/h/g,'');
+      return t.replace(/[^a-záéíóúñü\s]/gi,'').replace(/\s+/g,' ').trim();
     }
-  }
 
-  return renderSpeak(buildSpeakSentence(), "Local generator");
-}
+    /* =========================================================
+       Translation (online + offline)
+       ========================================================= */
+    const clean = (t)=>(t??'').replace(/[\[*§•\]]/g,'').replace(/\s+/g,' ').trim();
 
-/* ===================== EXERCISES ===================== */
-function makeBlank(sentence){
-  const words = sentence.replace(/\.$/, "").split(" ").filter(Boolean);
-  let idx = Math.min(2, words.length-1);
-  if(idx < 1) idx = 1;
-  const correct = words[idx] || words[0];
-  words[idx] = "_____";
-  return {question: words.join(" "), correct};
-}
-function buildOptions(correct){
-  const pool = ["is","are","was","were","practice","practices","study","studies","work","works","read","reads","write","writes","go","goes","speak","speaks","learn","learns"]; 
-  const set = new Set([correct]);
-  while(set.size < 3) set.add(rnd(pool));
-  return Array.from(set).sort(()=>Math.random()-0.5);
-}
+    function educationalFallbackES(){
+      return rnd([
+        'Esta es una frase para practicar inglés.',
+        'Esta oración sirve como ejemplo de aprendizaje.',
+        'Practica esta frase en inglés.',
+        'Esta es una frase sencilla para estudiar inglés.'
+      ]);
+    }
+    function educationalFallbackEN(){
+      return rnd([
+        'This is a sentence to practice English.',
+        'This sentence is an example for learning.',
+        'Practice this sentence in English.',
+        'This is a simple sentence for study.'
+      ]);
+    }
 
-async function loadExercise(){
-  pill(UI.exStatus, "⏳ Loading...", 900);
+    const MINI_DICT_EN_ES = Object.freeze({
+      'i':'yo','you':'tú','he':'él','she':'ella','we':'nosotros','they':'ellos',
+      'always':'siempre','usually':'usualmente','often':'a menudo','sometimes':'a veces','never':'nunca',
+      'practice':'practico','practices':'practica','study':'estudio','studies':'estudia',
+      'work':'trabajo','works':'trabaja','go':'voy','goes':'va','eat':'como','eats':'come',
+      'play':'juego','plays':'juega','read':'leo','reads':'lee','write':'escribo','writes':'escribe',
+      'listen':'escucho','listens':'escucha','learn':'aprendo','learns':'aprende','speak':'hablo','speaks':'habla',
+      'english':'inglés','after':'después','before':'antes','school':'escuela','home':'casa',
+      'morning':'mañana','day':'día','every':'cada','with':'con','my':'mi','friends':'amigos',
+      'at':'en','in':'en','to':'a','a':'un','the':'el','and':'y','is':'es','are':'son',
+      'today':'hoy','yesterday':'ayer','weekend':'fin de semana',
+      'park':'parque','city':'ciudad','dinner':'cena',
+      'good':'bueno','bad':'malo','better':'mejor','more':'más',
+      'confidence':'confianza','skills':'habilidades'
+    });
 
-  if(UI.aiMode.value === "gemini"){
-    try{
-      const g = await gemini(
-        "Create ONE English sentence suitable for a fill-in-the-blank exercise.\n"+
-        "Rules: CEFR A1–A2, present simple, end with a period.\nReturn only the sentence."
-      );
-      const sentence = clean(g);
-      if(sentence && sentence.length > 6){
-        const {question, correct} = makeBlank(sentence.endsWith(".") ? sentence : (sentence+"."));
-        const key = question + "::" + correct;
-        if(!isRepeat(mem.exercises, key)){
-          cacheAdd(mem.exercises, key);
-          return renderExercise(question, buildOptions(correct), correct, "Gemini");
+    const MINI_DICT_ES_EN = (()=>{
+      const rev = {};
+      for(const [en, es] of Object.entries(MINI_DICT_EN_ES)){
+        const key = String(es).toLowerCase();
+        if(!rev[key]) rev[key] = en;
+      }
+      Object.assign(rev, {
+        'hola':'hello','buenos':'good','buenas':'good','gracias':'thanks','por':'for','favor':'please',
+        'yo':'i','tú':'you','tu':'your','él':'he','el':'the','ella':'she','nosotros':'we','ellos':'they',
+        'en':'in','con':'with','cada':'every','siempre':'always','nunca':'never','hoy':'today','ayer':'yesterday',
+        'mañana':'morning','casa':'home','trabajo':'work','escuela':'school'
+      });
+      return Object.freeze(rev);
+    })();
+
+    function offlineTranslateWordByWord(text, dir){
+      const t = clean(text);
+      if(!t) return (dir==='en-es') ? educationalFallbackES() : educationalFallbackEN();
+      if(dir==='en-es'){
+        const words = t.toLowerCase().replace(/[^a-z\s']/g,'').split(/\s+/).filter(Boolean);
+        if(!words.length) return educationalFallbackES();
+        const out = words.map(w=> MINI_DICT_EN_ES[w] ?? w);
+        return 'Traducción aproximada: ' + out.join(' ') + '.';
+      }else{
+        const words = t.toLowerCase().replace(/[^a-záéíóúñü\s]/g,'').split(/\s+/).filter(Boolean);
+        if(!words.length) return educationalFallbackEN();
+        const out = words.map(w=> MINI_DICT_ES_EN[w] ?? w);
+        return 'Approx. translation: ' + out.join(' ') + '.';
+      }
+    }
+
+    async function translateMyMemory(text, dir){
+      const t = clean(text);
+      if(!t) return '';
+      const pair = (dir==='en-es') ? 'en|es' : 'es|en';
+      const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(t) + '&langpair=' + pair;
+      const data = await fetchJson(url, {timeoutMs: 7500});
+      return clean(data?.responseData?.translatedText ?? '');
+    }
+
+    function detectLang(text){
+      const t = (text??'').toLowerCase();
+      if(/[áéíóúñü]/.test(t)) return 'es';
+      const esHits = [' el ',' la ',' de ',' que ',' y ',' en ',' por ','para ','hola','gracias','buenos']
+        .reduce((a,w)=>a+(t.includes(w)?1:0),0);
+      const enHits = [' the ',' and ',' to ',' of ',' in ',' for ','with ','hello','thanks']
+        .reduce((a,w)=>a+(t.includes(w)?1:0),0);
+      return (esHits>=enHits) ? 'es' : 'en';
+    }
+
+    async function translate(text, mode){
+      const t = clean(text);
+      if(!t) return {out:'', used:'-'};
+      let dir = mode;
+      if(mode==='auto') dir = (detectLang(t)==='es') ? 'es-en' : 'en-es';
+
+      if(navigator.onLine){
+        try{
+          const out = await translateMyMemory(t, dir);
+          if(out && out.length>=2) return {out, used:'MyMemory'};
+        }catch{}
+      }
+      return {out: offlineTranslateWordByWord(t, dir), used:'Offline'};
+    }
+
+    /* =========================================================
+       Gemini (optional)
+       ========================================================= */
+    async function gemini(prompt){
+      if(UI.aiMode.value !== 'gemini') throw new Error('AI mode OFF');
+      const key = UI.geminiKey.value.trim();
+      if(!key) throw new Error('Missing Gemini key');
+      const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + encodeURIComponent(key);
+      const body = JSON.stringify({contents:[{parts:[{text:prompt}]}]});
+      const data = await fetchJson(endpoint, {
+        method:'POST',
+        timeoutMs: 9000,
+        headers:{'Content-Type':'application/json'},
+        body
+      });
+      const out = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if(!out) throw new Error('Gemini empty');
+      return String(out).trim();
+    }
+
+    /* =========================================================
+       Unlimited generators (local)
+       ========================================================= */
+    const GEN = Object.freeze({
+      subjects: ['I','You','He','She','We','They'],
+      adverbs: ['always','usually','often','sometimes','never'],
+      verbs: [
+        {b:'practice', s:'practices'},
+        {b:'study', s:'studies'},
+        {b:'work', s:'works'},
+        {b:'read', s:'reads'},
+        {b:'write', s:'writes'},
+        {b:'listen', s:'listens'},
+        {b:'learn', s:'learns'},
+        {b:'speak', s:'speaks'},
+        {b:'go', s:'goes'},
+        {b:'cook', s:'cooks'},
+        {b:'walk', s:'walks'}
+      ],
+      objects: [
+        'English every day','at school','in the morning','after work','with my friends','at home',
+        'on the weekend','before dinner','at the park','in my free time'
+      ],
+      extras: ['to improve my skills','to feel more confident','because it helps me','to communicate better','for my future','to learn new words'],
+      storyStarts: ['Today,','Yesterday,','In the morning,','After work,','On the weekend,'],
+      storyPeople: ['Tom','Ana','Luis','Sara','David','Maria'],
+      storyPlaces: ['at home','at school','in the park','at work','in the city'],
+      storyActions: ['practices English','studies new words','listens to a short story','speaks with a friend','reads a simple text']
+    });
+
+    function buildSentence(topic='general'){
+      const s = rnd(GEN.subjects);
+      const adv = rnd(GEN.adverbs);
+      const v = rnd(GEN.verbs);
+
+      const topicObj = {
+        general: GEN.objects,
+        work: ['after work','at work','with my team','before work','in the city'],
+        travel: ['at the airport','in a hotel','in the city','with a map','on the weekend'],
+        daily: ['at home','in the morning','before dinner','with my friends','in my free time']
+      };
+      const objects = topicObj[topic] || GEN.objects;
+
+      const obj = rnd(objects);
+      const extra = Math.random() < 0.55 ? (' ' + rnd(GEN.extras)) : '';
+      const verb = (s==='He' || s==='She') ? v.s : v.b;
+      return `${s} ${adv} ${verb} ${obj}${extra}.`.replace(/\s+/g,' ').trim();
+    }
+
+    function buildSpeakSentence(){
+      const s = rnd(['I','You','He','She','We','They']);
+      const v = rnd([{b:'practice',s:'practices'},{b:'study',s:'studies'},{b:'work',s:'works'},{b:'speak',s:'speaks'},{b:'read',s:'reads'}]);
+      const obj = rnd(['English every day','at home','after work','in the morning','with friends']);
+      const verb = (s==='He' || s==='She') ? v.s : v.b;
+      return `${s} ${verb} ${obj}.`;
+    }
+
+    function buildLocalStory(){
+      const start = rnd(GEN.storyStarts);
+      const name = rnd(GEN.storyPeople);
+      const place = rnd(GEN.storyPlaces);
+      const action1 = rnd(GEN.storyActions);
+      const action2 = rnd(GEN.storyActions);
+      const end = rnd(['He feels more confident.','She feels more confident.','They learn something new.','It becomes a good habit.','It helps a lot.']);
+      const s1 = `${start} ${name} is ${place}.`;
+      const s2 = `${name} ${action1}.`;
+      const s3 = (action2 !== action1) ? `${name} also ${action2}.` : `${name} repeats the practice.`;
+      return `${s1} ${s2} ${s3} ${end}`.replace(/\s+/g,' ').trim();
+    }
+
+    /* Online sources */
+    async function getOnlinePhrase(){
+      const sources = [
+        async()=> (await fetchJson('https://api.quotable.io/random', {timeoutMs:6500}))?.content,
+        async()=> (await fetchJson('https://api.adviceslip.com/advice', {timeoutMs:6500}))?.slip?.advice,
+        async()=>{
+          const d = await fetchJson('https://baconipsum.com/api/?type=meat-and-filler&sentences=1', {timeoutMs:6500});
+          return Array.isArray(d) ? d[0] : null;
+        }
+      ];
+      for(const s of sources){
+        try{
+          const t = clean(await s());
+          if(t && t.length>=6 && t.length<=160) return t;
+        }catch{}
+      }
+      return null;
+    }
+
+    async function getWikipediaStory(){
+      const url = 'https://en.wikipedia.org/api/rest_v1/page/random/summary';
+      const d = await fetchJson(url, {timeoutMs:8000});
+      const title = clean(d?.title ?? 'Wikipedia');
+      const extract = clean(d?.extract ?? '');
+      if(!extract || extract.length < 60) throw new Error('Wikipedia short');
+      return {title, extract};
+    }
+
+    /* =========================================================
+       Caches to avoid repeats
+       ========================================================= */
+    const mem = {
+      phrases: new Set(),
+      speak: new Set(),
+      exercises: new Set(),
+      stories: new Set()
+    };
+    function cacheAdd(set, value, max=380){
+      if(!value) return;
+      set.add(value);
+      if(set.size > max) set.clear();
+    }
+    const isRepeat = (set, value)=>set.has(value);
+
+    /* =========================================================
+       Favorites + stats
+       ========================================================= */
+    function getFavs(){ return safeJson.get(STORE.FAVS, []); }
+    function setFavs(arr){ safeJson.set(STORE.FAVS, arr.slice(0, 200)); }
+
+    function addFavorite(phrase){
+      const p = clean(phrase);
+      if(!p) return;
+      const favs = getFavs();
+      if(favs.includes(p)) return toast('Favorites','Ya está guardada.', 1400);
+      favs.unshift(p);
+      setFavs(favs);
+      renderFavs();
+      toast('Favorites','Guardada ⭐', 1400);
+      bumpStat('favorites', 1);
+    }
+
+    function renderFavs(){
+      const favs = getFavs();
+      const html = favs.length
+        ? favs.slice(0, 12).map((t,i)=> `<div style="margin-bottom:10px"><b>#${i+1}</b> — ${escapeHtml(t)}</div>`).join('')
+        : '<span class="muted">Aún no hay favoritas. Presiona “Save” en Learn.</span>';
+      UI.favList.innerHTML = html;
+      UI.favList2.innerHTML = html;
+    }
+
+    function getStats(){
+      const fb = {
+        lastDay: '',
+        streak: 0,
+        week: [0,0,0,0,0,0,0],
+        speakScores: [],
+        totals: {phrases:0, exercises:0, speak:0, favorites:0}
+      };
+      return safeJson.get(STORE.STATS, fb);
+    }
+    function setStats(s){ safeJson.set(STORE.STATS, s); }
+
+    function todayKey(){
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const day = String(d.getDate()).padStart(2,'0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function bumpStreak(){
+      const s = getStats();
+      const t = todayKey();
+      if(s.lastDay === t) return; // already counted
+
+      // determine if yesterday
+      const d = new Date();
+      const y = new Date(d.getTime()-86400000);
+      const yk = `${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;
+
+      if(s.lastDay === yk){ s.streak = (s.streak||0) + 1; }
+      else { s.streak = 1; }
+
+      s.lastDay = t;
+
+      // shift week (simple heuristic): increment today's slot
+      const idx = d.getDay(); // 0..6
+      s.week[idx] = (s.week[idx]||0) + 1;
+
+      setStats(s);
+      renderHomeStats();
+    }
+
+    function bumpStat(kind, n=1){
+      const s = getStats();
+      s.totals = s.totals || {phrases:0, exercises:0, speak:0, favorites:0};
+      if(kind in s.totals) s.totals[kind] += n;
+      setStats(s);
+      bumpStreak();
+      renderHomeStats();
+    }
+
+    function addSpeakScore(percent, words=0, seconds=0){
+      const s = getStats();
+      s.speakScores = s.speakScores || [];
+      s.speakScores.unshift({t: Date.now(), percent, words, seconds});
+      s.speakScores = s.speakScores.slice(0, 60);
+      setStats(s);
+      bumpStreak();
+      renderHomeStats();
+    }
+
+    function renderHomeStats(){
+      const s = getStats();
+      UI.streakVal.textContent = `${s.streak||0} días`;
+      UI.streakDelta.textContent = (s.lastDay===todayKey()) ? '+1 hoy' : '+0 hoy';
+
+      // speak metrics
+      const last = (s.speakScores||[])[0];
+      if(last){
+        UI.accVal.textContent = `${last.percent}%`;
+        UI.accDelta.className = 'delta ' + (last.percent>=70? 'ok':'warn');
+        UI.accDelta.textContent = last.percent>=70 ? 'Bien — sigue así' : 'Objetivo: 70%+';
+
+        if(last.seconds>0){
+          const wpm = Math.round((last.words/last.seconds)*60);
+          UI.wpmVal.textContent = `${wpm} wpm`;
+          UI.wpmDelta.textContent = 'Última sesión';
+        }else{
+          UI.wpmVal.textContent = '—';
+          UI.wpmDelta.textContent = 'Registra un score para ver WPM';
+        }
+      }else{
+        UI.accVal.textContent = '—';
+        UI.wpmVal.textContent = '—';
+      }
+    }
+
+    /* =========================================================
+       Renderers
+       ========================================================= */
+    async function renderPhrase(en, meta){
+      const text = clean(en).replace(/\s+/g,' ').trim();
+      const safe = text.endsWith('.') ? text : (text + '.');
+      UI.phEn.textContent = safe;
+      UI.phFig.textContent = phoneticENtoES(safe);
+      UI.phEs.textContent = (await translate(safe, 'en-es')).out;
+      UI.phMeta.textContent = meta;
+      pill(UI.phStatus, '✅ Ready', 1100);
+    }
+
+    async function renderStory(title, en, meta){
+      const safeTitle = clean(title) || 'Wikipedia';
+      const text = clean(en).replace(/\s+/g,' ').trim();
+      UI.stTitle.textContent = safeTitle;
+      UI.stEn.textContent = text;
+      UI.stFig.textContent = phoneticENtoES(text);
+      UI.stEs.textContent = (await translate(text, 'en-es')).out;
+      UI.stMeta.textContent = meta;
+      pill(UI.stStatus, '✅ Ready', 1100);
+    }
+
+    async function renderSpeak(en, meta){
+      const text = clean(en).replace(/\s+/g,' ').trim();
+      const safe = text.endsWith('.') ? text : (text + '.');
+      UI.spTarget.textContent = safe;
+      UI.spFig.textContent = phoneticENtoES(safe);
+      UI.spEs.textContent = (await translate(safe, 'en-es')).out;
+      UI.spMeta.textContent = meta;
+      UI.spResult.textContent = '';
+      UI.spManual.value = '';
+      pill(UI.spStatus, '✅ Ready', 1100);
+    }
+
+    function renderExercise(question, options, correct, meta){
+      UI.exQ.textContent = question;
+      UI.exOpts.innerHTML = '';
+      options.forEach(o=>{
+        const d = document.createElement('div');
+        d.className = 'option';
+        d.textContent = o;
+        d.addEventListener('click', ()=>{
+          d.classList.add(o===correct ? 'correct':'wrong');
+          bumpStat('exercises', 1);
+        });
+        UI.exOpts.appendChild(d);
+      });
+      UI.exMeta.textContent = meta;
+      pill(UI.exStatus, '✅ Ready', 1100);
+    }
+
+    /* =========================================================
+       Pipelines
+       ========================================================= */
+    async function loadPhrase(){
+      pill(UI.phStatus,'⏳ Loading...', 900);
+      const topic = safeGet('EEP_TOPIC', 'general');
+
+      if(UI.aiMode.value==='gemini'){
+        try{
+          const g = await gemini(
+            'Generate ONE short English sentence for language learning.\n' +
+            'Rules: CEFR A1–A2, no jokes, no irony, max 10 words, end with a period.\n' +
+            `Theme: ${topic}.`
+          );
+          const text = clean(g);
+          if(text && !isRepeat(mem.phrases, text)){
+            cacheAdd(mem.phrases, text);
+            bumpStat('phrases', 1);
+            return renderPhrase(text, 'Gemini');
+          }
+        }catch{}
+      }
+
+      try{
+        const online = await getOnlinePhrase();
+        if(online && !isRepeat(mem.phrases, online)){
+          cacheAdd(mem.phrases, online);
+          bumpStat('phrases', 1);
+          return renderPhrase(online, 'Internet');
+        }
+      }catch{}
+
+      for(let i=0;i<8;i++){
+        const local = buildSentence(topic);
+        if(local && !isRepeat(mem.phrases, local)){
+          cacheAdd(mem.phrases, local);
+          bumpStat('phrases', 1);
+          return renderPhrase(local, 'Local generator');
         }
       }
-    }catch{}
-  }
+      bumpStat('phrases', 1);
+      return renderPhrase(buildSentence(topic), 'Local generator');
+    }
 
-  try{
-    const online = await getOnlinePhrase();
-    if(online){
-      const sentence = clean(online);
-      const {question, correct} = makeBlank(sentence.endsWith(".") ? sentence : (sentence+"."));
-      const key = "net::" + question;
-      if(!isRepeat(mem.exercises, key)){
-        cacheAdd(mem.exercises, key);
-        return renderExercise(question, buildOptions(correct), correct, "Internet");
+    async function loadStory(){
+      pill(UI.stStatus,'⏳ Loading...', 900);
+      try{
+        const w = await getWikipediaStory();
+        const key = w.title + '::' + w.extract.slice(0, 80);
+        if(!isRepeat(mem.stories, key)){
+          cacheAdd(mem.stories, key);
+          bumpStreak();
+          return renderStory(w.title, w.extract, 'Wikipedia');
+        }
+      }catch{}
+
+      try{
+        const d = await fetchJson('https://baconipsum.com/api/?type=meat-and-filler&paras=1', {timeoutMs:6500});
+        const text = clean(Array.isArray(d) ? d[0] : '');
+        if(text && text.length>60){
+          const key = 'bacon::' + text.slice(0,80);
+          if(!isRepeat(mem.stories, key)){
+            cacheAdd(mem.stories, key);
+            bumpStreak();
+            return renderStory('Reading practice', text, 'Internet fallback');
+          }
+        }
+      }catch{}
+
+      for(let i=0;i<8;i++){
+        const s = buildLocalStory();
+        const key = 'local::' + s.slice(0,80);
+        if(!isRepeat(mem.stories, key)){
+          cacheAdd(mem.stories, key);
+          bumpStreak();
+          return renderStory('Mini story', s, 'Local generator');
+        }
+      }
+      bumpStreak();
+      return renderStory('Mini story', buildLocalStory(), 'Local generator');
+    }
+
+    async function generateSpeak(){
+      pill(UI.spStatus,'⏳ Loading...', 900);
+      if(UI.aiMode.value==='gemini'){
+        try{
+          const g = await gemini(
+            'Give ONE simple English sentence for pronunciation practice.\n' +
+            'Rules: CEFR A1, no idioms, no commas, max 8 words, end with a period.'
+          );
+          const text = clean(g);
+          if(text && !isRepeat(mem.speak, text)){
+            cacheAdd(mem.speak, text);
+            bumpStat('speak', 1);
+            return renderSpeak(text, 'Gemini');
+          }
+        }catch{}
+      }
+
+      try{
+        const online = await getOnlinePhrase();
+        if(online){
+          const short = online.split(/[.!?]/)[0].trim();
+          const s = (short.length>90) ? short.slice(0,90) : short;
+          if(s && !isRepeat(mem.speak, s)){
+            cacheAdd(mem.speak, s);
+            bumpStat('speak', 1);
+            return renderSpeak(s, 'Internet');
+          }
+        }
+      }catch{}
+
+      for(let i=0;i<8;i++){
+        const local = buildSpeakSentence();
+        if(local && !isRepeat(mem.speak, local)){
+          cacheAdd(mem.speak, local);
+          bumpStat('speak', 1);
+          return renderSpeak(local, 'Local generator');
+        }
+      }
+      bumpStat('speak', 1);
+      return renderSpeak(buildSpeakSentence(), 'Local generator');
+    }
+
+    /* Exercises */
+    function makeBlank(sentence){
+      const words = sentence.replace(/\.$/,'').split(' ').filter(Boolean);
+      let idx = Math.min(2, words.length-1);
+      if(idx<1) idx=1;
+      const correct = words[idx] || words[0];
+      words[idx] = '_____';
+      return {question: words.join(' '), correct};
+    }
+
+    function buildOptions(correct){
+      const pool = ['is','are','was','were','practice','practices','study','studies','work','works','read','reads','write','writes','go','goes','speak','speaks','learn','learns'];
+      const set = new Set([correct]);
+      while(set.size<3) set.add(rnd(pool));
+      return Array.from(set).sort(()=> Math.random()-0.5);
+    }
+
+    async function loadExercise(){
+      pill(UI.exStatus,'⏳ Loading...', 900);
+      if(UI.aiMode.value==='gemini'){
+        try{
+          const g = await gemini(
+            'Create ONE English sentence suitable for a fill-in-the-blank exercise.\n' +
+            'Rules: CEFR A1–A2, present simple, end with a period.\nReturn only the sentence.'
+          );
+          const sentence = clean(g);
+          if(sentence && sentence.length>6){
+            const {question, correct} = makeBlank(sentence.endsWith('.')? sentence : (sentence+'.'));
+            const key = question + '::' + correct;
+            if(!isRepeat(mem.exercises, key)){
+              cacheAdd(mem.exercises, key);
+              return renderExercise(question, buildOptions(correct), correct, 'Gemini');
+            }
+          }
+        }catch{}
+      }
+
+      try{
+        const online = await getOnlinePhrase();
+        if(online){
+          const sentence = clean(online);
+          const {question, correct} = makeBlank(sentence.endsWith('.')? sentence : (sentence+'.'));
+          const key = 'net::' + question;
+          if(!isRepeat(mem.exercises, key)){
+            cacheAdd(mem.exercises, key);
+            return renderExercise(question, buildOptions(correct), correct, 'Internet');
+          }
+        }
+      }catch{}
+
+      for(let i=0;i<10;i++){
+        const sentence = buildSentence(safeGet('EEP_TOPIC','general'));
+        const {question, correct} = makeBlank(sentence);
+        const key = 'local::' + question;
+        if(!isRepeat(mem.exercises, key)){
+          cacheAdd(mem.exercises, key);
+          return renderExercise(question, buildOptions(correct), correct, 'Local generator');
+        }
+      }
+
+      const sentence = buildSentence();
+      const {question, correct} = makeBlank(sentence);
+      return renderExercise(question, buildOptions(correct), correct, 'Local generator');
+    }
+
+    /* =========================================================
+       Speak evaluation
+       ========================================================= */
+    function normalizeText(t){
+      return clean(t).toLowerCase().replace(/[^a-z\s']/g,'').replace(/\s+/g,' ').trim();
+    }
+    function editDistance(a,b){
+      a = a||''; b = b||'';
+      const m=a.length, n=b.length;
+      const dp = Array.from({length:m+1}, ()=> new Array(n+1).fill(0));
+      for(let i=0;i<=m;i++) dp[i][0]=i;
+      for(let j=0;j<=n;j++) dp[0][j]=j;
+      for(let i=1;i<=m;i++){
+        for(let j=1;j<=n;j++){
+          const cost = a[i-1]===b[j-1] ? 0 : 1;
+          dp[i][j] = Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+cost);
+        }
+      }
+      return dp[m][n];
+    }
+    function simWord(w1,w2){
+      if(!w1 && !w2) return 1;
+      if(!w1 || !w2) return 0;
+      const dist = editDistance(w1,w2);
+      const max = Math.max(w1.length, w2.length) || 1;
+      return 1 - (dist/max);
+    }
+
+    function evaluatePronunciation(target, spoken){
+      const t = normalizeText(target).split(' ').filter(Boolean);
+      const s = normalizeText(spoken).split(' ').filter(Boolean);
+      let i=0, j=0, correct=0;
+      const parts=[];
+      while(i<t.length){
+        const tw = t[i];
+        const sw = s[j] ?? '';
+        const scoreHere = simWord(tw, sw);
+        const scoreSkip = simWord(tw, s[j+1] ?? '');
+        let best = scoreHere;
+        if(scoreSkip > scoreHere){ best = scoreSkip; j += 1; }
+        const ok = best >= 0.72;
+        if(ok) correct++;
+        parts.push({word:tw, ok});
+        i++; j++;
+      }
+      return {parts, percent: Math.round((correct/Math.max(1,t.length))*100), words: t.length};
+    }
+
+    function renderPronResult(spoken, seconds=0){
+      const target = UI.spTarget.textContent;
+      const {parts, percent, words} = evaluatePronunciation(target, spoken);
+      UI.spResult.textContent = '';
+
+      const top = document.createElement('div');
+      top.style.marginBottom = '8px';
+      top.append('🗣 ');
+      const b = document.createElement('b');
+      b.textContent = spoken;
+      top.appendChild(b);
+
+      const line = document.createElement('div');
+      parts.forEach(p=>{
+        const s = document.createElement('span');
+        s.textContent = p.word + ' ';
+        s.style.fontWeight = '950';
+        s.style.color = p.ok ? '#2ecc71' : '#e74c3c';
+        line.appendChild(s);
+      });
+
+      const score = document.createElement('div');
+      score.style.marginTop = '10px';
+      score.style.fontWeight = '980';
+      score.textContent = '🎯 Pronunciation: ';
+      const pct = document.createElement('span');
+      pct.textContent = percent + '%';
+      pct.style.color = (percent>=70) ? '#2ecc71' : '#e74c3c';
+      score.appendChild(pct);
+
+      UI.spResult.appendChild(top);
+      UI.spResult.appendChild(line);
+      UI.spResult.appendChild(score);
+
+      addSpeakScore(percent, words, seconds);
+
+      toast('Speak', percent>=70 ? '¡Buen trabajo! ✅' : 'Sigue practicando 💪', 1600);
+      return {percent, words};
+    }
+
+    function startSpeak(){
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!SR){
+        toast('Micrófono','SpeechRecognition no disponible. Usa modo manual.', 2200);
+        return;
+      }
+      try{
+        const rec = new SR();
+        rec.lang = 'en-US';
+        rec.interimResults = false;
+        const start = performance.now();
+        UI.spResult.textContent = '🎙️ Listening...';
+        rec.onresult = (e)=>{
+          const spoken = e.results?.[0]?.[0]?.transcript ?? '';
+          const seconds = Math.max(1, (performance.now()-start)/1000);
+          renderPronResult(spoken, seconds);
+        };
+        rec.onerror = (e)=>{ UI.spResult.textContent = '❌ ' + (e.error || 'Error'); };
+        rec.start();
+      }catch{
+        toast('Micrófono','No se pudo iniciar. Usa modo manual.', 2200);
       }
     }
-  }catch{}
 
-  for(let i=0;i<8;i++){
-    const sentence = buildSentence();
-    const {question, correct} = makeBlank(sentence);
-    const key = "local::" + question;
-    if(!isRepeat(mem.exercises, key)){
-      cacheAdd(mem.exercises, key);
-      return renderExercise(question, buildOptions(correct), correct, "Local generator");
+    /* =========================================================
+       Custom speak phrase
+       ========================================================= */
+    async function useCustomSpeakPhrase(){
+      const custom = clean(UI.spCustom.value);
+      if(!custom){ toast('SPEAK','Escribe una frase en inglés primero.',1600); return; }
+      cacheAdd(mem.speak, custom);
+      await renderSpeak(custom, 'Custom');
+      toast('SPEAK','Frase personalizada cargada.', 1600);
     }
-  }
 
-  const sentence = buildSentence();
-  const {question, correct} = makeBlank(sentence);
-  return renderExercise(question, buildOptions(correct), correct, "Local generator");
-}
-
-/* ===================== SPEAK EVALUATION ===================== */
-function normalizeText(t){
-  return clean(t).toLowerCase().replace(/[^a-z\s']/g, "").replace(/\s+/g, " ").trim();
-}
-function editDistance(a,b){
-  a = a || ""; b = b || "";
-  const m=a.length, n=b.length;
-  const dp = Array.from({length:m+1}, ()=> new Array(n+1).fill(0));
-  for(let i=0;i<=m;i++) dp[i][0]=i;
-  for(let j=0;j<=n;j++) dp[0][j]=j;
-  for(let i=1;i<=m;i++){
-    for(let j=1;j<=n;j++){
-      const cost = a[i-1]===b[j-1] ? 0 : 1;
-      dp[i][j] = Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+cost);
+    /* =========================================================
+       Translator actions
+       ========================================================= */
+    async function doTranslate(){
+      pill(UI.trStatus, '⏳ Translating...', 1000);
+      const input = UI.trIn.value;
+      const mode = UI.trMode.value;
+      const res = await translate(input, mode);
+      UI.trOut.value = res.out;
+      UI.trMeta.textContent = `ES ⇄ EN · ${res.used} · ${mode.toUpperCase()}`;
+      pill(UI.trStatus, '✅ Done', 1200);
+      bumpStreak();
     }
-  }
-  return dp[m][n];
-}
-function simWord(w1,w2){
-  if(!w1&&!w2) return 1;
-  if(!w1||!w2) return 0;
-  const dist = editDistance(w1,w2);
-  const max = Math.max(w1.length, w2.length) || 1;
-  return 1 - (dist/max);
-}
-function evaluatePronunciation(target, spoken){
-  const t = normalizeText(target).split(" ").filter(Boolean);
-  const s = normalizeText(spoken).split(" ").filter(Boolean);
-  let i=0, j=0, correct=0;
-  const parts=[];
-  while(i<t.length){
-    const tw = t[i];
-    const sw = s[j] ?? "";
-    const scoreHere = simWord(tw, sw);
-    const scoreSkip = simWord(tw, s[j+1] ?? "");
-    let best = scoreHere;
-    if(scoreSkip > scoreHere){ best = scoreSkip; j += 1; }
-    const ok = best >= 0.72;
-    if(ok) correct++;
-    parts.push({word:tw, ok});
-    i++; j++;
-  }
-  return {parts, percent: Math.round((correct/Math.max(1,t.length))*100)};
-}
-function renderPronResult(spoken){
-  const target = UI.spTarget.textContent;
-  const {parts, percent} = evaluatePronunciation(target, spoken);
-  UI.spResult.textContent = "";
 
-  const top = document.createElement("div");
-  top.style.marginBottom = "8px";
-  top.append("🗣 ");
-  const b = document.createElement("b");
-  b.textContent = spoken;
-  top.appendChild(b);
-
-  const line = document.createElement("div");
-  parts.forEach(p=>{
-    const s = document.createElement("span");
-    s.textContent = p.word + " ";
-    s.style.fontWeight = "900";
-    s.style.color = p.ok ? "#2ecc71" : "#e74c3c";
-    line.appendChild(s);
-  });
-
-  const score = document.createElement("div");
-  score.style.marginTop = "10px";
-  score.style.fontWeight = "950";
-  score.textContent = "🎯 Pronunciation: ";
-  const pct = document.createElement("span");
-  pct.textContent = percent + "%";
-  pct.style.color = (percent>=70) ? "#2ecc71" : "#e74c3c";
-  score.appendChild(pct);
-
-  UI.spResult.appendChild(top);
-  UI.spResult.appendChild(line);
-  UI.spResult.appendChild(score);
-}
-
-function startSpeak(){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){
-    toast("Micrófono", "SpeechRecognition no disponible. Usa modo manual.");
-    return;
-  }
-  try{
-    const rec = new SR();
-    rec.lang = "en-US";
-    rec.interimResults = false;
-    UI.spResult.textContent = "🎙️ Listening...";
-    rec.onresult = (e)=>{
-      const spoken = e.results?.[0]?.[0]?.transcript ?? "";
-      renderPronResult(spoken);
-    };
-    rec.onerror = (e)=>{
-      UI.spResult.textContent = "❌ " + (e.error || "Error");
-    };
-    rec.start();
-  }catch{
-    toast("Micrófono", "No se pudo iniciar. Usa modo manual.");
-  }
-}
-
-/* ===================== CUSTOM SPEAK PHRASE ===================== */
-async function useCustomSpeakPhrase(){
-  const custom = clean(UI.spCustom.value);
-  if(!custom){ toast("SPEAK", "Escribe una frase en inglés primero."); return; }
-  cacheAdd(mem.speak, custom);
-  await renderSpeak(custom, "Custom");
-  toast("SPEAK", "Frase personalizada cargada.", 1600);
-}
-
-/* ===================== TRANSLATOR ===================== */
-async function doTranslate(){
-  const input = UI.trIn.value;
-  const mode = UI.trMode.value;
-  pill(UI.trStatus, "⏳ Translating...", 1000);
-  const res = await translate(input, mode);
-  UI.trOut.value = res.out;
-  UI.trMeta.textContent = `ES ⇄ EN · ${res.used} · ${mode.toUpperCase()}`;
-  pill(UI.trStatus, "✅ Done", 1200);
-}
-
-function swapTranslator(){
-  const a = UI.trIn.value;
-  UI.trIn.value = UI.trOut.value;
-  UI.trOut.value = a;
-  // swap mode if explicit
-  if(UI.trMode.value === 'en-es') UI.trMode.value = 'es-en';
-  else if(UI.trMode.value === 'es-en') UI.trMode.value = 'en-es';
-  toast("Translator", "Swap listo.", 1400);
-}
-
-async function copyText(val){
-  try{
-    await navigator.clipboard.writeText(val);
-    toast("Clipboard", "Copiado.", 1400);
-  }catch{
-    // fallback
-    const ta = document.createElement('textarea');
-    ta.value = val;
-    document.body.appendChild(ta);
-    ta.select();
-    try{ document.execCommand('copy'); toast("Clipboard", "Copiado.", 1400);}catch{ toast("Clipboard", "No se pudo copiar.", 1800); }
-    ta.remove();
-  }
-}
-
-/* ===================== SETTINGS ===================== */
-function loadSettings(){
-  UI.geminiKey.value = safeGet(STORE.GEMINI_KEY, "");
-  UI.aiMode.value = safeGet(STORE.AI_MODE, "off");
-}
-function saveSettings(){
-  safeSet(STORE.GEMINI_KEY, UI.geminiKey.value);
-  safeSet(STORE.AI_MODE, UI.aiMode.value);
-  UI.globalStatus.textContent = "✅ Settings saved.";
-  updateAIChip();
-  // Measure bottom nav to avoid covering content
-  try{
-    const nav = document.getElementById("bottomNav");
-    if(nav){
-      const setH = ()=>{
-        const h = Math.ceil(nav.getBoundingClientRect().height);
-        document.documentElement.style.setProperty("--navH", h+"px");
-      };
-      setH();
-      window.addEventListener("resize", setH);
+    function swapTranslator(){
+      const a = UI.trIn.value;
+      UI.trIn.value = UI.trOut.value;
+      UI.trOut.value = a;
+      if(UI.trMode.value==='en-es') UI.trMode.value='es-en';
+      else if(UI.trMode.value==='es-en') UI.trMode.value='en-es';
+      toast('Translator','Swap listo.', 1400);
     }
-  }catch{}
-  toast("Settings", "Guardado correctamente.");
-}
 
-/* ===================== WIRE EVENTS ===================== */
-// PHRASES
-$("phPlay").addEventListener("click", ()=> tts(UI.phEn.textContent, "en", 1));
-$("phSlow").addEventListener("click", ()=> tts(UI.phEn.textContent, "en", 0.65));
-$("phDuo").addEventListener("click", ()=> duo(UI.phEn.textContent, UI.phEs.textContent));
-$("phNew").addEventListener("click", loadPhrase);
+    async function copyText(val){
+      try{
+        await navigator.clipboard.writeText(val);
+        toast('Clipboard','Copiado.', 1400);
+      }catch{
+        const ta = document.createElement('textarea');
+        ta.value = val;
+        document.body.appendChild(ta);
+        ta.select();
+        try{ document.execCommand('copy'); toast('Clipboard','Copiado.', 1400); }
+        catch{ toast('Clipboard','No se pudo copiar.', 1800); }
+        ta.remove();
+      }
+    }
 
-// STORIES
-$("stPlay").addEventListener("click", ()=> tts(UI.stEn.textContent, "en", 1));
-$("stSlow").addEventListener("click", ()=> tts(UI.stEn.textContent, "en", 0.65));
-$("stDuo").addEventListener("click", ()=> duo(UI.stEn.textContent, UI.stEs.textContent));
-$("stNew").addEventListener("click", loadStory);
+    /* =========================================================
+       Settings
+       ========================================================= */
+    function loadSettings(){
+      UI.geminiKey.value = safeGet(STORE.GEMINI_KEY,'');
+      UI.aiMode.value = safeGet(STORE.AI_MODE,'off');
+      UI.ttsPref.value = safeGet(STORE.TTS_PREF,'en-US');
+      UI.ttsRate.value = safeGet(STORE.TTS_RATE,'1');
+      $('perfMode').value = safeGet(STORE.PERF,'balanced');
+      $('audioMode').value = safeGet(STORE.AUDIO,'on');
+      UI.quickNote.value = safeGet(STORE.NOTE,'');
+      UI.noteOut.textContent = UI.quickNote.value ? 'Última nota: ' + UI.quickNote.value : '';
+      updateAIChip();
+    }
 
-// SPEAK
-$("spPlay").addEventListener("click", ()=> tts(UI.spTarget.textContent, "en", 1));
-$("spMic").addEventListener("click", startSpeak);
-$("spNew").addEventListener("click", generateSpeak);
-$("spUseCustom").addEventListener("click", useCustomSpeakPhrase);
-$("spEvalManual").addEventListener("click", ()=>{
-  const typed = clean(UI.spManual.value);
-  if(!typed){ toast("Manual", "Escribe lo que dijiste para evaluar."); return; }
-  renderPronResult(typed);
-});
+    function saveSettings(){
+      safeSet(STORE.GEMINI_KEY, UI.geminiKey.value);
+      safeSet(STORE.AI_MODE, UI.aiMode.value);
+      safeSet(STORE.TTS_PREF, UI.ttsPref.value);
+      safeSet(STORE.TTS_RATE, UI.ttsRate.value);
+      safeSet(STORE.PERF, $('perfMode').value);
+      safeSet(STORE.AUDIO, $('audioMode').value);
+      UI.settingsStatus.textContent = '✅ Settings saved.';
+      updateAIChip();
+      toast('Settings','Guardado correctamente.', 1500);
+    }
 
-// EXERCISES
-$("exNew").addEventListener("click", loadExercise);
+    /* =========================================================
+       Premium content: tips
+       ========================================================= */
+    const TIPS = [
+      {rule:'He/She/It +s', ex:'She works after work. / They work after work.'},
+      {rule:'Always / Usually / Sometimes', ex:'I usually practice English in the morning.'},
+      {rule:'Short answers', ex:'Do you work today? Yes, I do. / No, I don\'t.'},
+      {rule:'Prepositions', ex:'I study at home. I go to work.'},
+      {rule:'Simple questions', ex:'Where do you work? I work in the city.'}
+    ];
+    function newTip(){
+      const t = rnd(TIPS);
+      UI.grammarBox.textContent = `${t.rule} → ${t.ex}`;
+      toast('Tip','Micro-lección actualizada.', 1400);
+    }
 
-// TRANSLATOR
-$("trGo").addEventListener("click", doTranslate);
-$("trSwap").addEventListener("click", swapTranslator);
-$("trClear").addEventListener("click", ()=>{ UI.trIn.value=""; UI.trOut.value=""; toast("Translator","Limpio.",1200); });
-$("trCopyIn").addEventListener("click", ()=> copyText(UI.trIn.value));
-$("trCopyOut").addEventListener("click", ()=> copyText(UI.trOut.value));
-$("trSpeakIn").addEventListener("click", ()=>{
-  const mode = UI.trMode.value;
-  const text = clean(UI.trIn.value);
-  if(!text) return toast("TTS","No hay texto.",1200);
-  const lang = (mode === 'es-en') ? 'es' : (mode === 'en-es' ? 'en' : (detectLang(text)==='es'?'es':'en'));
-  tts(text, lang, 1);
-});
-$("trSpeakOut").addEventListener("click", ()=>{
-  const mode = UI.trMode.value;
-  const text = clean(UI.trOut.value);
-  if(!text) return toast("TTS","No hay texto.",1200);
-  const lang = (mode === 'es-en') ? 'en' : (mode === 'en-es' ? 'es' : (detectLang(text)==='es'?'es':'en'));
-  tts(text, lang, 1);
-});
+    /* =========================================================
+       Progress rendering
+       ========================================================= */
+    function renderAchievements(){
+      const s = getStats();
+      const totals = s.totals || {phrases:0, exercises:0, speak:0, favorites:0};
+      const items = [
+        {name:'First Steps', desc:'Genera 5 frases', ok: totals.phrases>=5},
+        {name:'Daily Worker', desc:'Streak de 3 días', ok: (s.streak||0)>=3},
+        {name:'Speaker', desc:'Guarda 5 scores de speaking', ok: (s.speakScores||[]).length>=5},
+        {name:'Collector', desc:'Guarda 5 favoritas', ok: totals.favorites>=5},
+        {name:'Trainer', desc:'Completa 10 ejercicios', ok: totals.exercises>=10}
+      ];
+      UI.achievements.innerHTML = items.map(it=>{
+        const color = it.ok ? 'rgba(43,255,136,.92)' : 'rgba(255,184,77,.92)';
+        const icon = it.ok ? '✅' : '🟡';
+        return `<div style="margin-bottom:10px"><b style="color:${color}">${icon} ${escapeHtml(it.name)}</b><div class="muted">${escapeHtml(it.desc)}</div></div>`;
+      }).join('');
+    }
 
-UI.trIn.addEventListener('keydown', (e)=>{
-  if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
-    e.preventDefault();
-    doTranslate();
-  }
-  if(e.altKey && (e.key.toLowerCase() === 's')){
-    e.preventDefault();
-    swapTranslator();
-  }
-});
+    function drawChart(){
+      const c = UI.chart;
+      const ctx = c.getContext('2d');
+      const s = getStats();
+      const week = (s.week||[0,0,0,0,0,0,0]).slice(0,7);
 
-// SETTINGS
-$("saveGlobal").addEventListener("click", saveSettings);
-$("testGemini").addEventListener("click", async ()=>{
-  UI.globalStatus.textContent = "⏳ Testing Gemini...";
-  try{
-    const out = await gemini("Say hello in ONE short English sentence. End with a period.");
-    UI.globalStatus.textContent = "✅ Gemini OK: " + clean(out);
-    toast("Gemini", "Conexión OK.");
-  }catch(e){
-    UI.globalStatus.textContent = "❌ Gemini failed: " + (e?.message || e);
-    toast("Gemini", "Falló. Se usará fallback ilimitado.");
-  }
-});
+      // clear
+      ctx.clearRect(0,0,c.width,c.height);
 
-// Keyboard shortcuts
-window.addEventListener('keydown', (e)=>{
-  if(e.target && ['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
-  const k = e.key.toLowerCase();
-  if(k === 'p') loadPhrase();
-  if(k === 't') setTab('tab-translator');
-});
+      // background grid
+      const w = c.width, h = c.height;
+      ctx.save();
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = 'rgba(255,255,255,.12)';
+      for(let i=1;i<=4;i++){
+        const y = (h/5)*i;
+        ctx.beginPath(); ctx.moveTo(12,y); ctx.lineTo(w-12,y); ctx.stroke();
+      }
+      ctx.restore();
 
-/* ===================== INIT ===================== */
-(async function init(){
-  loadSettings();
-  updateNetChip();
-  updateAIChip();
+      // bars
+      const maxV = Math.max(1, ...week);
+      const pad = 16;
+      const bw = (w - pad*2) / 7;
+      for(let i=0;i<7;i++){
+        const v = week[i];
+        const bh = (h-60) * (v/maxV);
+        const x = pad + i*bw + 8;
+        const y = h-30 - bh;
 
-  await loadPhrase();
-  await loadStory();
-  await generateSpeak();
-  await loadExercise();
+        // gradient bar
+        const g = ctx.createLinearGradient(x, y, x, h-30);
+        g.addColorStop(0, 'rgba(53,227,255,.92)');
+        g.addColorStop(1, 'rgba(123,124,255,.55)');
+        ctx.fillStyle = g;
+        roundRect(ctx, x, y, bw-16, bh, 12);
+        ctx.fill();
 
-  if(!navigator.onLine){
-    toast("Offline", "Sin internet: contenido ilimitado con generador local.", 2800);
-  }
-})();
-</script>
+        // label
+        ctx.fillStyle = 'rgba(244,247,255,.86)';
+        ctx.font = '800 14px ' + getComputedStyle(document.body).fontFamily;
+        ctx.fillText(String(v), x + 6, y - 8);
+      }
+
+      // x labels
+      const names = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      ctx.fillStyle = 'rgba(170,182,232,.85)';
+      ctx.font = '800 12px ' + getComputedStyle(document.body).fontFamily;
+      for(let i=0;i<7;i++){
+        const x = pad + i*bw + 10;
+        ctx.fillText(names[i], x, h-10);
+      }
+    }
+
+    function roundRect(ctx, x, y, w, h, r){
+      r = Math.min(r, w/2, h/2);
+      ctx.beginPath();
+      ctx.moveTo(x+r, y);
+      ctx.arcTo(x+w, y, x+w, y+h, r);
+      ctx.arcTo(x+w, y+h, x, y+h, r);
+      ctx.arcTo(x, y+h, x, y, r);
+      ctx.arcTo(x, y, x+w, y, r);
+      ctx.closePath();
+    }
+
+    function renderProgress(){
+      renderFavs();
+      renderAchievements();
+      drawChart();
+    }
+
+    /* =========================================================
+       Quick actions modal
+       ========================================================= */
+    function openModal(){
+      UI.modalBackdrop.classList.add('show');
+      UI.modalBackdrop.setAttribute('aria-hidden','false');
+      toast('Quick Actions','Selecciona una acción.', 1200);
+    }
+    function closeModal(){
+      UI.modalBackdrop.classList.remove('show');
+      UI.modalBackdrop.setAttribute('aria-hidden','true');
+    }
+
+    /* =========================================================
+       Health check
+       ========================================================= */
+    function healthCheck(){
+      const parts = [];
+      parts.push(navigator.onLine ? '✅ Internet disponible' : '🟡 Sin internet (fallback activo)');
+      parts.push('✅ LocalStorage: ' + (function(){ try{ localStorage.setItem('__t','1'); localStorage.removeItem('__t'); return 'OK'; }catch{return 'Blocked';} })());
+      parts.push('✅ TTS: ' + ('speechSynthesis' in window ? 'OK' : 'No'));
+      parts.push('✅ SpeechRecognition: ' + ((window.SpeechRecognition||window.webkitSpeechRecognition) ? 'OK' : 'No'));
+      UI.sysMsg.textContent = parts.join(' · ');
+      toast('Health Check', 'Sistema verificado.', 1600);
+    }
+
+    /* =========================================================
+       Plan builder
+       ========================================================= */
+    function buildPlan(){
+      safeSet('EEP_TOPIC', UI.topic.value);
+      const minutes = Number(UI.goal.value || 5);
+      const steps = [
+        `1) Generate 2 phrases (${Math.max(1, Math.round(minutes*0.25))} min)`,
+        `2) Speak 1 sentence (${Math.max(1, Math.round(minutes*0.25))} min)`,
+        `3) Do 1 exercise (${Math.max(1, Math.round(minutes*0.2))} min)`,
+        `4) Translate your own idea (${Math.max(1, Math.round(minutes*0.3))} min)`
+      ];
+      pill(UI.planPill, '✅ Plan listo: ' + steps.join(' · '), 3500);
+      toast('Plan', 'Plan del día creado.', 1400);
+    }
+
+    /* =========================================================
+       Escape HTML
+       ========================================================= */
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'",'&#039;');
+    }
+
+    /* =========================================================
+       Wire events
+       ========================================================= */
+    // Home
+    $('btnStart').addEventListener('click', ()=>{
+      toast('Session','Vamos. Te llevo a Learn.', 1400);
+      setTab('tab-learn');
+      loadPhrase();
+    });
+    $('btnTour').addEventListener('click', ()=>{
+      toast('Tour','Explora: Learn → Speak → Exercises → Progress.', 2000);
+    });
+    $('btnBuildPlan').addEventListener('click', buildPlan);
+    $('btnHealth').addEventListener('click', healthCheck);
+
+    // Learn
+    $('phPlay').addEventListener('click', ()=> tts(UI.phEn.textContent, 'en', 1));
+    $('phSlow').addEventListener('click', ()=> tts(UI.phEn.textContent, 'en', 0.65));
+    $('phDuo').addEventListener('click', ()=> duo(UI.phEn.textContent, UI.phEs.textContent));
+    $('phNew').addEventListener('click', loadPhrase);
+    $('phSave').addEventListener('click', ()=> addFavorite(UI.phEn.textContent));
+    $('favClear').addEventListener('click', ()=>{ setFavs([]); renderFavs(); toast('Favorites','Borradas.', 1400); });
+    $('btnNewTip').addEventListener('click', newTip);
+
+    // Stories
+    $('stPlay').addEventListener('click', ()=> tts(UI.stEn.textContent, 'en', 1));
+    $('stSlow').addEventListener('click', ()=> tts(UI.stEn.textContent, 'en', 0.65));
+    $('stDuo').addEventListener('click', ()=> duo(UI.stEn.textContent, UI.stEs.textContent));
+    $('stNew').addEventListener('click', loadStory);
+
+    // Speak
+    $('spPlay').addEventListener('click', ()=> tts(UI.spTarget.textContent, 'en', 1));
+    $('spMic').addEventListener('click', startSpeak);
+    $('spNew').addEventListener('click', generateSpeak);
+    $('spUseCustom').addEventListener('click', useCustomSpeakPhrase);
+    $('spEvalManual').addEventListener('click', ()=>{
+      const typed = clean(UI.spManual.value);
+      if(!typed){ toast('Manual','Escribe lo que dijiste para evaluar.', 1600); return; }
+      // approximate seconds by typed length
+      const seconds = clamp(Math.round(typed.split(/\s+/).filter(Boolean).length * 0.6), 2, 18);
+      renderPronResult(typed, seconds);
+    });
+    $('spSave').addEventListener('click', ()=>{
+      const s = getStats();
+      const last = (s.speakScores||[])[0];
+      if(!last) return toast('Speak','Aún no hay score para guardar.', 1600);
+      toast('Speak','Score guardado en Progress.', 1600);
+      setTab('tab-progress');
+      renderProgress();
+    });
+
+    // Exercises
+    $('exNew').addEventListener('click', loadExercise);
+
+    // Translator
+    $('trGo').addEventListener('click', doTranslate);
+    $('trSwap').addEventListener('click', swapTranslator);
+    $('trClear').addEventListener('click', ()=>{ UI.trIn.value=''; UI.trOut.value=''; toast('Translator','Limpio.', 1200); });
+    $('trCopyIn').addEventListener('click', ()=> copyText(UI.trIn.value));
+    $('trCopyOut').addEventListener('click', ()=> copyText(UI.trOut.value));
+    $('trSpeakIn').addEventListener('click', ()=>{
+      const mode = UI.trMode.value;
+      const text = clean(UI.trIn.value);
+      if(!text) return toast('TTS','No hay texto.', 1200);
+      const lang = (mode==='es-en') ? 'es' : (mode==='en-es' ? 'en' : (detectLang(text)==='es'?'es':'en'));
+      tts(text, lang, 1);
+    });
+    $('trSpeakOut').addEventListener('click', ()=>{
+      const mode = UI.trMode.value;
+      const text = clean(UI.trOut.value);
+      if(!text) return toast('TTS','No hay texto.', 1200);
+      const lang = (mode==='es-en') ? 'en' : (mode==='en-es' ? 'es' : (detectLang(text)==='es'?'es':'en'));
+      tts(text, lang, 1);
+    });
+
+    UI.trIn.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey || e.metaKey) && e.key==='Enter'){ e.preventDefault(); doTranslate(); }
+      if(e.altKey && (e.key.toLowerCase()==='s')){ e.preventDefault(); swapTranslator(); }
+    });
+
+    // Settings
+    $('saveSettings').addEventListener('click', saveSettings);
+    $('testGemini').addEventListener('click', async ()=>{
+      UI.settingsStatus.textContent = '⏳ Testing Gemini...';
+      try{
+        const out = await gemini('Say hello in ONE short English sentence. End with a period.');
+        UI.settingsStatus.textContent = '✅ Gemini OK: ' + clean(out);
+        toast('Gemini','Conexión OK.', 1400);
+      }catch(e){
+        UI.settingsStatus.textContent = '❌ Gemini failed: ' + (e?.message || e);
+        toast('Gemini','Falló. Se usará fallback ilimitado.', 2200);
+      }
+    });
+
+    // Progress
+    $('resetAll').addEventListener('click', ()=>{
+      try{ localStorage.removeItem(STORE.FAVS); localStorage.removeItem(STORE.STATS); localStorage.removeItem(STORE.NOTE); }
+      catch{}
+      toast('Reset','Datos reiniciados.', 1600);
+      renderProgress();
+      renderHomeStats();
+    });
+
+    // Quick modal
+    $('btnQuick').addEventListener('click', openModal);
+    $('closeModal').addEventListener('click', closeModal);
+    UI.modalBackdrop.addEventListener('click', (e)=>{ if(e.target===UI.modalBackdrop) closeModal(); });
+    $$('[data-qa]').forEach(b=> b.addEventListener('click', async ()=>{
+      const a = b.dataset.qa;
+      if(a==='phrase'){ closeModal(); setTab('tab-learn'); await loadPhrase(); }
+      if(a==='exercise'){ closeModal(); setTab('tab-exercises'); await loadExercise(); }
+      if(a==='speak'){ closeModal(); setTab('tab-speak'); await generateSpeak(); }
+      if(a==='translate'){ closeModal(); setTab('tab-translator'); UI.trIn.focus(); }
+    }));
+
+    $('saveNote').addEventListener('click', ()=>{
+      const v = clean(UI.quickNote.value);
+      safeSet(STORE.NOTE, v);
+      UI.noteOut.textContent = v ? ('Última nota: ' + v) : '';
+      toast('Note', v? 'Guardada.':'Nota vacía.', 1400);
+    });
+
+    $('btnProfile').addEventListener('click', ()=>{
+      const s = getStats();
+      const totals = s.totals || {phrases:0, exercises:0, speak:0, favorites:0};
+      toast('Profile', `Streak: ${s.streak||0}d · Phrases: ${totals.phrases} · Exercises: ${totals.exercises} · Favorites: ${totals.favorites}`, 2600);
+    });
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e)=>{
+      const tag = e.target?.tagName;
+      if(tag && ['INPUT','TEXTAREA','SELECT'].includes(tag)){
+        // allow / to open quick when typing? don't
+        return;
+      }
+      const k = e.key.toLowerCase();
+      if(k==='p'){ setTab('tab-learn'); loadPhrase(); }
+      if(k==='s'){ setTab('tab-speak'); generateSpeak(); }
+      if(k==='e'){ setTab('tab-exercises'); loadExercise(); }
+      if(k==='t'){ setTab('tab-translator'); }
+      if(k==='/'){ e.preventDefault(); openModal(); }
+      if(k==='escape'){ closeModal(); }
+    });
+
+    /* =========================================================
+       Initialize
+       ========================================================= */
+    (async function init(){
+      loadSettings();
+      updateNetChip();
+      updateAIChip();
+      renderFavs();
+      renderHomeStats();
+      healthCheck();
+
+      // Initial content (fast skeleton feel)
+      UI.phEn.textContent = ' '; UI.phFig.textContent=' '; UI.phEs.textContent=' ';
+      UI.stTitle.textContent = ' '; UI.stEn.textContent=' '; UI.stFig.textContent=' '; UI.stEs.textContent=' ';
+      UI.spTarget.textContent = ' '; UI.spFig.textContent=' '; UI.spEs.textContent=' ';
+      UI.exQ.textContent = ' '; UI.exOpts.innerHTML = '';
+
+      await loadPhrase();
+      await loadStory();
+      await generateSpeak();
+      await loadExercise();
+
+      if(!navigator.onLine){
+        toast('Offline','Sin internet: contenido ilimitado con generador local.', 2800);
+      }
+
+      // save defaults
+      safeSet('EEP_TOPIC', UI.topic.value || 'general');
+
+      // cinematic mode: reduce grain if fast
+      const perf = safeGet(STORE.PERF,'balanced');
+      if(perf==='fast'){
+        document.querySelector('.grain').style.display='none';
+      }
+
+    })();
+
+  </script>
+
+  <script id="pro-translate-addon">
+  (function(){
+    'use strict';
+    const TR_CACHE_NS='EEP_TR_CACHE_V1';
+    const TR_SUPPRESS_NS='EEP_TR_SUPPRESS';
+    const $ = (id)=>document.getElementById(id);
+    function clean(t){ return (t??'').replace(/[\[*§•\]]/g,'').replace(/\s+/g,' ').trim(); }
+    function trCacheGet(dir, text){ try{ const m=JSON.parse(localStorage.getItem(TR_CACHE_NS)||'{}'); return m[dir+'::'+text]||null; }catch{return null;} }
+    function trCacheSet(dir, text, out){ try{ const m=JSON.parse(localStorage.getItem(TR_CACHE_NS)||'{}'); m[dir+'::'+text]=out; localStorage.setItem(TR_CACHE_NS, JSON.stringify(m)); }catch{} }
+    function isSuppressed(name){ try{ const m=JSON.parse(localStorage.getItem(TR_SUPPRESS_NS)||'{}'); return Date.now()<(m[name]||0); }catch{return false;} }
+    function suppress(name, hours=12){ try{ const m=JSON.parse(localStorage.getItem(TR_SUPPRESS_NS)||'{}'); m[name]=Date.now()+hours*3600*1000; localStorage.setItem(TR_SUPPRESS_NS, JSON.stringify(m)); }catch{} }
+    async function fetchJsonStrict(url, opt){ opt=opt||{}; const ctrl=new AbortController(); const t=setTimeout(()=>ctrl.abort(), opt.timeoutMs||10000); try{ const res=await fetch(url,{method:opt.method||'GET', headers:opt.headers, body:opt.body, signal:ctrl.signal}); if(!res.ok){ const txt=await res.text().catch(()=>res.statusText); const e=new Error('HTTP '+res.status+': '+txt.slice(0,140)); e.status=res.status; throw e; } return await res.json(); } finally{ clearTimeout(t);} }
+    async function pLibre(text, dir){ const ep='https://libretranslate.com'; const src=(dir==='en-es')?'en':'es'; const tgt=(dir==='en-es')?'es':'en'; const data=await fetchJsonStrict(ep.replace(/\/$/,'')+'/translate',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({q:text, source:src, target:tgt, format:'text'}), timeoutMs:10000}); const out=clean(data&&data.translatedText||''); if(!out) throw new Error('Libre empty'); return out; }
+    async function pApertium(text, dir){ const eps=['https://apertium.org/apy/translate','https://beta.apertium.org/apy/translate']; const pair=(dir==='en-es')?'en|es':'es|en'; const body=new URLSearchParams({ q:text, langpair:pair }); let last=null; for(const ep of eps){ try{ const d=await fetchJsonStrict(ep,{method:'POST', headers:{}, body, timeoutMs:9000}); const out=clean((d&&d.responseData&&d.responseData.translatedText)||d.translatedText||''); if(out) return out; last=new Error('Apertium empty'); } catch(e){ last=e; } } throw last||new Error('Apertium failed'); }
+    async function pMyMemory(text, dir){ const pair=(dir==='en-es')?'en|es':'es|en'; const d=await fetchJsonStrict('https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+pair,{timeoutMs:8000}); const out=clean(d&&d.responseData&&d.responseData.translatedText||''); if(!out) throw new Error('MyMemory empty'); if(String(d&&d.responseStatus)==='403'||String(d&&d.responseStatus)==='429'){ suppress('MyMemory'); } return out; }
+    const PROVIDERS=[ {name:'Libre', fn:pLibre}, {name:'Apertium', fn:pApertium}, {name:'MyMemory', fn:pMyMemory} ];
+    async function translateOnlineMulti(text, dir){ const c=trCacheGet(dir,text); if(c) return c; for(const p of PROVIDERS){ if(isSuppressed(p.name)) continue; try{ const out=await p.fn(text,dir); trCacheSet(dir,text,out); const el=$('settingsStatus'); if(el) el.textContent='ONLINE: '+p.name; return out; } catch(e){ if(e && (/429|quota|limit|Too Many/i).test(String(e.status||e.message||''))) suppress(p.name); } } throw new Error('All providers failed'); }
+    // Safe override: keep original translate()
+    window._origTranslate = window._origTranslate || window.translate;
+    window.translate = async function(text, mode){ try{ const input=clean(text); if(!input) return {out:'', used:'-'}; let dir=mode; if(mode==='auto' && typeof detectLang==='function'){ dir=(detectLang(input)==='es')?'es-en':'en-es'; } const out=await translateOnlineMulti(input, dir); return {out:(dir==='en-es'?'Traduccion: ':'Translation: ')+out, used:'Online'}; } catch(e){ if(typeof window._origTranslate==='function') return window._origTranslate(text, mode); return {out:'Traduccion no disponible sin internet.', used:'Offline'}; } };
+    // Floating net status chip
+    const chip=document.createElement('div'); chip.id='pro-net'; chip.textContent = navigator.onLine? 'Online':'Offline'; chip.className = navigator.onLine? 'ok':'bad'; document.body.appendChild(chip);
+    window.addEventListener('online', ()=>{ chip.textContent='Online'; chip.className='ok'; });
+    window.addEventListener('offline', ()=>{ chip.textContent='Offline'; chip.className='bad'; });
+  })();
+  </script>
+
 </body>
 </html>
