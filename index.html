@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elite English Pro · Final</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@700;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--bg:#050812;
+--card:#12183a;
+--card2:#0b0f2e;
+--glass:#ffffff12;
+--text:#f4f6ff;
+--muted:#aab3d9;
+--brand:#7b7cff;
+--brand2:#35e3ff;
+--gold:#ffd479;
+--ok:#2bff88;
+--bad:#ff5a5a;
+}
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Inter;
+background:radial-gradient(1200px 700px at 50% -300px,#1c2570,#050812);
+color:var(--text);
+padding-bottom:110px;
+}
+header{
+padding:18px;
+font-family:Outfit;
+font-weight:900;
+text-align:center;
+background:#050812dd;
+backdrop-filter:blur(24px);
+position:sticky;
+top:0;
+z-index:10;
+}
+.container{max-width:900px;margin:auto;padding:24px}
+.card{
+background:linear-gradient(180deg,var(--card),var(--card2));
+border-radius:28px;
+padding:26px;
+margin-bottom:28px;
+box-shadow:0 40px 120px rgba(0,0,0,.65);
+}
+.badge{
+font-size:.7rem;
+font-weight:900;
+letter-spacing:.12em;
+color:#bcd1ff;
+margin-bottom:12px;
+}
+.text-en{font-family:Outfit;font-size:1.6rem;line-height:1.3}
+.text-es{color:var(--muted);margin-top:10px}
+.text-fig{
+font-family:monospace;
+color:var(--gold);
+background:#0008;
+padding:14px;
+border-radius:14px;
+margin-top:12px;
+}
+.controls{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+.btn-icon{
+width:48px;height:48px;border-radius:50%;
+border:none;
+background:linear-gradient(135deg,var(--brand),var(--brand2));
+color:#fff;font-size:1.1rem;
+}
+.btn-main{
+width:100%;padding:16px;border:none;border-radius:22px;
+background:linear-gradient(135deg,var(--brand),var(--brand2));
+font-family:Outfit;font-weight:900;color:#fff;margin-top:18px;
+}
+.tab{display:none}.tab.active{display:block}
+
+/* TRANSLATOR */
+.translator{display:flex;flex-direction:column;gap:14px}
+.trans-box{background:var(--glass);border-radius:20px;padding:16px}
+.lang-row{
+display:flex;justify-content:space-between;align-items:center;
+font-weight:900;font-size:.8rem;color:#bcd1ff;margin-bottom:6px
+}
+.swap{
+border:none;border-radius:50%;
+width:54px;height:54px;
+align-self:center;
+background:#ffffff20;color:#fff;font-size:1.2rem;margin:10px 0
+}
+textarea,input,select{
+width:100%;min-height:44px;
+border:none;border-radius:14px;
+padding:14px;background:#0007;color:#fff;
+font-family:Inter
+}
+textarea{min-height:140px;resize:none}
+
+/* EXERCISES */
+.option{
+background:#ffffff14;
+padding:14px;border-radius:14px;margin-top:10px
+}
+.correct{background:#2bff8830}
+.wrong{background:#ff5a5a40}
+
+/* NAV */
+nav{
+position:fixed;bottom:0;left:0;right:0;
+height:88px;
+background:#050812f2;
+backdrop-filter:blur(30px);
+display:flex;justify-content:space-around;align-items:center
+}
+nav div{
+display:flex;flex-direction:column;align-items:center;
+gap:6px;font-size:.65rem;font-weight:900;
+color:#9aa3d0
+}
+nav i{font-size:1.5rem}
+nav .active{color:var(--brand2);transform:translateY(-4px)}
+</style>
+</head>
+
+<body>
+
+<header>ELITE ENGLISH PRO</header>
+
+<div class="container">
+
+<!-- PHRASES -->
+<section id="phrases" class="tab active">
+<div class="card">
+<div class="badge">PHRASES</div>
+<div id="phEn" class="text-en"></div>
+<div id="phFig" class="text-fig"></div>
+<div id="phEs" class="text-es"></div>
+<div class="controls">
+<button class="btn-icon" onclick="tts(phEn.innerText,'en',1)"><i class="fas fa-play"></i></button>
+<button class="btn-icon" onclick="tts(phEn.innerText,'en',0.6)"><i class="fas fa-snail"></i></button>
+<button class="btn-icon" onclick="duo(phEn.innerText,phEs.innerText)"><i class="fas fa-globe"></i></button>
+</div>
+<button class="btn-main" onclick="loadPhrase()">NEW PHRASE</button>
+</div>
+</section>
+
+<!-- STORIES -->
+<section id="stories" class="tab">
+<div class="card">
+<div class="badge">STORIES</div>
+<div id="stEn" class="text-en"></div>
+<div id="stFig" class="text-fig"></div>
+<div id="stEs" class="text-es"></div>
+<div class="controls">
+<button class="btn-icon" onclick="tts(stEn.innerText,'en',1)"><i class="fas fa-play"></i></button>
+<button class="btn-icon" onclick="tts(stEn.innerText,'en',0.6)"><i class="fas fa-snail"></i></button>
+<button class="btn-icon" onclick="duo(stEn.innerText,stEs.innerText)"><i class="fas fa-globe"></i></button>
+</div>
+<button class="btn-main" onclick="loadStory()">NEW STORY</button>
+</div>
+</section>
+
+<!-- TRANSLATOR -->
+<section id="translator" class="tab">
+<div class="card">
+<div class="badge">TRANSLATOR</div>
+<div class="translator">
+<div class="trans-box">
+<div class="lang-row"><span id="langFrom">🇪🇸 ESPAÑOL</span></div>
+<textarea id="trInput" placeholder="Escribe aquí..."></textarea>
+</div>
+<button class="swap" onclick="swapLangs()"><i class="fas fa-right-left"></i></button>
+<div class="trans-box">
+<div class="lang-row"><span id="langTo">🇺🇸 ENGLISH</span></div>
+<div id="trOutput" class="text-en"></div>
+<div id="trFig" class="text-fig"></div>
+<div class="controls">
+<button class="btn-icon" onclick="tts(trOutput.innerText,currentTo,1)">
+<i class="fas fa-volume-up"></i></button>
+</div>
+</div>
+</div>
+<button class="btn-main" onclick="translateText()">TRANSLATE</button>
+</div>
+</section>
+
+<!-- SPEAK -->
+<section id="speak" class="tab">
+<div class="card">
+<div class="badge">SPEAK</div>
+<div id="spTarget" class="text-en"></div>
+<div id="spFig" class="text-fig"></div>
+<div id="spEs" class="text-es"></div>
+<div class="controls">
+<button class="btn-icon" onclick="tts(spTarget.innerText,'en',1)"><i class="fas fa-play"></i></button>
+<button class="btn-icon" onclick="startSpeak()"><i class="fas fa-microphone"></i></button>
+</div>
+<div id="spResult"></div>
+<button class="btn-main" onclick="generateSpeak()">NEW PHRASE</button>
+</div>
+</section>
+
+<!-- EXERCISES -->
+<section id="exercises" class="tab">
+<div class="card">
+<div class="badge">EXERCISES</div>
+<div id="exQ" class="text-en"></div>
+<div id="exOpts"></div>
+<button class="btn-main" onclick="loadExercise()">NEW EXERCISE</button>
+</div>
+</section>
+
+<!-- GLOBAL -->
+<section id="global" class="tab">
+<div class="card">
+<div class="badge">GLOBAL · IA SETTINGS</div>
+<label>GEMINI API KEY</label>
+<input id="geminiKey" type="password" placeholder="Paste your Gemini API Key">
+<label style="margin-top:12px">AI MODE</label>
+<select id="aiMode">
+<option value="off">OFF (Internet + Local)</option>
+<option value="gemini">GEMINI (Priority)</option>
+</select>
+<button class="btn-main" onclick="saveGlobal()">SAVE SETTINGS</button>
+<div id="globalStatus" class="text-es"></div>
+</div>
+</section>
+
+</div>
+
+<nav>
+<div class="active" onclick="tab('phrases',this)"><i class="fas fa-bolt"></i><span>PHRASES</span></div>
+<div onclick="tab('stories',this)"><i class="fas fa-book"></i><span>STORIES</span></div>
+<div onclick="tab('translator',this)"><i class="fas fa-language"></i><span>TRANSLATE</span></div>
+<div onclick="tab('speak',this)"><i class="fas fa-microphone"></i><span>SPEAK</span></div>
+<div onclick="tab('exercises',this)"><i class="fas fa-dumbbell"></i><span>EXERCISES</span></div>
+<div onclick="tab('global',this)"><i class="fas fa-gear"></i><span>GLOBAL</span></div>
+</nav>
+
+<script>
+let currentFrom="es",currentTo="en";
+
+/* NAV */
+function tab(id,el){
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+document.querySelectorAll('nav div').forEach(n=>n.classList.remove('active'));
+el.classList.add('active');
+}
+
+/* AUDIO */
+function tts(t,lang,r){
+if(!t)return;
+const u=new SpeechSynthesisUtterance(t);
+u.lang=lang==="en"?"en-US":"es-ES";
+u.rate=r;
+speechSynthesis.speak(u);
+}
+function duo(en,es){
+tts(en,"en",1);
+setTimeout(()=>tts(es,"es",1),1200);
+}
+
+/* ===== PRONUNCIACIÓN FIGURADA PRO EN → ES ===== */
+function pronunciacionFiguradaEN(text){
+let t = " " + text.toLowerCase() + " ";
+
+t = t.replace(/th/g," d ").replace(/ph/g," f ").replace(/ck/g," k ")
+.replace(/qu/g," ku ").replace(/wh/g," gu ").replace(/wr/g," r ")
+.replace(/kn/g," n ").replace(/gn/g," n ").replace(/ps/g," s ")
+.replace(/gh/g," ");
+
+t = t.replace(/tion\b/g," shon ").replace(/sion\b/g," shon ")
+.replace(/cial\b/g," shal ").replace(/tial\b/g," shal ")
+.replace(/ing\b/g," in ").replace(/ed\b/g," d ")
+.replace(/ly\b/g," li ").replace(/ous\b/g," os ")
+.replace(/able\b/g," eibol ").replace(/ment\b/g," ment ");
+
+t = t.replace(/ee|ea/g," ii ").replace(/ie|igh/g," ai ")
+.replace(/ai|ay/g," ei ").replace(/oa/g," ou ")
+.replace(/ow|ou/g," au ").replace(/oo/g," u ");
+
+t = t.replace(/[^a-záéíóúñ\s]/gi," ");
+t = t.replace(/\s+/g," ").trim();
+return t;
+}
+
+/* APIs */
+async function translateAPI(t,f,to){
+const r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(t)}&langpair=${f}|${to}`);
+return (await r.json()).responseData.translatedText;
+}
+
+/* CONTENT */
+async function loadPhrase(){
+const r=await fetch("https://api.adviceslip.com/advice");
+const t=(await r.json()).slip.advice;
+phEn.innerText=t;
+phFig.innerText=pronunciacionFiguradaEN(t);
+phEs.innerText=await translateAPI(t,"en","es");
+}
+async function loadStory(){
+const r=await fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary");
+const d=await r.json();
+stEn.innerText=d.extract;
+stFig.innerText=pronunciacionFiguradaEN(d.extract);
+stEs.innerText=await translateAPI(d.extract,"en","es");
+}
+async function generateSpeak(){
+const r=await fetch("https://api.adviceslip.com/advice");
+const t=(await r.json()).slip.advice;
+spTarget.innerText=t;
+spFig.innerText=pronunciacionFiguradaEN(t);
+spEs.innerText=await translateAPI(t,"en","es");
+}
+function startSpeak(){
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const r=new SR();r.lang="en-US";
+r.onresult=e=>spResult.innerText=e.results[0][0].transcript;
+r.start();
+}
+async function loadExercise(){
+try{
+const r=await fetch("https://opentdb.com/api.php?amount=1&type=multiple");
+const d=await r.json();
+const q=d.results[0];
+exQ.innerText=q.question;
+exOpts.innerHTML="";
+[...q.incorrect_answers,q.correct_answer].sort().forEach(o=>{
+let div=document.createElement("div");
+div.className="option";
+div.innerText=o;
+div.onclick=()=>div.classList.add(o===q.correct_answer?"correct":"wrong");
+exOpts.appendChild(div);
+});
+}catch{
+exQ.innerText="She ___ English every day.";
+exOpts.innerHTML="";
+["study","studies","studying"].forEach((o,i)=>{
+let d=document.createElement("div");
+d.className="option";
+d.innerText=o;
+d.onclick=()=>d.classList.add(i===1?"correct":"wrong");
+exOpts.appendChild(d);
+});
+}
+}
+
+/* TRANSLATOR */
+function swapLangs(){
+[currentFrom,currentTo]=[currentTo,currentFrom];
+langFrom.innerText=currentFrom==="es"?"🇪🇸 ESPAÑOL":"🇺🇸 ENGLISH";
+langTo.innerText=currentTo==="en"?"🇺🇸 ENGLISH":"🇪🇸 ESPAÑOL";
+trFig.innerText="";
+}
+async function translateText(){
+const t=trInput.value.trim();if(!t)return;
+const out=await translateAPI(t,currentFrom,currentTo);
+trOutput.innerText=out;
+trFig.innerText=currentTo==="en"?pronunciacionFiguradaEN(out):"";
+}
+
+/* GLOBAL */
+function saveGlobal(){
+localStorage.setItem("GEMINI_KEY",geminiKey.value.trim());
+localStorage.setItem("AI_MODE",aiMode.value);
+globalStatus.innerText="✅ Settings saved";
+}
+(function(){
+geminiKey.value=localStorage.getItem("GEMINI_KEY")||"";
+aiMode.value=localStorage.getItem("AI_MODE")||"off";
+})();
+
+/* INIT */
+loadPhrase();loadStory();generateSpeak();loadExercise();
+</script>
+
+</body>
+</html>
