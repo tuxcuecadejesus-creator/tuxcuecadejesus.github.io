@@ -2498,4 +2498,199 @@
   </script>
 
 </body>
+<script>
+/* =========================================================
+   🔐 GEMINI AI ENGINE · PRO CLIENT LAYER
+   Elite English Pro — Secure Frontend Integration
+   START
+   ========================================================= */
+
+(() => {
+  "use strict";
+
+  /* =========================================================
+     INTERNAL STATE
+     ========================================================= */
+  const GEMINI = {
+    enabled: false,
+    validated: false,
+    lastError: null
+  };
+
+  /* =========================================================
+     ✅ ACTUAL GEMINI ENDPOINT (NO 404)
+     ========================================================= */
+  const GEMINI_ENDPOINT =
+    "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
+
+  /* =========================================================
+     KEY OBFUSCATION (Frontend-safe)
+     ========================================================= */
+  const encodeKey = (str) =>
+    btoa(unescape(encodeURIComponent(str.split("").reverse().join(""))));
+
+  const decodeKey = (str) =>
+    decodeURIComponent(escape(atob(str))).split("").reverse().join("");
+
+  function getKey() {
+    const raw = safeGet(STORE.GEMINI_KEY, "");
+    if (!raw) return null;
+    try { return decodeKey(raw); }
+    catch { return null; }
+  }
+
+  function saveKey(key) {
+    safeSet(STORE.GEMINI_KEY, encodeKey(key.trim()));
+  }
+
+  function wipeKey() {
+    safeSet(STORE.GEMINI_KEY, "");
+  }
+
+  /* =========================================================
+     VALIDATION LAYER (REAL TEST)
+     ========================================================= */
+  async function validateGemini() {
+    if (!navigator.onLine) throw new Error("OFFLINE");
+
+    const key = getKey();
+    if (!key) throw new Error("NO_KEY");
+
+    const res = await fetch(`${GEMINI_ENDPOINT}?key=${key}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          { parts: [{ text: "Reply only with OK" }] }
+        ]
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error("HTTP_" + res.status);
+    }
+
+    GEMINI.enabled = true;
+    GEMINI.validated = true;
+    GEMINI.lastError = null;
+    return true;
+  }
+
+  /* =========================================================
+     GENERATION CORE
+     ========================================================= */
+  async function geminiGenerate(prompt) {
+    if (!GEMINI.enabled || !GEMINI.validated)
+      throw new Error("AI_DISABLED");
+
+    const key = getKey();
+    if (!key) throw new Error("NO_KEY");
+
+    const res = await fetch(`${GEMINI_ENDPOINT}?key=${key}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          { parts: [{ text: prompt }] }
+        ]
+      })
+    });
+
+    if (!res.ok) {
+      disableGemini("RUNTIME_" + res.status);
+      throw new Error("GEMINI_FAIL");
+    }
+
+    const data = await res.json();
+    return (
+      data?.candidates?.[0]?.content?.parts?.[0]?.text || ""
+    );
+  }
+
+  /* =========================================================
+     FAILSAFE
+     ========================================================= */
+  function disableGemini(reason = "MANUAL") {
+    GEMINI.enabled = false;
+    GEMINI.validated = false;
+    GEMINI.lastError = reason;
+  }
+
+  /* =========================================================
+     PUBLIC SAFE API
+     ========================================================= */
+  window.AI = {
+    async test(keyInput) {
+      try {
+        saveKey(keyInput);
+        await validateGemini();
+
+        safeSet(STORE.AI_MODE, "gemini");
+        UI.aiMode.value = "gemini";
+        updateAIChip();
+
+        toast("Gemini OK", "API conectada correctamente.", 2200);
+        return true;
+
+      } catch (e) {
+        wipeKey();
+        disableGemini(e.message);
+
+        safeSet(STORE.AI_MODE, "off");
+        UI.aiMode.value = "off";
+        updateAIChip();
+
+        toast(
+          "Gemini failed",
+          "Error: " + e.message,
+          2800
+        );
+        return false;
+      }
+    },
+
+    async run(prompt, fallbackFn) {
+      try {
+        if (GEMINI.enabled && GEMINI.validated) {
+          return await geminiGenerate(prompt);
+        }
+      } catch {
+        disableGemini("AUTO_FALLBACK");
+      }
+      return fallbackFn();
+    },
+
+    off() {
+      disableGemini("USER_OFF");
+      safeSet(STORE.AI_MODE, "off");
+      updateAIChip();
+    },
+
+    status() {
+      return { ...GEMINI };
+    }
+  };
+
+  /* =========================================================
+     UI AUTO-HOOK (NO BREAKS)
+     ========================================================= */
+  const testBtn = $("testGemini");
+  if (testBtn) {
+    testBtn.addEventListener("click", () => {
+      const key = UI.geminiKey.value;
+      if (!key) {
+        toast("API Key", "Pega tu API Key primero.", 1800);
+        return;
+      }
+      window.AI.test(key);
+    });
+  }
+
+})();
+
+/* =========================================================
+   🔐 GEMINI AI ENGINE · PRO CLIENT LAYER
+   END
+   ========================================================= */
+</script>
 </html>
