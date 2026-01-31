@@ -2496,7 +2496,207 @@
     window.addEventListener('offline', ()=>{ chip.textContent='Offline'; chip.className='bad'; });
   })();
   </script>
+<script>
+/* =========================================================
+   🧠 ELITE SENTENCE LOGIC ENGINE · ULTIMATE
+   Compatible with Elite-English-Pro HTML
+   START
+   ========================================================= */
 
+(() => {
+  "use strict";
+
+  /* =========================================================
+     GLOBAL CONFIG
+     ========================================================= */
+
+  const CFG = {
+    MIN_WORDS: 3,
+    MAX_WORDS: 24,
+    MIN_LENGTH: 8,
+    MAX_LENGTH: 140
+  };
+
+  /* =========================================================
+     LINGUISTIC DATABASE (CONTROLLED)
+     ========================================================= */
+
+  const SUBJECTS = {
+    first: ["I", "We"],
+    second: ["You"],
+    third: ["He", "She", "They"],
+    neutral: ["A student", "A person", "Someone"]
+  };
+
+  const VERBS = {
+    present: [
+      { base: "learn", third: "learns", obj: "English" },
+      { base: "study", third: "studies", obj: "English" },
+      { base: "practice", third: "practices", obj: "speaking English" },
+      { base: "work", third: "works", obj: "every day" },
+      { base: "need", third: "needs", obj: "more practice" },
+      { base: "want", third: "wants", obj: "to improve" },
+      { base: "use", third: "uses", obj: "English at work" }
+    ]
+  };
+
+  const CONTEXTS = [
+    "every day",
+    "at home",
+    "at work",
+    "in the morning",
+    "after school",
+    "right now"
+  ];
+
+  /* =========================================================
+     FORBIDDEN / BAD PATTERNS
+     ========================================================= */
+
+  const FORBIDDEN = [
+    /^\s*$/,
+    /undefined|null|NaN/i,
+    /(.)\1{4,}/,
+    /\bthe the\b/i,
+    /\bI is\b/i,
+    /\bHe are\b/i,
+    /\bShe are\b/i,
+    /\bThey is\b/i,
+    /^[^a-zA-Z]+$/,
+    /\b(and|or|but)\s*$/i,
+    /\bfoo|bar|lorem\b/i
+  ];
+
+  /* =========================================================
+     AUTO FIX RULES
+     ========================================================= */
+
+  const FIXES = [
+    { r: /\bI is\b/gi, v: "I am" },
+    { r: /\bHe are\b/gi, v: "He is" },
+    { r: /\bShe are\b/gi, v: "She is" },
+    { r: /\bThey is\b/gi, v: "They are" },
+    { r: /\bthe the\b/gi, v: "the" },
+    { r: /\s{2,}/g, v: " " }
+  ];
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+
+  function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function normalize(text) {
+    let s = String(text)
+      .replace(/\s+/g, " ")
+      .replace(/^[^a-zA-Z]+/, "")
+      .trim();
+
+    FIXES.forEach(f => s = s.replace(f.r, f.v));
+
+    if (!/[.!?]$/.test(s)) s += ".";
+    return capitalize(s);
+  }
+
+  /* =========================================================
+     GRAMMAR CHECKS
+     ========================================================= */
+
+  function hasSubject(s) {
+    return Object.values(SUBJECTS)
+      .flat()
+      .some(sub => new RegExp("\\b" + sub + "\\b", "i").test(s));
+  }
+
+  function hasVerb(s) {
+    return VERBS.present.some(v =>
+      new RegExp("\\b(" + v.base + "|" + v.third + ")\\b", "i").test(s)
+    );
+  }
+
+  function validStructure(s) {
+    const words = s.split(" ");
+    if (words.length < CFG.MIN_WORDS) return false;
+    if (words.length > CFG.MAX_WORDS) return false;
+    if (s.length < CFG.MIN_LENGTH) return false;
+    if (s.length > CFG.MAX_LENGTH) return false;
+    return true;
+  }
+
+  function forbiddenPattern(s) {
+    return FORBIDDEN.some(p => p.test(s));
+  }
+
+  /* =========================================================
+     FALLBACK GENERATOR (GUARANTEED LOGIC)
+     ========================================================= */
+
+  function generateFallback() {
+    const subjectGroup = pick(Object.values(SUBJECTS));
+    const subject = pick(subjectGroup);
+    const verb = pick(VERBS.present);
+
+    const third =
+      /^(He|She|A|Someone)/.test(subject);
+
+    const verbForm = third ? verb.third : verb.base;
+    const ctx = Math.random() > 0.5 ? " " + pick(CONTEXTS) : "";
+
+    return `${subject} ${verbForm} ${verb.obj}${ctx}.`;
+  }
+
+  /* =========================================================
+     CORE VALIDATOR
+     ========================================================= */
+
+  function isValid(s) {
+    if (!s || typeof s !== "string") return false;
+    if (forbiddenPattern(s)) return false;
+    if (!validStructure(s)) return false;
+    if (!hasSubject(s)) return false;
+    if (!hasVerb(s)) return false;
+    return true;
+  }
+
+  /* =========================================================
+     PUBLIC API (HTML COMPATIBLE)
+     ========================================================= */
+
+  window.EliteSentenceEngine = {
+
+    ensure(sentence) {
+      try {
+        if (!sentence) throw "EMPTY";
+        const clean = normalize(sentence);
+        if (isValid(clean)) return clean;
+        throw "INVALID";
+      } catch {
+        return generateFallback();
+      }
+    },
+
+    ensureBatch(list) {
+      if (!Array.isArray(list)) return [];
+      return list.map(s => this.ensure(s));
+    },
+
+    ensureFromAI(promise) {
+      return promise.then(txt => this.ensure(txt));
+    }
+
+  };
+
+})();
+
+/* =========================================================
+   🧠 ELITE SENTENCE LOGIC ENGINE · ULTIMATE
+   END
+   ========================================================= */
+</script>
 </body>
 <script>
 /* =========================================================
